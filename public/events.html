@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos | Iglesia Internacional Jehová es Gloria</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800">
+
+    <!-- Header / Barra de Navegación -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img src="\images\logo.png" alt="Logo Iglesia Jehová es Gloria" class="w-[60px] h-[60px] object-cover rounded-full shadow-md border border-blue-200">
+                <span class="text-xl font-bold text-blue-700">Jehová es Gloria</span>
+            </div>
+            <nav class="hidden md:flex space-x-6 font-medium text-sm">
+                <a href="index.html" class="text-slate-600 hover:text-blue-800 transition">Inicio</a>
+                <a href="sermons.html" class="text-slate-600 hover:text-blue-800 transition">Prédicas</a>
+                <a href="events.html" class="text-blue-600 hover:text-blue-800 transition">Eventos</a>
+                <a href="prayer.html" class="text-slate-600 hover:text-blue-800 transition">Oración</a>
+            </nav>
+            <a href="index.html#location" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-md transition">
+                Contacto
+            </a>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="max-w-7xl mx-auto px-6 py-12">
+        <div class="text-center mb-12">
+            <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Comunidad</span>
+            <h1 class="text-4xl font-extrabold text-slate-900 mt-2">Próximos Eventos</h1>
+            <p class="text-slate-600 mt-2">Acompaña a nuestra familia en cada una de las actividades especiales preparadas para ti.</p>
+        </div>
+
+        <!-- Contenedor dinámico de eventos -->
+        <div id="events-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <div class="text-blue-600 font-bold text-sm">Sábado próximo</div>
+                <h3 class="text-xl font-bold text-slate-900 mt-1">Ayuno Congregacional Presencial</h3>
+                <p class="text-slate-500 text-sm mt-2">Te esperamos a las 9:00 AM en nuestra sede en San Fernando.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center text-sm mt-20">
+        <p>&copy; 2026 Iglesia Internacional Jehová es Gloria. Todos los derechos reservados.</p>
+    </footer>
+
+</body>
+</html>
