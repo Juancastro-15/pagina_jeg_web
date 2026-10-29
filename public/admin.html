@@ -165,15 +165,36 @@
             <div id="user-msg" class="hidden text-center text-sm font-medium mt-4 p-3 rounded-xl"></div>
         </div>
 
-        <!-- SECCIÓN 3: Contabilidad y Finanzas -->
+        <!-- SECCIÓN 3: Contabilidad y Finanzas (Dinámico) -->
         <div id="section-accounting" class="hidden bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
-            <div>
-                <h2 class="text-2xl font-extrabold text-slate-900">Módulo de Contabilidad y Finanzas</h2>
-                <p class="text-slate-600 text-sm mt-1">Gestión interna de diezmos, ofrendas y reportes financieros.</p>
+            <div class="flex justify-between items-center border-b pb-4">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">Módulo de Contabilidad y Finanzas</h2>
+                    <p class="text-slate-600 text-sm mt-1">Control de ingresos por diezmos, ofrendas y donaciones en tiempo real.</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="cargarContabilidad()" class="text-xs text-blue-600 hover:underline font-medium">Actualizar 🔄</button>
+                    <div id="total-recaudado" class="bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded-2xl text-sm font-bold shadow-sm">
+                        Total: $0
+                    </div>
+                </div>
             </div>
 
-            <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl text-sm text-blue-800">
-                💡 <strong>Módulo en desarrollo:</strong> Próximamente se integrarán aquí los formularios para registrar diezmos, ofrendas y consultar los reportes contables periódicos.
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+                            <th class="p-4">Tipo</th>
+                            <th class="p-4">Monto</th>
+                            <th class="p-4">Feligrés / Donante</th>
+                            <th class="p-4">Método de Pago</th>
+                            <th class="p-4">Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-accounting-list" class="text-sm divide-y divide-slate-100">
+                        <tr><td colspan="5" class="p-6 text-center text-slate-500 animate-pulse">Cargando registros contables...</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -222,6 +243,7 @@
 
             applyRolePermissions(currentUserRole);
             cargarPredicasAdmin();
+            cargarContabilidad();
         });
 
         function applyRolePermissions(role) {
@@ -454,6 +476,50 @@
             } catch (err) {
                 console.error("Error al eliminar:", err);
                 alert("Error de conexión al intentar eliminar.");
+            }
+        }
+
+        // Cargar Datos Contables y Financieros en el Admin
+        async function cargarContabilidad() {
+            const tbody = document.getElementById("admin-accounting-list");
+            const totalBox = document.getElementById("total-recaudado");
+            const token = localStorage.getItem("token");
+            if (!tbody) return;
+
+            try {
+                const res = await fetch(`${API_URL}/api/accounting`, {
+                    headers: { "Authorization": "Bearer " + token }
+                });
+                const transactions = await res.json();
+
+                tbody.innerHTML = "";
+                let sumaTotal = 0;
+
+                if (!Array.isArray(transactions) || transactions.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">No hay registros financieros aún.</td></tr>`;
+                    totalBox.textContent = "Total: $0";
+                    return;
+                }
+
+                transactions.forEach(tx => {
+                    sumaTotal += parseFloat(tx.amount || 0);
+                    const fecha = tx.date ? new Date(tx.date).toLocaleDateString() : "Reciente";
+                    
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-4 font-semibold text-slate-900"><span class="bg-blue-50 text-blue-600 text-xs px-2.5 py-1 rounded-md">${tx.type}</span></td>
+                            <td class="p-4 font-bold text-green-600">$${Number(tx.amount).toLocaleString()}</td>
+                            <td class="p-4 text-slate-700">${tx.donor_name}</td>
+                            <td class="p-4 text-xs text-slate-500">${tx.payment_method}</td>
+                            <td class="p-4 text-xs text-slate-500">${fecha}</td>
+                        </tr>
+                    `;
+                });
+
+                totalBox.textContent = `Total Recaudado: $${sumaTotal.toLocaleString()}`;
+            } catch (err) {
+                console.error("Error al cargar contabilidad:", err);
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-red-500">Error al conectar con la base de datos financiera.</td></tr>`;
             }
         }
 

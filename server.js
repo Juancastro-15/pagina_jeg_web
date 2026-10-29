@@ -11,9 +11,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 // 📂 Rutas de la API
 const sermonRoutes = require('./src/routes/sermonRoutes'); 
 const authRoutes = require('./src/routes/authRoutes');
+const accountingRoutes = require('./src/routes/accountingRoutes'); // 👈 3. Importar rutas contables
 
 app.use('/api/sermons', sermonRoutes); 
 app.use('/api/auth', authRoutes);     
+app.use('/api/accounting', accountingRoutes); // 👈 4. Registrar la ruta base de contabilidad/donaciones
 
 // Puerto del servidor
 const PORT = process.env.PORT || 4000;
