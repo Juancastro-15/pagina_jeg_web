@@ -1,24 +1,45 @@
 const express = require('express');
 const path = require('path');
-const cors = require('cors'); // 👈 1. Importar cors
+const cors = require('cors');
+
 const app = express();
 
-// Middlewares globales
-app.use(cors()); // 👈 2. Habilitar CORS para permitir peticiones desde Vercel
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+// ==========================================
+// MIDDLEWARES GLOBALES
+// ==========================================
+app.use(cors()); // Permite peticiones cross-origin desde el frontend (Vercel, GitHub Pages, etc.)[cite: 5]
+app.use(express.json()); // Parsea el cuerpo de las peticiones HTTP en formato JSON[cite: 5]
+app.use(express.static(path.join(__dirname, 'public'))); // Sirve archivos estáticos[cite: 5]
 
-// 📂 Rutas de la API
+// ==========================================
+// IMPORTACIÓN DE RUTAS DE LA API
+// ==========================================
 const sermonRoutes = require('./src/routes/sermonRoutes'); 
 const authRoutes = require('./src/routes/authRoutes');
-const accountingRoutes = require('./src/routes/accountingRoutes'); // 👈 3. Importar rutas contables
+const accountingRoutes = require('./src/routes/accountingRoutes');
+const eventRoutes = require('./src/routes/eventRoutes');
+const userRoutes = require('./src/routes/userroutes');
+const prayerRoutes = require('./src/routes/prayerRoutes'); // 👈 Importar rutas de peticiones de oración
 
-app.use('/api/sermons', sermonRoutes); 
-app.use('/api/auth', authRoutes);     
-app.use('/api/accounting', accountingRoutes); // 👈 4. Registrar la ruta base de contabilidad/donaciones
+// ==========================================
+// REGISTRO DE RUTAS BASE
+// ==========================================
+app.use('/api/sermons', sermonRoutes);        // Prédicas y transmisiones[cite: 5]
+app.use('/api/auth', authRoutes);            // Autenticación y registro inicial[cite: 5]
+app.use('/api/accounting', accountingRoutes);  // Finanzas, diezmos y ofrendas[cite: 5]
+app.use('/api/events', eventRoutes);          // Gestión de eventos y actividades[cite: 5]
+app.use('/api/users', userRoutes);            // Administración de usuarios[cite: 5]
+app.use('/api/prayers', prayerRoutes);        // 👈 Registrar rutas de peticiones de oración
 
-// Puerto del servidor
+// Ruta base de prueba/salud de la API
+app.get('/', (req, res) => {
+    res.send('API de la Iglesia Internacional Jehová es Gloria funcionando correctamente 🚀');
+});
+
+// ==========================================
+// INICIALIZACIÓN DEL SERVIDOR
+// ==========================================
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`🚀 Servidor corriendo exitosamente en el puerto ${PORT}`);
 });

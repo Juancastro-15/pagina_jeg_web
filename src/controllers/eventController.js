@@ -29,7 +29,51 @@ const createEvent = async (req, res) => {
     }
 };
 
+// Actualizar un evento existente
+const updateEvent = async (req, res) => {
+    const { id } = req.params;
+    const { title, description, location, event_date, image_url } = req.body;
+    try {
+        const query = `
+            UPDATE events 
+            SET title = $1, description = $2, location = $3, event_date = $4, image_url = $5 
+            WHERE id = $6 
+            RETURNING *;
+        `;
+        const values = [title, description, location, event_date, image_url, id];
+        const result = await pool.query(query, values);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Evento no encontrado' });
+        }
+
+        res.json({ message: 'Evento actualizado con éxito 🔄', event: result.rows[0] });
+    } catch (error) {
+        console.error('Error al actualizar evento:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
+// Eliminar un evento
+const deleteEvent = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await pool.query('DELETE FROM events WHERE id = $1 RETURNING id', [id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Evento no encontrado' });
+        }
+
+        res.json({ message: 'Evento eliminado correctamente 🗑️' });
+    } catch (error) {
+        console.error('Error al eliminar evento:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
 module.exports = {
     getEvents,
-    createEvent
+    createEvent,
+    updateEvent,
+    deleteEvent
 };

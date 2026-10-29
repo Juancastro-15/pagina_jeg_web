@@ -9,7 +9,6 @@
     <!-- ESTILOS ESPECIALES PARA IMPRESIÓN / REPORTE PDF -->
     <style>
         @media print {
-            /* 1. Ocultar header, navegación, botones de acción y filtros */
             header, 
             .no-print, 
             #logout-btn, 
@@ -20,7 +19,6 @@
                 display: none !important;
             }
 
-            /* 2. Resetear fondos y márgenes de la página */
             body {
                 background-color: #ffffff !important;
                 color: #000000 !important;
@@ -35,8 +33,7 @@
                 margin: 0 !important;
             }
 
-            /* 3. Asegurar que solo la sección contable sea visible */
-            #section-sermons, #section-users {
+            #section-sermons, #section-events, #section-users, #section-prayers {
                 display: none !important;
             }
 
@@ -47,7 +44,6 @@
                 padding: 0 !important;
             }
 
-            /* 4. Encabezado membretado para la impresión */
             .print-header {
                 display: flex !important;
                 align-items: center;
@@ -57,7 +53,6 @@
                 margin-bottom: 20px;
             }
 
-            /* 5. Estilo limpio de las tarjetas de resumen */
             .grid {
                 display: flex !important;
                 justify-content: space-between;
@@ -73,7 +68,6 @@
                 flex: 1;
             }
 
-            /* 6. Estilo formal de la tabla contable */
             table {
                 width: 100% !important;
                 border-collapse: collapse !important;
@@ -92,7 +86,6 @@
                 font-weight: bold !important;
             }
 
-            /* 7. Pie de página para firmas en la impresión */
             .print-footer {
                 display: flex !important;
                 justify-content: space-between;
@@ -108,7 +101,6 @@
             }
         }
 
-        /* Estilos en pantalla normal para elementos de impresión */
         .print-header, .print-footer {
             display: none;
         }
@@ -138,9 +130,11 @@
         
         <!-- Pestañas de navegación interna del Dashboard -->
         <div class="flex space-x-4 border-b border-slate-200 pb-3 overflow-x-auto no-print">
-            <button onclick="switchTab('sermons')" id="tab-sermons" class="font-bold text-blue-600 border-b-2 border-blue-600 pb-2 px-2 transition whitespace-nowrap">📖 Gestión de Prédicas</button>
-            <button onclick="switchTab('users')" id="tab-users" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">👥 Registrar Usuario</button>
-            <button onclick="switchTab('accounting')" id="tab-accounting" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">📊 Contabilidad y Finanzas</button>
+            <button onclick="switchTab('sermons')" id="tab-sermons" class="font-bold text-blue-600 border-b-2 border-blue-600 pb-2 px-2 transition whitespace-nowrap">📖 Prédicas</button>
+            <button onclick="switchTab('events')" id="tab-events" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">📅 Eventos</button>
+            <button onclick="switchTab('prayers')" id="tab-prayers" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">🙏 Peticiones de Oración</button>
+            <button onclick="switchTab('users')" id="tab-users" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">👥 Usuarios</button>
+            <button onclick="switchTab('accounting')" id="tab-accounting" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">📊 Contabilidad</button>
         </div>
 
         <!-- SECCIÓN 1: Gestión de Prédicas -->
@@ -156,12 +150,10 @@
 
                 <form id="admin-sermon-form" class="space-y-4">
                     <input type="hidden" id="sermon-id">
-
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">Título de la Prédica</label>
                         <input type="text" id="title" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="Ej. El poder de la fe y la obediencia">
                     </div>
-
                     <div class="grid md:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-1">Categoría / Tipo</label>
@@ -176,22 +168,18 @@
                             <input type="date" id="date" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm">
                         </div>
                     </div>
-
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">Breve Descripción</label>
                         <textarea id="description" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="De qué trató el mensaje..."></textarea>
                     </div>
-
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Enlace del Video en Facebook (link/video_url)</label>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Enlace del Video en Facebook</label>
                         <input type="url" id="video_url" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="https://www.facebook.com/iglesiajehovaesgloria/videos/...">
                     </div>
-
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">Enlace de Audio (Opcional)</label>
                         <input type="url" id="audio_url" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="https://...">
                     </div>
-
                     <div class="flex space-x-3 pt-2">
                         <button type="submit" id="submit-sermon-btn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow transition text-sm">
                             Publicar Prédica 🚀
@@ -221,59 +209,213 @@
                             </tr>
                         </thead>
                         <tbody id="admin-sermons-list" class="text-sm divide-y divide-slate-100">
-                            <tr>
-                                <td colspan="4" class="p-6 text-center text-slate-500 animate-pulse">Cargando prédicas...</td>
-                            </tr>
+                            <tr><td colspan="4" class="p-6 text-center text-slate-500 animate-pulse">Cargando prédicas...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- SECCIÓN 2: Registro de Usuarios -->
-        <div id="section-users" class="hidden bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
-            <div>
-                <h2 class="text-2xl font-extrabold text-slate-900">Registrar Nuevo Usuario</h2>
-                <p class="text-slate-600 text-sm mt-1">Crea credenciales de acceso seguras asignando el rol correspondiente.</p>
+        <!-- SECCIÓN 2: Gestión de Eventos -->
+        <div id="section-events" class="hidden space-y-8">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
+                <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-slate-900" id="event-form-title">Publicar Nuevo Evento</h2>
+                        <p class="text-slate-600 text-sm mt-1">Configura las actividades, fechas, costos y enlaces de inscripción para la congregación.</p>
+                    </div>
+                    <span id="event-form-mode-badge" class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">Modo: Crear</span>
+                </div>
+
+                <form id="admin-event-form" class="space-y-4">
+                    <input type="hidden" id="event-id">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Título del Evento</label>
+                            <input type="text" id="event-title" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="Ej. Gran Vigilia Juvenil">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Categoría</label>
+                            <input type="text" id="event-category" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="Ej. Ayuno, Conferencia, Campamento">
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Fecha del Evento</label>
+                            <input type="date" id="event-date" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Hora</label>
+                            <input type="text" id="event-time" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="Ej. 6:30 PM">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Costo / Aporte</label>
+                            <input type="text" id="event-cost" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="Ej. Gratuito / $20.000 COP">
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">URL de la Imagen de Portada</label>
+                            <input type="url" id="event-image" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="https://images.unsplash.com/...">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Enlace de Inscripción / Más Información</label>
+                            <input type="url" id="event-link" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="https://forms.gle/... o WhatsApp">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Ubicación o Lugar</label>
+                        <input type="text" id="event-location" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="Ej. Sede Principal San Fernando">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Descripción Detallada</label>
+                        <textarea id="event-description" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="Detalles de lo que se vivirá en el evento..."></textarea>
+                    </div>
+
+                    <div class="flex space-x-3 pt-2">
+                        <button type="submit" id="submit-event-btn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow transition text-sm">
+                            Publicar Evento 🗓️
+                        </button>
+                        <button type="button" id="cancel-event-edit-btn" onclick="resetEventForm()" class="hidden bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-6 py-3 rounded-xl transition text-sm">
+                            Cancelar ❌
+                        </button>
+                    </div>
+                </form>
+                <div id="event-admin-msg" class="hidden text-center text-sm font-medium mt-4 p-3 rounded-xl"></div>
             </div>
 
-            <form id="admin-user-form" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Nombre Completo</label>
-                    <input type="text" id="new-name" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="Ej. Juan Pérez">
+            <!-- Tabla de Eventos -->
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-slate-900">Eventos Registrados en la BD</h3>
+                    <button onclick="cargarEventosAdmin()" class="text-xs text-blue-600 hover:underline font-medium">Recargar Lista 🔄</button>
                 </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Correo Electrónico</label>
-                    <input type="email" id="new-email" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="colaborador@jehovaesgloria.com">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+                                <th class="p-4">Evento</th>
+                                <th class="p-4">Categoría / Costo</th>
+                                <th class="p-4">Fecha y Hora</th>
+                                <th class="p-4 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-events-list" class="text-sm divide-y divide-slate-100">
+                            <tr><td colspan="4" class="p-6 text-center text-slate-500 animate-pulse">Cargando eventos...</td></tr>
+                        </tbody>
+                    </table>
                 </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Contraseña Temporal</label>
-                    <input type="password" id="new-password" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="••••••••">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Rol en la Iglesia</label>
-                    <select id="new-role" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm">
-                        <option value="secretary">Secretario(a) / Comunicaciones</option>
-                        <option value="pastor">Pastor</option>
-                        <option value="contador">Contabilidad / Finanzas</option>
-                        <option value="admin">Administrador General</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow transition text-sm">
-                    Crear Cuenta de Usuario 🔑
-                </button>
-            </form>
-            <div id="user-msg" class="hidden text-center text-sm font-medium mt-4 p-3 rounded-xl"></div>
+            </div>
         </div>
 
-        <!-- SECCIÓN 3: Contabilidad y Finanzas (Optimizado para Impresión) -->
+        <!-- SECCIÓN 3: Peticiones de Oración [NUEVO] -->
+        <div id="section-prayers" class="hidden space-y-8">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
+                <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-slate-900">🙏 Peticiones de Oración de la Comunidad</h2>
+                        <p class="text-slate-600 text-sm mt-1">Motivos de intercesión enviados por los hermanos a través del portal web.</p>
+                    </div>
+                    <button onclick="cargarPeticionesAdmin()" class="bg-blue-50 text-blue-600 hover:bg-blue-100 px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm">
+                        Actualizar Peticiones 🔄
+                    </button>
+                </div>
+
+                <!-- Tabla de Peticiones -->
+                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200">
+                                <th class="p-4">Feligrés / Solicitante</th>
+                                <th class="p-4">Motivo de Oración</th>
+                                <th class="p-4">Fecha</th>
+                                <th class="p-4 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-prayers-list" class="text-sm divide-y divide-slate-100">
+                            <tr><td colspan="4" class="p-6 text-center text-slate-500 animate-pulse">Cargando peticiones...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 4: Gestión de Usuarios -->
+        <div id="section-users" class="hidden space-y-8">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
+                <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-slate-900" id="user-form-title">Registrar Nuevo Usuario</h2>
+                        <p class="text-slate-600 text-sm mt-1">Crea credenciales de acceso seguras asignando el rol correspondiente.</p>
+                    </div>
+                    <span id="user-form-mode-badge" class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">Modo: Crear</span>
+                </div>
+
+                <form id="admin-user-form" class="space-y-4">
+                    <input type="hidden" id="user-id">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Nombre Completo</label>
+                        <input type="text" id="new-name" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="Ej. Juan Pérez">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Correo Electrónico</label>
+                        <input type="email" id="new-email" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="colaborador@jehovaesgloria.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Contraseña <span id="pwd-label-hint" class="text-xs text-slate-400 font-normal">(Temporal)</span></label>
+                        <input type="password" id="new-password" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="••••••••">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Rol en la Iglesia</label>
+                        <select id="new-role" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm">
+                            <option value="secretary">Secretario(a) / Comunicaciones</option>
+                            <option value="pastor">Pastor</option>
+                            <option value="contador">Contabilidad / Finanzas</option>
+                            <option value="admin">Administrador General</option>
+                        </select>
+                    </div>
+                    <div class="flex space-x-3 pt-2">
+                        <button type="submit" id="submit-user-btn" class="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow transition text-sm">
+                            Crear Cuenta de Usuario 🔑
+                        </button>
+                        <button type="button" id="cancel-user-edit-btn" onclick="resetUserForm()" class="hidden bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-6 py-3 rounded-xl transition text-sm">
+                            Cancelar ❌
+                        </button>
+                    </div>
+                </form>
+                <div id="user-msg" class="hidden text-center text-sm font-medium mt-4 p-3 rounded-xl"></div>
+            </div>
+
+            <!-- Tabla de Usuarios -->
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-slate-900">Usuarios Registrados en el Sistema</h3>
+                    <button onclick="cargarUsuariosAdmin()" class="text-xs text-blue-600 hover:underline font-medium">Recargar Lista 🔄</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+                                <th class="p-4">Nombre</th>
+                                <th class="p-4">Correo</th>
+                                <th class="p-4">Rol</th>
+                                <th class="p-4 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-users-list" class="text-sm divide-y divide-slate-100">
+                            <tr><td colspan="4" class="p-6 text-center text-slate-500 animate-pulse">Cargando usuarios...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 5: Contabilidad y Finanzas -->
         <div id="section-accounting" class="hidden bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
-            
-            <!-- Encabezado exclusivo de Impresión -->
             <div class="print-header">
                 <div>
                     <h1 style="font-size: 16pt; font-weight: bold; margin: 0;">Iglesia Jehová es Gloria</h1>
@@ -284,7 +426,6 @@
                 </div>
             </div>
 
-            <!-- Encabezado del Módulo en Pantalla -->
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-4 gap-4 no-print">
                 <div>
                     <h2 class="text-2xl font-extrabold text-slate-900">Módulo de Contabilidad y Finanzas</h2>
@@ -303,7 +444,6 @@
                 </div>
             </div>
 
-            <!-- Tarjetas de Balance / Resumen -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-green-50 border border-green-200 p-5 rounded-2xl shadow-sm">
                     <span class="text-xs font-bold text-green-800 uppercase tracking-wider block">Total Recaudado</span>
@@ -319,7 +459,6 @@
                 </div>
             </div>
 
-            <!-- Barra de Filtros y Búsqueda -->
             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 grid grid-cols-1 md:grid-cols-4 gap-4 items-end no-print">
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">Buscar Donante / Ref.</label>
@@ -345,7 +484,6 @@
                 </div>
             </div>
 
-            <!-- Tabla de Registros Contables -->
             <div class="overflow-x-auto rounded-2xl border border-slate-200">
                 <table class="w-full text-left border-collapse">
                     <thead>
@@ -364,18 +502,11 @@
                 </table>
             </div>
 
-            <!-- Pie de página para firmas en la Impresión -->
             <div class="print-footer">
-                <div class="signature-box">
-                    <p style="margin-top: 30px;">Firma del Tesorero / Contador</p>
-                </div>
-                <div class="signature-box">
-                    <p style="margin-top: 30px;">Firma del Pastor General</p>
-                </div>
+                <div class="signature-box"><p style="margin-top: 30px;">Firma del Tesorero / Contador</p></div>
+                <div class="signature-box"><p style="margin-top: 30px;">Firma del Pastor General</p></div>
             </div>
-
         </div>
-
     </main>
 
     <!-- Script JavaScript -->
@@ -383,6 +514,8 @@
         const API_URL = "https://pagina-jeg-web.onrender.com";
         let currentUserRole = "secretary";
         let predicasCargadas = [];
+        let eventosCargados = [];
+        let usuariosCargados = [];
         let transaccionesGlobales = [];
 
         function parseJwt(token) {
@@ -422,17 +555,24 @@
 
             applyRolePermissions(currentUserRole);
             cargarPredicasAdmin();
+            cargarEventosAdmin();
+            cargarPeticionesAdmin();
+            cargarUsuariosAdmin();
             cargarContabilidad();
         });
 
         function applyRolePermissions(role) {
             const tabSermons = document.getElementById("tab-sermons");
+            const tabEvents = document.getElementById("tab-events");
+            const tabPrayers = document.getElementById("tab-prayers");
             const tabUsers = document.getElementById("tab-users");
             const tabAccounting = document.getElementById("tab-accounting");
 
             const normalizedRole = (role || "").toLowerCase().trim();
 
             if (tabSermons) tabSermons.classList.add("hidden");
+            if (tabEvents) tabEvents.classList.add("hidden");
+            if (tabPrayers) tabPrayers.classList.add("hidden");
             if (tabUsers) tabUsers.classList.add("hidden");
             if (tabAccounting) tabAccounting.classList.add("hidden");
 
@@ -441,9 +581,13 @@
                 switchTab("accounting");
             } else if (normalizedRole === "secretary" || normalizedRole === "secretario") {
                 if (tabSermons) tabSermons.classList.remove("hidden");
+                if (tabEvents) tabEvents.classList.remove("hidden");
+                if (tabPrayers) tabPrayers.classList.remove("hidden");
                 switchTab("sermons");
             } else if (normalizedRole === "pastor" || normalizedRole === "admin") {
                 if (tabSermons) tabSermons.classList.remove("hidden");
+                if (tabEvents) tabEvents.classList.remove("hidden");
+                if (tabPrayers) tabPrayers.classList.remove("hidden");
                 if (tabUsers) tabUsers.classList.remove("hidden");
                 if (tabAccounting) tabAccounting.classList.remove("hidden");
                 switchTab("sermons");
@@ -454,20 +598,21 @@
         }
 
         function switchTab(tab) {
-            const normalizedRole = (currentUserRole || "").toLowerCase().trim();
-
-            if (tab === 'users' && normalizedRole !== 'admin' && normalizedRole !== 'pastor') return;
-            if (tab === 'accounting' && normalizedRole !== 'admin' && normalizedRole !== 'pastor' && normalizedRole !== 'contador') return;
-
             const secSermons = document.getElementById("section-sermons");
+            const secEvents = document.getElementById("section-events");
+            const secPrayers = document.getElementById("section-prayers");
             const secUsers = document.getElementById("section-users");
             const secAccounting = document.getElementById("section-accounting");
 
             const tabSermons = document.getElementById("tab-sermons");
+            const tabEvents = document.getElementById("tab-events");
+            const tabPrayers = document.getElementById("tab-prayers");
             const tabUsers = document.getElementById("tab-users");
             const tabAccounting = document.getElementById("tab-accounting");
 
             if (secSermons) secSermons.classList.add("hidden");
+            if (secEvents) secEvents.classList.add("hidden");
+            if (secPrayers) secPrayers.classList.add("hidden");
             if (secUsers) secUsers.classList.add("hidden");
             if (secAccounting) secAccounting.classList.add("hidden");
 
@@ -475,9 +620,7 @@
             const activeClasses = ["font-bold", "text-blue-600", "border-b-2", "border-blue-600"];
 
             const updateTabStyle = (tabElement, isActive) => {
-                if (!tabElement) return;
-                if (tabElement.classList.contains("hidden")) return;
-
+                if (!tabElement || tabElement.classList.contains("hidden")) return;
                 if (isActive) {
                     tabElement.classList.remove(...inactiveClasses);
                     tabElement.classList.add(...activeClasses);
@@ -488,10 +631,14 @@
             };
 
             updateTabStyle(tabSermons, tab === 'sermons');
+            updateTabStyle(tabEvents, tab === 'events');
+            updateTabStyle(tabPrayers, tab === 'prayers');
             updateTabStyle(tabUsers, tab === 'users');
             updateTabStyle(tabAccounting, tab === 'accounting');
 
             if (tab === 'sermons' && secSermons) secSermons.classList.remove("hidden");
+            if (tab === 'events' && secEvents) secEvents.classList.remove("hidden");
+            if (tab === 'prayers' && secPrayers) secPrayers.classList.remove("hidden");
             if (tab === 'users' && secUsers) secUsers.classList.remove("hidden");
             if (tab === 'accounting' && secAccounting) secAccounting.classList.remove("hidden");
         }
@@ -501,23 +648,21 @@
             window.location.href = "login.html";
         });
 
-        // Cargar Lista de Prédicas
+        // ==========================================
+        // MÓDULO DE PRÉDICAS
+        // ==========================================
         async function cargarPredicasAdmin() {
             const tbody = document.getElementById("admin-sermons-list");
             if (!tbody) return;
-
             try {
                 const res = await fetch(`${API_URL}/api/sermons`);
                 const sermons = await res.json();
                 predicasCargadas = sermons;
-
                 tbody.innerHTML = "";
-
                 if (!Array.isArray(sermons) || sermons.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">No hay prédicas registradas.</td></tr>`;
                     return;
                 }
-
                 sermons.forEach((sermon, idx) => {
                     const id = sermon.id || sermon._id;
                     const titulo = sermon.title || sermon.titulo || "Transmisión";
@@ -549,7 +694,6 @@
         function prepararEdicion(index) {
             const sermon = predicasCargadas[index];
             if (!sermon) return;
-
             document.getElementById("sermon-id").value = sermon.id || sermon._id;
             document.getElementById("title").value = sermon.title || sermon.titulo || "";
             document.getElementById("category").value = sermon.category || sermon.categoria || "";
@@ -562,11 +706,9 @@
             document.getElementById("form-title").textContent = "Editar Prédica";
             document.getElementById("submit-sermon-btn").textContent = "Guardar Cambios 🔄";
             document.getElementById("cancel-edit-btn").classList.remove("hidden");
-            
             const badge = document.getElementById("form-mode-badge");
             badge.textContent = "Modo: Editar";
             badge.className = "bg-amber-100 text-amber-800 text-xs font-semibold px-3 py-1 rounded-full";
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -576,7 +718,6 @@
             document.getElementById("form-title").textContent = "Publicar Nueva Prédica";
             document.getElementById("submit-sermon-btn").textContent = "Publicar Prédica 🚀";
             document.getElementById("cancel-edit-btn").classList.add("hidden");
-
             const badge = document.getElementById("form-mode-badge");
             badge.textContent = "Modo: Crear";
             badge.className = "bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full";
@@ -624,13 +765,11 @@
 
         async function eliminarPredica(id) {
             if (!confirm("¿Estás seguro de que deseas eliminar esta prédica?")) return;
-
             try {
                 const res = await fetch(`${API_URL}/api/sermons/${id}`, {
                     method: "DELETE",
                     headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
                 });
-
                 if (res.ok) {
                     cargarPredicasAdmin();
                 } else {
@@ -644,7 +783,341 @@
         }
 
         // ==========================================
-        // MÓDULO CONTABLE: CARGA, FILTROS Y EXCEL
+        // MÓDULO DE GESTIÓN DE EVENTOS
+        // ==========================================
+        async function cargarEventosAdmin() {
+            const tbody = document.getElementById("admin-events-list");
+            if (!tbody) return;
+            try {
+                const res = await fetch(`${API_URL}/api/events`);
+                const events = await res.json();
+                eventosCargados = events;
+                tbody.innerHTML = "";
+                if (!Array.isArray(events) || events.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">No hay eventos publicados.</td></tr>`;
+                    return;
+                }
+                events.forEach((ev, idx) => {
+                    const id = ev.id || ev._id;
+                    const titulo = ev.title || ev.titulo || "Evento Especial";
+                    const categoria = ev.category || ev.categoria || "Comunidad";
+                    const costo = ev.cost || ev.costo || "Libre";
+                    const fecha = ev.date ? ev.date.split("T")[0] : "Pronto";
+                    const hora = ev.time || ev.hora || "";
+
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-4 font-bold text-slate-900">${titulo}</td>
+                            <td class="p-4">
+                                <span class="bg-blue-50 text-blue-600 text-xs px-2.5 py-1 rounded-md font-semibold inline-block mb-1">${categoria}</span>
+                                <div class="text-xs text-slate-500">Costo: ${costo}</div>
+                            </td>
+                            <td class="p-4 text-xs text-slate-500">${fecha} ${hora}</td>
+                            <td class="p-4 text-center space-x-2">
+                                <button onclick="prepararEdicionEvento(${idx})" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm">Editar ✏️</button>
+                                <button onclick="eliminarEvento(${id})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm">Eliminar 🗑️</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error("Error al cargar eventos:", err);
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-red-500">Error al conectar con el servidor de eventos.</td></tr>`;
+            }
+        }
+
+        function prepararEdicionEvento(index) {
+            const ev = eventosCargados[index];
+            if (!ev) return;
+            document.getElementById("event-id").value = ev.id || ev._id;
+            document.getElementById("event-title").value = ev.title || ev.titulo || "";
+            document.getElementById("event-category").value = ev.category || ev.categoria || "";
+            document.getElementById("event-date").value = ev.date ? ev.date.split("T")[0] : "";
+            document.getElementById("event-time").value = ev.time || ev.hora || "";
+            document.getElementById("event-cost").value = ev.cost || ev.costo || "";
+            document.getElementById("event-image").value = ev.image || ev.imagen || "";
+            document.getElementById("event-link").value = ev.link || ev.enlace || "";
+            document.getElementById("event-location").value = ev.location || ev.ubicacion || "";
+            document.getElementById("event-description").value = ev.description || ev.descripcion || "";
+
+            document.getElementById("event-form-title").textContent = "Editar Evento";
+            document.getElementById("submit-event-btn").textContent = "Guardar Cambios 🔄";
+            document.getElementById("cancel-event-edit-btn").classList.remove("hidden");
+            const badge = document.getElementById("event-form-mode-badge");
+            badge.textContent = "Modo: Editar";
+            badge.className = "bg-amber-100 text-amber-800 text-xs font-semibold px-3 py-1 rounded-full";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetEventForm() {
+            document.getElementById("admin-event-form").reset();
+            document.getElementById("event-id").value = "";
+            document.getElementById("event-form-title").textContent = "Publicar Nuevo Evento";
+            document.getElementById("submit-event-btn").textContent = "Publicar Evento 🗓️";
+            document.getElementById("cancel-event-edit-btn").classList.add("hidden");
+            const badge = document.getElementById("event-form-mode-badge");
+            badge.textContent = "Modo: Crear";
+            badge.className = "bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full";
+        }
+
+        document.getElementById("admin-event-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const id = document.getElementById("event-id").value;
+            const title = document.getElementById("event-title").value;
+            const category = document.getElementById("event-category").value;
+            const date = document.getElementById("event-date").value;
+            const time = document.getElementById("event-time").value;
+            const cost = document.getElementById("event-cost").value;
+            const image = document.getElementById("event-image").value;
+            const link = document.getElementById("event-link").value;
+            const location = document.getElementById("event-location").value;
+            const description = document.getElementById("event-description").value;
+            const msgBox = document.getElementById("event-admin-msg");
+
+            const method = id ? "PUT" : "POST";
+            const url = id ? `${API_URL}/api/events/${id}` : `${API_URL}/api/events`;
+
+            try {
+                const res = await fetch(url, {
+                    method: method,
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("token")
+                    },
+                    body: JSON.stringify({ title, category, date, time, cost, image, link, location, description })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    msgBox.className = "text-center text-sm font-medium mt-4 p-3 rounded-xl bg-green-50 text-green-700 border border-green-200";
+                    msgBox.textContent = id ? "¡Evento actualizado exitosamente! 🔄✨" : "¡Evento publicado con éxito! 🗓️✨";
+                    resetEventForm();
+                    cargarEventosAdmin();
+                } else {
+                    throw new Error(data.error || "Error al procesar el evento");
+                }
+            } catch (err) {
+                msgBox.className = "text-center text-sm font-medium mt-4 p-3 rounded-xl bg-red-50 text-red-700 border border-red-200";
+                msgBox.textContent = "Hubo un error: " + err.message;
+            }
+            msgBox.classList.remove("hidden");
+        });
+
+        async function eliminarEvento(id) {
+            if (!confirm("¿Estás seguro de que deseas eliminar este evento?")) return;
+            try {
+                const res = await fetch(`${API_URL}/api/events/${id}`, {
+                    method: "DELETE",
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+                });
+                if (res.ok) {
+                    cargarEventosAdmin();
+                } else {
+                    const data = await res.json();
+                    alert(data.error || "No se pudo eliminar el evento.");
+                }
+            } catch (err) {
+                console.error("Error al eliminar evento:", err);
+                alert("Error de conexión al intentar eliminar.");
+            }
+        }
+
+        // ==========================================
+        // MÓDULO DE PETICIONES DE ORACIÓN [NUEVO]
+        // ==========================================
+        async function cargarPeticionesAdmin() {
+            const tbody = document.getElementById("admin-prayers-list");
+            if (!tbody) return;
+            try {
+                const res = await fetch(`${API_URL}/api/prayers`, {
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+                });
+                const prayers = await res.json();
+                tbody.innerHTML = "";
+
+                if (!Array.isArray(prayers) || prayers.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">No hay peticiones de oración registradas.</td></tr>`;
+                    return;
+                }
+
+                prayers.forEach(prayer => {
+                    const id = prayer.id || prayer._id;
+                    const nombre = prayer.name || prayer.nombre || "Anónimo";
+                    const peticion = prayer.request || prayer.peticion || "";
+                    const fecha = prayer.date ? new Date(prayer.date).toLocaleDateString() : "Reciente";
+
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-4 font-bold text-slate-900">${nombre}</td>
+                            <td class="p-4 text-slate-700 max-w-md leading-relaxed">${peticion}</td>
+                            <td class="p-4 text-xs text-slate-500">${fecha}</td>
+                            <td class="p-4 text-center">
+                                <button onclick="eliminarPeticion(${id})" class="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm">Atendida / Borrar ✅</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error("Error al cargar peticiones:", err);
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-red-500">Error al conectar con la base de datos de peticiones.</td></tr>`;
+            }
+        }
+
+        async function eliminarPeticion(id) {
+            if (!confirm("¿Deseas marcar esta petición como atendida y retirarla del panel?")) return;
+            try {
+                const res = await fetch(`${API_URL}/api/prayers/${id}`, {
+                    method: "DELETE",
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+                });
+                if (res.ok) {
+                    cargarPeticionesAdmin();
+                } else {
+                    alert("No se pudo eliminar la petición.");
+                }
+            } catch (err) {
+                console.error("Error al eliminar petición:", err);
+                alert("Error de conexión.");
+            }
+        }
+
+        // ==========================================
+        // MÓDULO DE GESTIÓN DE USUARIOS
+        // ==========================================
+        async function cargarUsuariosAdmin() {
+            const tbody = document.getElementById("admin-users-list");
+            if (!tbody) return;
+            try {
+                const res = await fetch(`${API_URL}/api/users`, {
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+                });
+                const users = await res.json();
+                usuariosCargados = users;
+                tbody.innerHTML = "";
+                if (!Array.isArray(users) || users.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">No hay usuarios registrados.</td></tr>`;
+                    return;
+                }
+                users.forEach((user, idx) => {
+                    const id = user.id || user._id;
+                    const nombre = user.name || user.nombre || "Sin nombre";
+                    const email = user.email || user.correo || "N/A";
+                    const rol = user.role || user.rol || "secretary";
+                    const roleLabels = {
+                        admin: "Administrador General",
+                        pastor: "Pastor",
+                        secretary: "Secretaría",
+                        contador: "Contabilidad"
+                    };
+
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-4 font-bold text-slate-900">${nombre}</td>
+                            <td class="p-4 text-slate-600">${email}</td>
+                            <td class="p-4"><span class="bg-indigo-50 text-indigo-700 text-xs px-2.5 py-1 rounded-md font-semibold">${roleLabels[rol] || rol}</span></td>
+                            <td class="p-4 text-center space-x-2">
+                                <button onclick="prepararEdicionUsuario(${idx})" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm">Editar ✏️</button>
+                                <button onclick="eliminarUsuario(${id})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm">Eliminar 🗑️</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error("Error al cargar usuarios:", err);
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-red-500">Error al conectar con el servidor de usuarios.</td></tr>`;
+            }
+        }
+
+        function prepararEdicionUsuario(index) {
+            const user = usuariosCargados[index];
+            if (!user) return;
+            document.getElementById("user-id").value = user.id || user._id;
+            document.getElementById("new-name").value = user.name || user.nombre || "";
+            document.getElementById("new-email").value = user.email || user.correo || "";
+            document.getElementById("new-password").value = "";
+            document.getElementById("new-role").value = user.role || user.rol || "secretary";
+
+            document.getElementById("user-form-title").textContent = "Editar Usuario";
+            document.getElementById("submit-user-btn").textContent = "Guardar Cambios 🔄";
+            document.getElementById("cancel-user-edit-btn").classList.remove("hidden");
+            document.getElementById("pwd-label-hint").textContent = "(Déjalo en blanco para mantener la actual)";
+            const badge = document.getElementById("user-form-mode-badge");
+            badge.textContent = "Modo: Editar";
+            badge.className = "bg-amber-100 text-amber-800 text-xs font-semibold px-3 py-1 rounded-full";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetUserForm() {
+            document.getElementById("admin-user-form").reset();
+            document.getElementById("user-id").value = "";
+            document.getElementById("user-form-title").textContent = "Registrar Nuevo Usuario";
+            document.getElementById("submit-user-btn").textContent = "Crear Cuenta de Usuario 🔑";
+            document.getElementById("cancel-user-edit-btn").classList.add("hidden");
+            document.getElementById("pwd-label-hint").textContent = "(Temporal)";
+            const badge = document.getElementById("user-form-mode-badge");
+            badge.textContent = "Modo: Crear";
+            badge.className = "bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full";
+        }
+
+        document.getElementById("admin-user-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const id = document.getElementById("user-id").value;
+            const name = document.getElementById("new-name").value;
+            const email = document.getElementById("new-email").value;
+            const password = document.getElementById("new-password").value;
+            const role = document.getElementById("new-role").value;
+            const msgBox = document.getElementById("user-msg");
+
+            const method = id ? "PUT" : "POST";
+            const url = id ? `${API_URL}/api/users/${id}` : `${API_URL}/api/auth/register`;
+            const bodyData = { name, email, role };
+            if (password) bodyData.password = password;
+
+            try {
+                const res = await fetch(url, {
+                    method: method,
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("token")
+                    },
+                    body: JSON.stringify(bodyData)
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    msgBox.className = "text-center text-sm font-medium mt-4 p-3 rounded-xl bg-green-50 text-green-700 border border-green-200";
+                    msgBox.textContent = id ? "¡Usuario actualizado exitosamente! 🔄✨" : "¡Usuario registrado con éxito! 🔐✨";
+                    resetUserForm();
+                    cargarUsuariosAdmin();
+                } else {
+                    throw new Error(data.error || "Error al procesar usuario");
+                }
+            } catch (err) {
+                msgBox.className = "text-center text-sm font-medium mt-4 p-3 rounded-xl bg-red-50 text-red-700 border border-red-200";
+                msgBox.textContent = "Hubo un error: " + err.message;
+            }
+            msgBox.classList.remove("hidden");
+        });
+
+        async function eliminarUsuario(id) {
+            if (!confirm("¿Estás seguro de que deseas eliminar este usuario del sistema?")) return;
+            try {
+                const res = await fetch(`${API_URL}/api/users/${id}`, {
+                    method: "DELETE",
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+                });
+                if (res.ok) {
+                    cargarUsuariosAdmin();
+                } else {
+                    const data = await res.json();
+                    alert(data.error || "No se pudo eliminar el usuario.");
+                }
+            } catch (err) {
+                console.error("Error al eliminar usuario:", err);
+                alert("Error de conexión al intentar eliminar.");
+            }
+        }
+
+        // ==========================================
+        // MÓDULO CONTABLE
         // ==========================================
         async function cargarContabilidad() {
             const token = localStorage.getItem("token");
@@ -653,7 +1126,6 @@
                     headers: { "Authorization": "Bearer " + token }
                 });
                 const transactions = await res.json();
-
                 if (Array.isArray(transactions)) {
                     transaccionesGlobales = transactions;
                     renderizarTablaContabilidad(transactions);
@@ -690,14 +1162,11 @@
             lista.forEach(tx => {
                 const monto = parseFloat(tx.amount || 0);
                 sumaTotal += monto;
-
-                const tipoLower = (tx.type || "").toLowerCase();
-                if (tipoLower.includes("diezmo")) {
+                if ((tx.type || "").toLowerCase().includes("diezmo")) {
                     sumaDiezmos += monto;
                 } else {
                     sumaOfrendas += monto;
                 }
-
                 const fecha = tx.date ? new Date(tx.date).toLocaleDateString() : "Reciente";
                 
                 tbody.innerHTML += `
@@ -711,7 +1180,6 @@
                     </tr>
                 `;
             });
-
             statTotal.textContent = `$${sumaTotal.toLocaleString()}`;
             statDiezmos.textContent = `$${sumaDiezmos.toLocaleString()}`;
             statOfrendas.textContent = `$${sumaOfrendas.toLocaleString()}`;
@@ -723,21 +1191,12 @@
             const fechaDesde = document.getElementById("filter-date-from").value;
 
             const filtradas = transaccionesGlobales.filter(tx => {
-                const donante = (tx.donor_name || "").toLowerCase();
-                const referencia = (tx.reference || "").toLowerCase();
-                const coincideTexto = donante.includes(textoBusqueda) || referencia.includes(textoBusqueda);
-                
+                const coincideTexto = (tx.donor_name || "").toLowerCase().includes(textoBusqueda) || (tx.reference || "").toLowerCase().includes(textoBusqueda);
                 const coincideTipo = (tipoFiltro === "ALL" || tx.type === tipoFiltro);
-
                 let coincideFecha = true;
-                if (fechaDesde && tx.date) {
-                    const fechaTx = tx.date.split("T")[0];
-                    coincideFecha = (fechaTx >= fechaDesde);
-                }
-
+                if (fechaDesde && tx.date) coincideFecha = (tx.date.split("T")[0] >= fechaDesde);
                 return coincideTexto && coincideTipo && coincideFecha;
             });
-
             renderizarTablaContabilidad(filtradas);
         }
 
@@ -753,25 +1212,13 @@
                 alert("No hay datos para exportar.");
                 return;
             }
-
             let csvContent = "data:text/csv;charset=utf-8,Tipo,Monto,Donante,Metodo de Pago,Referencia,Fecha\r\n";
-            
             transaccionesGlobales.forEach(tx => {
-                const fila = [
-                    tx.type,
-                    tx.amount,
-                    `"${tx.donor_name || 'Anónimo'}"`,
-                    `"${tx.payment_method}"`,
-                    `"${tx.reference || 'N/A'}"`,
-                    tx.date ? tx.date.split("T")[0] : ""
-                ].join(",");
-                csvContent += fila + "\r\n";
+                csvContent += [tx.type, tx.amount, `"${tx.donor_name || 'Anónimo'}"`, `"${tx.payment_method}"`, `"${tx.reference || 'N/A'}"`, tx.date ? tx.date.split("T")[0] : ""].join(",") + "\r\n";
             });
-
-            const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `reporte_contable_jehova_es_gloria_${new Date().toISOString().split('T')[0]}.csv`);
+            link.setAttribute("href", encodeURI(csvContent));
+            link.setAttribute("download", `reporte_contable_${new Date().toISOString().split('T')[0]}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -779,45 +1226,9 @@
 
         function imprimirReporteLimpio() {
             const printDateEl = document.getElementById("print-date");
-            if (printDateEl) {
-                printDateEl.textContent = new Date().toLocaleDateString("es-CO", { year: 'numeric', month: 'long', day: 'numeric' });
-            }
+            if (printDateEl) printDateEl.textContent = new Date().toLocaleDateString("es-CO", { year: 'numeric', month: 'long', day: 'numeric' });
             window.print();
         }
-
-        // Registrar Nuevo Usuario
-        document.getElementById("admin-user-form").addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const name = document.getElementById("new-name").value;
-            const email = document.getElementById("new-email").value;
-            const password = document.getElementById("new-password").value;
-            const role = document.getElementById("new-role").value;
-            const msgBox = document.getElementById("user-msg");
-
-            try {
-                const res = await fetch(`${API_URL}/api/auth/register`, {
-                    method: "POST",
-                    headers: { 
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + localStorage.getItem("token")
-                    },
-                    body: JSON.stringify({ name, email, password, role })
-                });
-                const data = await res.json();
-                if (res.ok) {
-                    msgBox.className = "text-center text-sm font-medium mt-4 p-3 rounded-xl bg-green-50 text-green-700 border border-green-200";
-                    msgBox.textContent = "¡Usuario registrado con éxito! 🔐✨";
-                    document.getElementById("admin-user-form").reset();
-                } else {
-                    throw new Error(data.error || "Error al registrar usuario");
-                }
-            } catch (err) {
-                msgBox.className = "text-center text-sm font-medium mt-4 p-3 rounded-xl bg-red-50 text-red-700 border border-red-200";
-                msgBox.textContent = "Hubo un error: " + err.message;
-            }
-            msgBox.classList.remove("hidden");
-        });
     </script>
-
 </body>
 </html>
