@@ -1,5 +1,4 @@
-const bcrypt = require('bcrypt');
-// Ajusta la ruta a tu conexión de PostgreSQL si es diferente (por ejemplo, '../../config/db' o '../db')
+const bcrypt = require('bcryptjs'); // Usando bcryptjs tal como acordamos para evitar problemas en la nube
 const pool = require('../config/db'); 
 
 /**
@@ -32,14 +31,15 @@ const updateUser = async (req, res) => {
             return res.status(404).json({ error: 'El usuario especificado no existe.' });
         }
 
-        // Si se proporciona una nueva contraseña válida, la ciframos con bcrypt
+        // Si se proporciona una nueva contraseña válida, la ciframos con bcryptjs
         if (password && password.trim() !== '') {
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
 
+            // CORREGIDO: Se usa password_hash en lugar de password
             const queryWithPassword = `
                 UPDATE users 
-                SET name = $1, email = $2, role = $3, password = $4 
+                SET name = $1, email = $2, role = $3, password_hash = $4 
                 WHERE id = $5 
                 RETURNING id, name, email, role;
             `;
