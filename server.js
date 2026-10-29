@@ -1,17 +1,19 @@
 const express = require('express');
 const path = require('path');
+const cors = require('cors'); // 👈 1. Importar cors
 const app = express();
 
 // Middlewares globales
+app.use(cors()); // 👈 2. Habilitar CORS para permitir peticiones desde Vercel
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // 📂 Rutas de la API
 const sermonRoutes = require('./src/routes/sermonRoutes'); 
-const authRoutes = require('./src/routes/authRoutes'); // 👈 Importamos las rutas de autenticación
+const authRoutes = require('./src/routes/authRoutes');
 
-app.use('/api/sermons', sermonRoutes); // Rutas públicas (GET) y protegidas (POST) de prédicas
-app.use('/api/auth', authRoutes);     // Rutas de registro y login de administradores (/api/auth/login)
+app.use('/api/sermons', sermonRoutes); 
+app.use('/api/auth', authRoutes);     
 
 // Puerto del servidor
 const PORT = process.env.PORT || 4000;
