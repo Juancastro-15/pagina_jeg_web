@@ -18,7 +18,7 @@ const sermonRoutes = require('./src/routes/sermonRoutes');
 const authRoutes = require('./src/routes/authRoutes');
 const accountingRoutes = require('./src/routes/accountingRoutes');
 const eventRoutes = require('./src/routes/eventRoutes');
-const userRoutes = require('./src/routes/userroutes');
+const userRoutes = require('./src/routes/userRoutes');
 const prayerRoutes = require('./src/routes/prayerRoutes'); // 👈 Importar rutas de peticiones de oración
 
 // ==========================================
