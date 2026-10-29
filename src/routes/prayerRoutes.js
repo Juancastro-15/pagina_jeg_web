@@ -3,13 +3,11 @@ const router = express.Router();
 const { getPrayers, createPrayer, deletePrayer } = require('../controllers/prayerController');
 const verifyToken = require('../middlewares/authMiddleware');
 
-// Ruta pública: Cualquier persona puede enviar su petición de oración[cite: 2]
-router.post('/', createPrayer);
+// Ruta pública para RECIBIR (POST) peticiones de oración o formulario de ministerios
+router.post('/', createPrayer); 
 
-// Ruta protegida: Solo los administradores pueden ver la lista de peticiones privadas[cite: 2]
+// Rutas protegidas para ver y eliminar
 router.get('/', verifyToken, getPrayers);
-
-// Ruta protegida: Eliminar / marcar como atendida una petición
 router.delete('/:id', verifyToken, deletePrayer);
 
 module.exports = router;
