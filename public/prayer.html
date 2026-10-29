@@ -8,22 +8,33 @@
 </head>
 <body class="bg-slate-50 font-sans text-slate-800">
 
-    <!-- Header / Barra de Navegación -->
+<!-- Header / Barra de Navegación Unificada -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            
+            <!-- LOGO Y NOMBRE DE LA IGLESIA -->
             <div class="flex items-center space-x-3">
-                <img src="\images\logo.png" alt="Logo Iglesia Jehová es Gloria" class="w-[60px] h-[60px] object-cover rounded-full shadow-md border border-blue-200">
+                <img src="\images\logo.png" alt="Logo" class="w-12 h-12 object-cover rounded-full shadow-md border border-blue-200">
                 <span class="text-xl font-bold text-blue-700">Jehová es Gloria</span>
             </div>
+
+            <!-- MENÚ DE NAVEGACIÓN ESTÁNDAR -->
             <nav class="hidden md:flex space-x-6 font-medium text-sm">
                 <a href="index.html" class="text-slate-600 hover:text-blue-800 transition">Inicio</a>
-                <a href="sermons.html" class="text-slate-600 hover:text-blue-800 transition">Prédicas</a>
                 <a href="events.html" class="text-slate-600 hover:text-blue-800 transition">Eventos</a>
+                <a href="sermons.html" class="text-slate-600 hover:text-blue-800 transition">Prédicas</a>
                 <a href="prayer.html" class="text-slate-600 hover:text-blue-800 transition">Oración</a>
             </nav>
-            <a href="index.html#location" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-md transition">
-                Contacto
-            </a>
+
+            <!-- ACCESOS RÁPIDOS Y LOGIN -->
+            <div class="flex items-center space-x-3">
+                <a href="https://linktr.ee/jehovaesgloria" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-md transition">
+                    Redes & Enlaces
+                </a>
+                <a href="login.html" class="text-xs text-slate-400 hover:text-blue-600 transition">
+                    🔒 Acceso Admin
+                </a>
+            </div>
         </div>
     </header>
 
@@ -83,9 +94,50 @@
         });
     </script>
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 py-8 text-center text-sm mt-20">
-        <p>&copy; 2026 Iglesia Internacional Jehová es Gloria. Todos los derechos reservados.</p>
+<!-- Footer Unificado con Ubicación, Contactos y Redes -->
+    <footer class="bg-slate-900 text-slate-400 pt-16 pb-8 border-t border-slate-800 mt-20">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10 pb-12 border-b border-slate-800 text-sm">
+            
+            <!-- Columna 1: Identidad -->
+            <div class="space-y-3">
+                <div class="flex items-center space-x-3">
+                    <img src="\images\logo.png" alt="Logo" class="w-10 h-10 object-cover rounded-full border border-blue-500">
+                    <span class="text-white font-bold text-base">Iglesia Jehová es Gloria</span>
+                </div>
+                <p class="text-slate-400 text-xs leading-relaxed">
+                    "Un lugar de esperanza, restauración y poder de Dios en Cartagena." Pastores Wilson Camacho y Ella Margarita Ribón.
+                </p>
+            </div>
+
+            <!-- Columna 2: Ubicación y Contacto -->
+            <div class="space-y-2">
+                <h4 class="text-white font-semibold text-sm mb-3">📍 Visítanos y Contáctanos</h4>
+                <p class="text-xs"><strong>Dirección:</strong> Barrio San Fernando, Sector Nueva Delhi (Frente a Tienda la Medusa).</p>
+                <p class="text-xs"><strong>Teléfonos:</strong> 313 5584881 - 310 6235032</p>
+                <div class="pt-2">
+                    <a href="https://maps.app.goo.gl/vRaLCr9WZDJeXqas9" target="_blank" class="text-blue-400 hover:text-blue-300 text-xs underline font-medium">
+                        Ver ubicación en Google Maps 📍
+                    </a>
+                </div>
+            </div>
+
+            <!-- Columna 3: Enlaces y Redes -->
+            <div class="space-y-2">
+                <h4 class="text-white font-semibold text-sm mb-3">🔗 Redes Oficiales</h4>
+                <p class="text-xs">Síguenos en nuestras plataformas:</p>
+                <div class="flex flex-col space-y-1.5 text-xs">
+                    <a href="https://facebook.com/iglesiajehovaesgloria" target="_blank" class="text-blue-400 hover:text-blue-300 underline">Facebook Oficial</a>
+                    <a href="https://instagram.com/iglesiajehovaesgloria" target="_blank" class="text-blue-400 hover:text-blue-300 underline">Instagram Oficial</a>
+                    <a href="https://linktr.ee/jehovaesgloria" target="_blank" class="text-blue-400 hover:text-blue-300 underline">Linktree (Todos los enlaces)</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Copyright inferior -->
+        <div class="max-w-7xl mx-auto px-6 pt-8 text-center text-xs text-slate-500">
+            <p>&copy; 2026 Iglesia Internacional Jehová es Gloria. Todos los derechos reservados.</p>
+        </div>
     </footer>
 
 </body>
