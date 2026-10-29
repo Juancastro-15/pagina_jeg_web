@@ -33,7 +33,7 @@
                 margin: 0 !important;
             }
 
-            #section-sermons, #section-events, #section-users, #section-prayers {
+            #section-sermons, #section-events, #section-users, #section-prayers, #section-ministries {
                 display: none !important;
             }
 
@@ -133,6 +133,7 @@
             <button onclick="switchTab('sermons')" id="tab-sermons" class="font-bold text-blue-600 border-b-2 border-blue-600 pb-2 px-2 transition whitespace-nowrap">📖 Prédicas</button>
             <button onclick="switchTab('events')" id="tab-events" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">📅 Eventos</button>
             <button onclick="switchTab('prayers')" id="tab-prayers" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">🙏 Peticiones de Oración</button>
+            <button onclick="switchTab('ministries')" id="tab-ministries" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">🤝 Ministerios</button>
             <button onclick="switchTab('users')" id="tab-users" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">👥 Usuarios</button>
             <button onclick="switchTab('accounting')" id="tab-accounting" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">📊 Contabilidad</button>
         </div>
@@ -312,7 +313,7 @@
             </div>
         </div>
 
-        <!-- SECCIÓN 3: Peticiones de Oración [NUEVO] -->
+        <!-- SECCIÓN 3: Peticiones de Oración -->
         <div id="section-prayers" class="hidden space-y-8">
             <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
                 <div class="flex justify-between items-center border-b border-slate-100 pb-4">
@@ -344,7 +345,41 @@
             </div>
         </div>
 
-        <!-- SECCIÓN 4: Gestión de Usuarios -->
+        <!-- SECCIÓN 4: Solicitudes de Ministerios [NUEVO] -->
+        <div id="section-ministries" class="hidden space-y-8">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
+                <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-slate-900">🤝 Solicitudes de Ministerios</h2>
+                        <p class="text-slate-600 text-sm mt-1">Hermanos interesados en unirse y servir en las distintas áreas de la iglesia.</p>
+                    </div>
+                    <button onclick="cargarMinisteriosAdmin()" class="bg-blue-50 text-blue-600 hover:bg-blue-100 px-4 py-2 rounded-xl text-xs font-bold transition">
+                        Actualizar Solicitudes 🔄
+                    </button>
+                </div>
+
+                <!-- Tabla de Ministerios -->
+                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200">
+                                <th class="p-4">Nombre</th>
+                                <th class="p-4">Teléfono</th>
+                                <th class="p-4">Ministerio</th>
+                                <th class="p-4">Experiencia / Notas</th>
+                                <th class="p-4">Fecha</th>
+                                <th class="p-4 text-center">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-ministries-list" class="text-sm divide-y divide-slate-100">
+                            <tr><td colspan="6" class="p-6 text-center text-slate-500 animate-pulse">Cargando solicitudes...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 5: Gestión de Usuarios -->
         <div id="section-users" class="hidden space-y-8">
             <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
                 <div class="flex justify-between items-center border-b border-slate-100 pb-4">
@@ -414,7 +449,7 @@
             </div>
         </div>
 
-        <!-- SECCIÓN 5: Contabilidad y Finanzas -->
+        <!-- SECCIÓN 6: Contabilidad y Finanzas -->
         <div id="section-accounting" class="hidden bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
             <div class="print-header">
                 <div>
@@ -557,6 +592,7 @@
             cargarPredicasAdmin();
             cargarEventosAdmin();
             cargarPeticionesAdmin();
+            cargarMinisteriosAdmin();
             cargarUsuariosAdmin();
             cargarContabilidad();
         });
@@ -565,6 +601,7 @@
             const tabSermons = document.getElementById("tab-sermons");
             const tabEvents = document.getElementById("tab-events");
             const tabPrayers = document.getElementById("tab-prayers");
+            const tabMinistries = document.getElementById("tab-ministries");
             const tabUsers = document.getElementById("tab-users");
             const tabAccounting = document.getElementById("tab-accounting");
 
@@ -573,6 +610,7 @@
             if (tabSermons) tabSermons.classList.add("hidden");
             if (tabEvents) tabEvents.classList.add("hidden");
             if (tabPrayers) tabPrayers.classList.add("hidden");
+            if (tabMinistries) tabMinistries.classList.add("hidden");
             if (tabUsers) tabUsers.classList.add("hidden");
             if (tabAccounting) tabAccounting.classList.add("hidden");
 
@@ -583,11 +621,13 @@
                 if (tabSermons) tabSermons.classList.remove("hidden");
                 if (tabEvents) tabEvents.classList.remove("hidden");
                 if (tabPrayers) tabPrayers.classList.remove("hidden");
+                if (tabMinistries) tabMinistries.classList.remove("hidden");
                 switchTab("sermons");
             } else if (normalizedRole === "pastor" || normalizedRole === "admin") {
                 if (tabSermons) tabSermons.classList.remove("hidden");
                 if (tabEvents) tabEvents.classList.remove("hidden");
                 if (tabPrayers) tabPrayers.classList.remove("hidden");
+                if (tabMinistries) tabMinistries.classList.remove("hidden");
                 if (tabUsers) tabUsers.classList.remove("hidden");
                 if (tabAccounting) tabAccounting.classList.remove("hidden");
                 switchTab("sermons");
@@ -601,18 +641,21 @@
             const secSermons = document.getElementById("section-sermons");
             const secEvents = document.getElementById("section-events");
             const secPrayers = document.getElementById("section-prayers");
+            const secMinistries = document.getElementById("section-ministries");
             const secUsers = document.getElementById("section-users");
             const secAccounting = document.getElementById("section-accounting");
 
             const tabSermons = document.getElementById("tab-sermons");
             const tabEvents = document.getElementById("tab-events");
             const tabPrayers = document.getElementById("tab-prayers");
+            const tabMinistries = document.getElementById("tab-ministries");
             const tabUsers = document.getElementById("tab-users");
             const tabAccounting = document.getElementById("tab-accounting");
 
             if (secSermons) secSermons.classList.add("hidden");
             if (secEvents) secEvents.classList.add("hidden");
             if (secPrayers) secPrayers.classList.add("hidden");
+            if (secMinistries) secMinistries.classList.add("hidden");
             if (secUsers) secUsers.classList.add("hidden");
             if (secAccounting) secAccounting.classList.add("hidden");
 
@@ -633,12 +676,14 @@
             updateTabStyle(tabSermons, tab === 'sermons');
             updateTabStyle(tabEvents, tab === 'events');
             updateTabStyle(tabPrayers, tab === 'prayers');
+            updateTabStyle(tabMinistries, tab === 'ministries');
             updateTabStyle(tabUsers, tab === 'users');
             updateTabStyle(tabAccounting, tab === 'accounting');
 
             if (tab === 'sermons' && secSermons) secSermons.classList.remove("hidden");
             if (tab === 'events' && secEvents) secEvents.classList.remove("hidden");
             if (tab === 'prayers' && secPrayers) secPrayers.classList.remove("hidden");
+            if (tab === 'ministries' && secMinistries) secMinistries.classList.remove("hidden");
             if (tab === 'users' && secUsers) secUsers.classList.remove("hidden");
             if (tab === 'accounting' && secAccounting) secAccounting.classList.remove("hidden");
         }
@@ -922,7 +967,7 @@
         }
 
         // ==========================================
-        // MÓDULO DE PETICIONES DE ORACIÓN [NUEVO]
+        // MÓDULO DE PETICIONES DE ORACIÓN
         // ==========================================
         async function cargarPeticionesAdmin() {
             const tbody = document.getElementById("admin-prayers-list");
@@ -976,6 +1021,71 @@
                 }
             } catch (err) {
                 console.error("Error al eliminar petición:", err);
+                alert("Error de conexión.");
+            }
+        }
+
+        // ==========================================
+        // MÓDULO DE SOLICITUDES DE MINISTERIOS [NUEVO]
+        // ==========================================
+        async function cargarMinisteriosAdmin() {
+            const tbody = document.getElementById("admin-ministries-list");
+            if (!tbody) return;
+            try {
+                const res = await fetch(`${API_URL}/api/ministerios`, {
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+                });
+                const requests = await res.json();
+                tbody.innerHTML = "";
+
+                if (!Array.isArray(requests) || requests.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-500">No hay solicitudes de ministerios.</td></tr>`;
+                    return;
+                }
+
+                requests.forEach(req => {
+                    const id = req.id || req._id;
+                    const nombre = req.name || "Anónimo";
+                    const telefono = req.phone || "Sin teléfono";
+                    const ministerio = req.ministry_name || "General";
+                    const notas = req.notes || "Sin notas adicionales";
+                    const fecha = req.created_at ? new Date(req.created_at).toLocaleDateString() : "Reciente";
+
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-4 font-bold text-slate-900">${nombre}</td>
+                            <td class="p-4 text-slate-600">${telefono}</td>
+                            <td class="p-4"><span class="bg-blue-100 text-blue-700 text-xs px-2.5 py-1 rounded-full font-bold">${ministerio}</span></td>
+                            <td class="p-4 text-slate-600 text-xs max-w-xs">${notas}</td>
+                            <td class="p-4 text-xs text-slate-500">${fecha}</td>
+                            <td class="p-4 text-center">
+                                <button onclick="eliminarMinisterio(${id})" class="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm">
+                                    Atendido / Borrar ✅
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error("Error al cargar ministerios:", err);
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-red-500">Error al conectar con la base de datos de ministerios.</td></tr>`;
+            }
+        }
+
+        async function eliminarMinisterio(id) {
+            if (!confirm("¿Deseas marcar esta solicitud como atendida y retirarla del panel?")) return;
+            try {
+                const res = await fetch(`${API_URL}/api/ministerios/${id}`, {
+                    method: "DELETE",
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+                });
+                if (res.ok) {
+                    cargarMinisteriosAdmin();
+                } else {
+                    alert("No se pudo eliminar la solicitud.");
+                }
+            } catch (err) {
+                console.error("Error al eliminar solicitud:", err);
                 alert("Error de conexión.");
             }
         }
