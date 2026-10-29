@@ -135,8 +135,11 @@
 
     </main>
 
-    <!-- Script JavaScript -->
+<!-- Script JavaScript -->
     <script>
+        // URL de tu backend desplegado en Render
+        const API_URL = "https://pagina-jeg-web.onrender.com";
+
         // Función auxiliar para decodificar el payload del JWT
         function parseJwt(token) {
             try {
@@ -243,14 +246,10 @@
             const inactiveClasses = ["font-medium", "text-slate-500", "hover:text-slate-800"];
             const activeClasses = ["font-bold", "text-blue-600", "border-b-2", "border-blue-600"];
 
-            // Función interna para actualizar estilos manteniendo la clase 'hidden' intacta
             const updateTabStyle = (tabElement, isActive) => {
                 if (!tabElement) return;
-                
-                // Si la pestaña está oculta por permisos de rol, NO tocamos sus clases de estado
                 if (tabElement.classList.contains("hidden")) return;
 
-                // Alternar estilos activo / inactivo
                 if (isActive) {
                     tabElement.classList.remove(...inactiveClasses);
                     tabElement.classList.add(...activeClasses);
@@ -260,12 +259,10 @@
                 }
             };
 
-            // Aplicar los cambios según la pestaña seleccionada
             updateTabStyle(tabSermons, tab === 'sermons');
             updateTabStyle(tabUsers, tab === 'users');
             updateTabStyle(tabAccounting, tab === 'accounting');
 
-            // 3. Mostrar la sección seleccionada
             if (tab === 'sermons' && secSermons) secSermons.classList.remove("hidden");
             if (tab === 'users' && secUsers) secUsers.classList.remove("hidden");
             if (tab === 'accounting' && secAccounting) secAccounting.classList.remove("hidden");
@@ -277,7 +274,7 @@
             window.location.href = "login.html";
         });
 
-        // 4. Enviar nueva prédica con JWT
+        // 4. Enviar nueva prédica con JWT hacia Render
         document.getElementById("admin-sermon-form").addEventListener("submit", async (e) => {
             e.preventDefault();
             const title = document.getElementById("title").value;
@@ -289,7 +286,7 @@
             const msgBox = document.getElementById("admin-msg");
 
             try {
-                const res = await fetch("/api/sermons", {
+                const res = await fetch(`${API_URL}/api/sermons`, {
                     method: "POST",
                     headers: { 
                         "Content-Type": "application/json",
@@ -312,7 +309,7 @@
             msgBox.classList.remove("hidden");
         });
 
-        // 5. Registrar nuevo usuario con rol asignado (Enviando token JWT)
+        // 5. Registrar nuevo usuario con rol asignado hacia Render
         document.getElementById("admin-user-form").addEventListener("submit", async (e) => {
             e.preventDefault();
             const name = document.getElementById("new-name").value;
@@ -322,7 +319,7 @@
             const msgBox = document.getElementById("user-msg");
 
             try {
-                const res = await fetch("/api/auth/register", {
+                const res = await fetch(`${API_URL}/api/auth/register`, {
                     method: "POST",
                     headers: { 
                         "Content-Type": "application/json",

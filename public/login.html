@@ -39,7 +39,10 @@
     </div>
 
     <!-- Script de Autenticación -->
-    <script>
+<script>
+        // URL de tu backend desplegado en Render (sin barra al final)
+        const API_URL = "https://pagina-jeg-web.onrender.com";
+
         document.getElementById("login-form").addEventListener("submit", async (e) => {
             e.preventDefault();
             const email = document.getElementById("email").value;
@@ -47,8 +50,8 @@
             const msgBox = document.getElementById("login-msg");
 
             try {
-                // Aquí se conectará con tu ruta de login en el backend (ej. /api/auth/login)
-                const res = await fetch("/api/auth/login", {
+                // Conectando correctamente a la URL absoluta de Render
+                const res = await fetch(`${API_URL}/api/auth/login`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ email, password })
