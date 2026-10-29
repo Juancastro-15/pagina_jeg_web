@@ -9,10 +9,10 @@
 <body class="bg-slate-100 font-sans text-slate-800">
 
     <!-- Header / Barra Superior del Admin -->
-    <header class="bg-white shadow-sm">
-        <div class="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <img src="/images/logo.png" alt="Logo" class="w-10 h-10 object-cover rounded-full border border-blue-200 shadow-sm">
+                <img src="images/logo.png" alt="Logo" class="w-10 h-10 object-cover rounded-full border border-blue-200 shadow-sm">
                 <div>
                     <h1 class="font-bold text-lg text-blue-700">Dashboard - Jehová es Gloria</h1>
                     <span id="user-role-badge" class="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 font-medium">Cargando rol...</span>
@@ -26,62 +26,106 @@
     </header>
 
     <!-- Contenido Principal -->
-    <main class="max-w-4xl mx-auto px-6 py-10 space-y-6">
+    <main class="max-w-6xl mx-auto px-6 py-10 space-y-8">
         
-        <!-- Pestañas de navegación interna del Dashboard (Se filtran por rol) -->
+        <!-- Pestañas de navegación interna del Dashboard -->
         <div class="flex space-x-4 border-b border-slate-200 pb-3 overflow-x-auto">
-            <button onclick="switchTab('sermons')" id="tab-sermons" class="font-bold text-blue-600 border-b-2 border-blue-600 pb-2 px-2 transition whitespace-nowrap">📖 Publicar Prédica</button>
+            <button onclick="switchTab('sermons')" id="tab-sermons" class="font-bold text-blue-600 border-b-2 border-blue-600 pb-2 px-2 transition whitespace-nowrap">📖 Gestión de Prédicas</button>
             <button onclick="switchTab('users')" id="tab-users" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">👥 Registrar Usuario</button>
             <button onclick="switchTab('accounting')" id="tab-accounting" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">📊 Contabilidad y Finanzas</button>
         </div>
 
-        <!-- SECCIÓN 1: Formulario de Prédicas (Acceso: Admin, Pastor, Secretary) -->
-        <div id="section-sermons" class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
-            <div>
-                <h2 class="text-2xl font-extrabold text-slate-900">Publicar Nueva Prédica</h2>
-                <p class="text-slate-600 text-sm mt-1">Guarda el enlace de transmisión de Facebook en la base de datos.</p>
+        <!-- SECCIÓN 1: Gestión de Prédicas (Crear, Editar y Eliminar) -->
+        <div id="section-sermons" class="space-y-8">
+            
+            <!-- Formulario de Prédica (Modo Dual: Crear / Editar) -->
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
+                <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-slate-900" id="form-title">Publicar Nueva Prédica</h2>
+                        <p class="text-slate-600 text-sm mt-1">Ingresa o modifica la información del mensaje y su transmisión de Facebook.</p>
+                    </div>
+                    <span id="form-mode-badge" class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">Modo: Crear</span>
+                </div>
+
+                <form id="admin-sermon-form" class="space-y-4">
+                    <input type="hidden" id="sermon-id">
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Título de la Prédica</label>
+                        <input type="text" id="title" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="Ej. El poder de la fe y la obediencia">
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Categoría / Tipo</label>
+                            <input type="text" id="category" placeholder="Ej. Culto, Escuela Bíblica" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Predicador / Pastor</label>
+                            <input type="text" id="speaker" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="Ej. Pastor Wilson Camacho">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Fecha de la Prédica</label>
+                            <input type="date" id="date" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Breve Descripción</label>
+                        <textarea id="description" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="De qué trató el mensaje..."></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Enlace del Video en Facebook (link/video_url)</label>
+                        <input type="url" id="video_url" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="https://www.facebook.com/iglesiajehovaesgloria/videos/...">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Enlace de Audio (Opcional)</label>
+                        <input type="url" id="audio_url" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="https://...">
+                    </div>
+
+                    <div class="flex space-x-3 pt-2">
+                        <button type="submit" id="submit-sermon-btn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow transition text-sm">
+                            Publicar Prédica 🚀
+                        </button>
+                        <button type="button" id="cancel-edit-btn" onclick="resetSermonForm()" class="hidden bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-6 py-3 rounded-xl transition text-sm">
+                            Cancelar ❌
+                        </button>
+                    </div>
+                </form>
+                <div id="admin-msg" class="hidden text-center text-sm font-medium mt-4 p-3 rounded-xl"></div>
             </div>
 
-            <form id="admin-sermon-form" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Título de la Prédica</label>
-                    <input type="text" id="title" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="Ej. El poder de la fe y la obediencia">
+            <!-- Tabla de Prédicas Publicadas -->
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-slate-900">Prédicas Registradas en la BD</h3>
+                    <button onclick="cargarPredicasAdmin()" class="text-xs text-blue-600 hover:underline font-medium">Recargar Lista 🔄</button>
                 </div>
-
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Predicador / Pastor</label>
-                        <input type="text" id="speaker" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="Ej. Pastor Wilson Camacho">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Fecha de la Prédica</label>
-                        <input type="date" id="date" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm">
-                    </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+                                <th class="p-4">Título</th>
+                                <th class="p-4">Categoría / Autor</th>
+                                <th class="p-4">Fecha</th>
+                                <th class="p-4 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-sermons-list" class="text-sm divide-y divide-slate-100">
+                            <tr>
+                                <td colspan="4" class="p-6 text-center text-slate-500 animate-pulse">Cargando prédicas...</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+            </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Breve Descripción</label>
-                    <textarea id="description" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="De qué trató el mensaje..."></textarea>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Enlace del Video en Facebook</label>
-                    <input type="url" id="video_url" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="https://www.facebook.com/iglesiajehovaesgloria/videos/...">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Enlace de Audio (Opcional)</label>
-                    <input type="url" id="audio_url" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="https://...">
-                </div>
-
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow transition">
-                    Publicar Prédica 🚀
-                </button>
-            </form>
-            <div id="admin-msg" class="hidden text-center text-sm font-medium mt-4 p-3 rounded-xl"></div>
         </div>
 
-        <!-- SECCIÓN 2: Formulario de Registro de Nuevos Usuarios (Acceso: Admin, Pastor) -->
+        <!-- SECCIÓN 2: Formulario de Registro de Nuevos Usuarios -->
         <div id="section-users" class="hidden bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
             <div>
                 <h2 class="text-2xl font-extrabold text-slate-900">Registrar Nuevo Usuario</h2>
@@ -114,14 +158,14 @@
                     </select>
                 </div>
 
-                <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow transition">
+                <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow transition text-sm">
                     Crear Cuenta de Usuario 🔑
                 </button>
             </form>
             <div id="user-msg" class="hidden text-center text-sm font-medium mt-4 p-3 rounded-xl"></div>
         </div>
 
-        <!-- SECCIÓN 3: Contabilidad y Finanzas (Acceso: Admin, Pastor, Contador) -->
+        <!-- SECCIÓN 3: Contabilidad y Finanzas -->
         <div id="section-accounting" class="hidden bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
             <div>
                 <h2 class="text-2xl font-extrabold text-slate-900">Módulo de Contabilidad y Finanzas</h2>
@@ -135,12 +179,12 @@
 
     </main>
 
-<!-- Script JavaScript -->
+    <!-- Script JavaScript -->
     <script>
-        // URL de tu backend desplegado en Render
         const API_URL = "https://pagina-jeg-web.onrender.com";
+        let currentUserRole = "secretary";
+        let predicasCargadas = [];
 
-        // Función auxiliar para decodificar el payload del JWT
         function parseJwt(token) {
             try {
                 const base64Url = token.split('.')[1];
@@ -154,9 +198,6 @@
             }
         }
 
-        let currentUserRole = "secretary";
-
-        // 1. Validar autenticación y configurar UI según rol al cargar
         document.addEventListener("DOMContentLoaded", () => {
             const token = localStorage.getItem("token");
             if (!token) {
@@ -170,9 +211,6 @@
                 currentUserRole = payload.role;
             }
 
-            console.log("Rol detectado en el Token JWT:", currentUserRole);
-
-            // Actualizar etiqueta del rol en el header
             const roleBadge = document.getElementById("user-role-badge");
             const roleNames = {
                 admin: "Administrador General",
@@ -182,11 +220,10 @@
             };
             roleBadge.textContent = roleNames[currentUserRole] || currentUserRole;
 
-            // Configurar visibilidad de pestañas por rol
             applyRolePermissions(currentUserRole);
+            cargarPredicasAdmin();
         });
 
-        // Configuración estricta de permisos por Rol en el Frontend
         function applyRolePermissions(role) {
             const tabSermons = document.getElementById("tab-sermons");
             const tabUsers = document.getElementById("tab-users");
@@ -194,12 +231,10 @@
 
             const normalizedRole = (role || "").toLowerCase().trim();
 
-            // 1. Ocultar todas las pestañas de navegación por defecto
             if (tabSermons) tabSermons.classList.add("hidden");
             if (tabUsers) tabUsers.classList.add("hidden");
             if (tabAccounting) tabAccounting.classList.add("hidden");
 
-            // 2. Mostrar únicamente las pestañas permitidas según el rol
             if (normalizedRole === "contador") {
                 if (tabAccounting) tabAccounting.classList.remove("hidden");
                 switchTab("accounting");
@@ -217,17 +252,11 @@
             }
         }
 
-        // Control de pestañas (Respetando el ocultamiento estricto por rol)
         function switchTab(tab) {
             const normalizedRole = (currentUserRole || "").toLowerCase().trim();
 
-            // 🛡️ Validación de seguridad
-            if (tab === 'users' && normalizedRole !== 'admin' && normalizedRole !== 'pastor') {
-                return;
-            }
-            if (tab === 'accounting' && normalizedRole !== 'admin' && normalizedRole !== 'pastor' && normalizedRole !== 'contador') {
-                return;
-            }
+            if (tab === 'users' && normalizedRole !== 'admin' && normalizedRole !== 'pastor') return;
+            if (tab === 'accounting' && normalizedRole !== 'admin' && normalizedRole !== 'pastor' && normalizedRole !== 'contador') return;
 
             const secSermons = document.getElementById("section-sermons");
             const secUsers = document.getElementById("section-users");
@@ -237,12 +266,10 @@
             const tabUsers = document.getElementById("tab-users");
             const tabAccounting = document.getElementById("tab-accounting");
 
-            // 1. Ocultar todas las secciones de contenido
             if (secSermons) secSermons.classList.add("hidden");
             if (secUsers) secUsers.classList.add("hidden");
             if (secAccounting) secAccounting.classList.add("hidden");
 
-            // 2. Definir clases de estilo sin afectar la visibilidad 'hidden'
             const inactiveClasses = ["font-medium", "text-slate-500", "hover:text-slate-800"];
             const activeClasses = ["font-bold", "text-blue-600", "border-b-2", "border-blue-600"];
 
@@ -268,16 +295,100 @@
             if (tab === 'accounting' && secAccounting) secAccounting.classList.remove("hidden");
         }
 
-        // 3. Cerrar Sesión
         document.getElementById("logout-btn").addEventListener("click", () => {
             localStorage.removeItem("token");
             window.location.href = "login.html";
         });
 
-        // 4. Enviar nueva prédica con JWT hacia Render
+        // Cargar Lista de Prédicas en la Tabla
+        async function cargarPredicasAdmin() {
+            const tbody = document.getElementById("admin-sermons-list");
+            if (!tbody) return;
+
+            try {
+                const res = await fetch(`${API_URL}/api/sermons`);
+                const sermons = await res.json();
+                predicasCargadas = sermons;
+
+                tbody.innerHTML = "";
+
+                if (!Array.isArray(sermons) || sermons.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">No hay prédicas registradas.</td></tr>`;
+                    return;
+                }
+
+                sermons.forEach((sermon, idx) => {
+                    const id = sermon.id || sermon._id;
+                    const titulo = sermon.title || sermon.titulo || "Transmisión";
+                    const categoria = sermon.category || sermon.categoria || "Culto";
+                    const speaker = sermon.speaker || sermon.predicador || "Pastor";
+                    const fecha = sermon.date ? sermon.date.split("T")[0] : "Reciente";
+
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-4 font-bold text-slate-900">${titulo}</td>
+                            <td class="p-4">
+                                <span class="bg-blue-50 text-blue-600 text-xs px-2.5 py-1 rounded-md font-semibold inline-block mb-1">${categoria}</span>
+                                <div class="text-xs text-slate-500">${speaker}</div>
+                            </td>
+                            <td class="p-4 text-xs text-slate-500">${fecha}</td>
+                            <td class="p-4 text-center space-x-2">
+                                <button onclick="prepararEdicion(${idx})" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm">Editar ✏️</button>
+                                <button onclick="eliminarPredica(${id})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm">Eliminar 🗑️</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error("Error al cargar prédicas:", err);
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-red-500">Error al conectar con la base de datos.</td></tr>`;
+            }
+        }
+
+        // Cargar datos en el formulario para Editar
+        function prepararEdicion(index) {
+            const sermon = predicasCargadas[index];
+            if (!sermon) return;
+
+            document.getElementById("sermon-id").value = sermon.id || sermon._id;
+            document.getElementById("title").value = sermon.title || sermon.titulo || "";
+            document.getElementById("category").value = sermon.category || sermon.categoria || "";
+            document.getElementById("speaker").value = sermon.speaker || sermon.predicador || "";
+            document.getElementById("date").value = sermon.date ? sermon.date.split("T")[0] : "";
+            document.getElementById("description").value = sermon.description || sermon.descripcion || "";
+            document.getElementById("video_url").value = sermon.video_url || sermon.link || sermon.enlace || "";
+            document.getElementById("audio_url").value = sermon.audio_url || "";
+
+            document.getElementById("form-title").textContent = "Editar Prédica";
+            document.getElementById("submit-sermon-btn").textContent = "Guardar Cambios 🔄";
+            document.getElementById("cancel-edit-btn").classList.remove("hidden");
+            
+            const badge = document.getElementById("form-mode-badge");
+            badge.textContent = "Modo: Editar";
+            badge.className = "bg-amber-100 text-amber-800 text-xs font-semibold px-3 py-1 rounded-full";
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Cancelar edición y limpiar campos
+        function resetSermonForm() {
+            document.getElementById("admin-sermon-form").reset();
+            document.getElementById("sermon-id").value = "";
+            document.getElementById("form-title").textContent = "Publicar Nueva Prédica";
+            document.getElementById("submit-sermon-btn").textContent = "Publicar Prédica 🚀";
+            document.getElementById("cancel-edit-btn").classList.add("hidden");
+
+            const badge = document.getElementById("form-mode-badge");
+            badge.textContent = "Modo: Crear";
+            badge.className = "bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full";
+        }
+
+        // Guardar (POST o PUT según si hay ID)
         document.getElementById("admin-sermon-form").addEventListener("submit", async (e) => {
             e.preventDefault();
+            const id = document.getElementById("sermon-id").value;
             const title = document.getElementById("title").value;
+            const category = document.getElementById("category").value;
             const speaker = document.getElementById("speaker").value;
             const date = document.getElementById("date").value;
             const description = document.getElementById("description").value;
@@ -285,22 +396,35 @@
             const audio_url = document.getElementById("audio_url").value || null;
             const msgBox = document.getElementById("admin-msg");
 
+            const method = id ? "PUT" : "POST";
+            const url = id ? `${API_URL}/api/sermons/${id}` : `${API_URL}/api/sermons`;
+
             try {
-                const res = await fetch(`${API_URL}/api/sermons`, {
-                    method: "POST",
+                const res = await fetch(url, {
+                    method: method,
                     headers: { 
                         "Content-Type": "application/json",
                         "Authorization": "Bearer " + localStorage.getItem("token")
                     },
-                    body: JSON.stringify({ title, speaker, date, description, video_url, audio_url })
+                    body: JSON.stringify({ 
+                        title, 
+                        category, 
+                        speaker, 
+                        date, 
+                        description, 
+                        video_url, 
+                        link: video_url, 
+                        audio_url 
+                    })
                 });
                 const data = await res.json();
                 if (res.ok) {
                     msgBox.className = "text-center text-sm font-medium mt-4 p-3 rounded-xl bg-green-50 text-green-700 border border-green-200";
-                    msgBox.textContent = "¡Prédica publicada con éxito! 📖✨";
-                    document.getElementById("admin-sermon-form").reset();
+                    msgBox.textContent = id ? "¡Prédica actualizada exitosamente! 🔄✨" : "¡Prédica publicada con éxito! 📖✨";
+                    resetSermonForm();
+                    cargarPredicasAdmin();
                 } else {
-                    throw new Error(data.error || "Error al registrar la prédica");
+                    throw new Error(data.error || "Error al procesar la solicitud");
                 }
             } catch (err) {
                 msgBox.className = "text-center text-sm font-medium mt-4 p-3 rounded-xl bg-red-50 text-red-700 border border-red-200";
@@ -309,7 +433,31 @@
             msgBox.classList.remove("hidden");
         });
 
-        // 5. Registrar nuevo usuario con rol asignado hacia Render
+        // Eliminar Prédica
+        async function eliminarPredica(id) {
+            if (!confirm("¿Estás seguro de que deseas eliminar esta prédica?")) return;
+
+            try {
+                const res = await fetch(`${API_URL}/api/sermons/${id}`, {
+                    method: "DELETE",
+                    headers: { 
+                        "Authorization": "Bearer " + localStorage.getItem("token") 
+                    }
+                });
+
+                if (res.ok) {
+                    cargarPredicasAdmin();
+                } else {
+                    const data = await res.json();
+                    alert(data.error || "No se pudo eliminar la prédica.");
+                }
+            } catch (err) {
+                console.error("Error al eliminar:", err);
+                alert("Error de conexión al intentar eliminar.");
+            }
+        }
+
+        // Registrar Nuevo Usuario
         document.getElementById("admin-user-form").addEventListener("submit", async (e) => {
             e.preventDefault();
             const name = document.getElementById("new-name").value;
