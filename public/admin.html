@@ -5,6 +5,114 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración | Iglesia Jehová es Gloria</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- ESTILOS ESPECIALES PARA IMPRESIÓN / REPORTE PDF -->
+    <style>
+        @media print {
+            /* 1. Ocultar header, navegación, botones de acción y filtros */
+            header, 
+            .no-print, 
+            #logout-btn, 
+            button, 
+            input, 
+            select, 
+            .border-b.pb-3 {
+                display: none !important;
+            }
+
+            /* 2. Resetear fondos y márgenes de la página */
+            body {
+                background-color: #ffffff !important;
+                color: #000000 !important;
+                font-size: 12pt;
+                margin: 0;
+                padding: 0;
+            }
+
+            main {
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            /* 3. Asegurar que solo la sección contable sea visible */
+            #section-sermons, #section-users {
+                display: none !important;
+            }
+
+            #section-accounting {
+                display: block !important;
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+            }
+
+            /* 4. Encabezado membretado para la impresión */
+            .print-header {
+                display: flex !important;
+                align-items: center;
+                justify-content: space-between;
+                border-b: 2px solid #1e3a8a;
+                padding-bottom: 12px;
+                margin-bottom: 20px;
+            }
+
+            /* 5. Estilo limpio de las tarjetas de resumen */
+            .grid {
+                display: flex !important;
+                justify-content: space-between;
+                gap: 10px !important;
+                margin-bottom: 20px !important;
+            }
+
+            .grid > div {
+                border: 1px solid #cbd5e1 !important;
+                background-color: #f8fafc !important;
+                padding: 10px !important;
+                border-radius: 8px !important;
+                flex: 1;
+            }
+
+            /* 6. Estilo formal de la tabla contable */
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+            }
+
+            th, td {
+                border: 1px solid #cbd5e1 !important;
+                padding: 8px 12px !important;
+                text-align: left !important;
+                font-size: 10pt !important;
+            }
+
+            th {
+                background-color: #f1f5f9 !important;
+                color: #0f172a !important;
+                font-weight: bold !important;
+            }
+
+            /* 7. Pie de página para firmas en la impresión */
+            .print-footer {
+                display: flex !important;
+                justify-content: space-between;
+                margin-top: 50px;
+                padding-top: 20px;
+            }
+
+            .signature-box {
+                border-top: 1px solid #000;
+                width: 200px;
+                text-align: center;
+                font-size: 9pt;
+            }
+        }
+
+        /* Estilos en pantalla normal para elementos de impresión */
+        .print-header, .print-footer {
+            display: none;
+        }
+    </style>
 </head>
 <body class="bg-slate-100 font-sans text-slate-800">
 
@@ -29,16 +137,14 @@
     <main class="max-w-6xl mx-auto px-6 py-10 space-y-8">
         
         <!-- Pestañas de navegación interna del Dashboard -->
-        <div class="flex space-x-4 border-b border-slate-200 pb-3 overflow-x-auto">
+        <div class="flex space-x-4 border-b border-slate-200 pb-3 overflow-x-auto no-print">
             <button onclick="switchTab('sermons')" id="tab-sermons" class="font-bold text-blue-600 border-b-2 border-blue-600 pb-2 px-2 transition whitespace-nowrap">📖 Gestión de Prédicas</button>
             <button onclick="switchTab('users')" id="tab-users" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">👥 Registrar Usuario</button>
             <button onclick="switchTab('accounting')" id="tab-accounting" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">📊 Contabilidad y Finanzas</button>
         </div>
 
-        <!-- SECCIÓN 1: Gestión de Prédicas (Crear, Editar y Eliminar) -->
+        <!-- SECCIÓN 1: Gestión de Prédicas -->
         <div id="section-sermons" class="space-y-8">
-            
-            <!-- Formulario de Prédica (Modo Dual: Crear / Editar) -->
             <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
                 <div class="flex justify-between items-center border-b border-slate-100 pb-4">
                     <div>
@@ -98,7 +204,7 @@
                 <div id="admin-msg" class="hidden text-center text-sm font-medium mt-4 p-3 rounded-xl"></div>
             </div>
 
-            <!-- Tabla de Prédicas Publicadas -->
+            <!-- Tabla de Prédicas -->
             <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="p-6 border-b border-slate-100 flex justify-between items-center">
                     <h3 class="text-xl font-bold text-slate-900">Prédicas Registradas en la BD</h3>
@@ -122,10 +228,9 @@
                     </table>
                 </div>
             </div>
-
         </div>
 
-        <!-- SECCIÓN 2: Formulario de Registro de Nuevos Usuarios -->
+        <!-- SECCIÓN 2: Registro de Usuarios -->
         <div id="section-users" class="hidden bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
             <div>
                 <h2 class="text-2xl font-extrabold text-slate-900">Registrar Nuevo Usuario</h2>
@@ -165,37 +270,110 @@
             <div id="user-msg" class="hidden text-center text-sm font-medium mt-4 p-3 rounded-xl"></div>
         </div>
 
-        <!-- SECCIÓN 3: Contabilidad y Finanzas (Dinámico) -->
+        <!-- SECCIÓN 3: Contabilidad y Finanzas (Optimizado para Impresión) -->
         <div id="section-accounting" class="hidden bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
-            <div class="flex justify-between items-center border-b pb-4">
+            
+            <!-- Encabezado exclusivo de Impresión -->
+            <div class="print-header">
                 <div>
-                    <h2 class="text-2xl font-extrabold text-slate-900">Módulo de Contabilidad y Finanzas</h2>
-                    <p class="text-slate-600 text-sm mt-1">Control de ingresos por diezmos, ofrendas y donaciones en tiempo real.</p>
+                    <h1 style="font-size: 16pt; font-weight: bold; margin: 0;">Iglesia Jehová es Gloria</h1>
+                    <p style="font-size: 10pt; color: #475569; margin: 0;">Reporte Oficial de Contabilidad y Tesorería</p>
                 </div>
-                <div class="flex items-center space-x-3">
-                    <button onclick="cargarContabilidad()" class="text-xs text-blue-600 hover:underline font-medium">Actualizar 🔄</button>
-                    <div id="total-recaudado" class="bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded-2xl text-sm font-bold shadow-sm">
-                        Total: $0
-                    </div>
+                <div style="text-align: right;">
+                    <p style="font-size: 9pt; margin: 0;"><strong>Fecha del Reporte:</strong> <span id="print-date"></span></p>
                 </div>
             </div>
 
-            <div class="overflow-x-auto">
+            <!-- Encabezado del Módulo en Pantalla -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-4 gap-4 no-print">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">Módulo de Contabilidad y Finanzas</h2>
+                    <p class="text-slate-600 text-sm mt-1">Control avanzado de ingresos por diezmos, ofrendas y donaciones.</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="exportarAExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center space-x-1">
+                        <span>📥 Exportar Excel</span>
+                    </button>
+                    <button onclick="imprimirReporteLimpio()" class="bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center space-x-1">
+                        <span>🖨️ Imprimir Reporte</span>
+                    </button>
+                    <button onclick="cargarContabilidad()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 p-2 rounded-xl text-xs font-bold transition" title="Actualizar datos">
+                        🔄
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tarjetas de Balance / Resumen -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-green-50 border border-green-200 p-5 rounded-2xl shadow-sm">
+                    <span class="text-xs font-bold text-green-800 uppercase tracking-wider block">Total Recaudado</span>
+                    <h3 id="stat-total" class="text-2xl font-extrabold text-green-700 mt-1">$0</h3>
+                </div>
+                <div class="bg-blue-50 border border-blue-200 p-5 rounded-2xl shadow-sm">
+                    <span class="text-xs font-bold text-blue-800 uppercase tracking-wider block">Total Diezmos</span>
+                    <h3 id="stat-diezmos" class="text-2xl font-extrabold text-blue-700 mt-1">$0</h3>
+                </div>
+                <div class="bg-purple-50 border border-purple-200 p-5 rounded-2xl shadow-sm">
+                    <span class="text-xs font-bold text-purple-800 uppercase tracking-wider block">Total Ofrendas / Donaciones</span>
+                    <h3 id="stat-ofrendas" class="text-2xl font-extrabold text-purple-700 mt-1">$0</h3>
+                </div>
+            </div>
+
+            <!-- Barra de Filtros y Búsqueda -->
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 grid grid-cols-1 md:grid-cols-4 gap-4 items-end no-print">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Buscar Donante / Ref.</label>
+                    <input type="text" id="filter-search" oninput="filtrarTransacciones()" placeholder="Nombre o referencia..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Filtrar por Tipo</label>
+                    <select id="filter-type" onchange="filtrarTransacciones()" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                        <option value="ALL">Todos los tipos</option>
+                        <option value="Diezmo">Diezmo</option>
+                        <option value="Ofrenda">Ofrenda</option>
+                        <option value="Donación">Donación Especial</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Desde Fecha</label>
+                    <input type="date" id="filter-date-from" onchange="filtrarTransacciones()" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                </div>
+                <div>
+                    <button onclick="limpiarFiltros()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-xl transition text-xs">
+                        Limpiar Filtros ✖️
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tabla de Registros Contables -->
+            <div class="overflow-x-auto rounded-2xl border border-slate-200">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+                        <tr class="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200">
                             <th class="p-4">Tipo</th>
-                            <th class="p-4">Monto</th>
+                            <th class="p-4">Monto ($ COP)</th>
                             <th class="p-4">Feligrés / Donante</th>
                             <th class="p-4">Método de Pago</th>
+                            <th class="p-4">Referencia</th>
                             <th class="p-4">Fecha</th>
                         </tr>
                     </thead>
                     <tbody id="admin-accounting-list" class="text-sm divide-y divide-slate-100">
-                        <tr><td colspan="5" class="p-6 text-center text-slate-500 animate-pulse">Cargando registros contables...</td></tr>
+                        <tr><td colspan="6" class="p-6 text-center text-slate-500 animate-pulse">Cargando registros contables...</td></tr>
                     </tbody>
                 </table>
             </div>
+
+            <!-- Pie de página para firmas en la Impresión -->
+            <div class="print-footer">
+                <div class="signature-box">
+                    <p style="margin-top: 30px;">Firma del Tesorero / Contador</p>
+                </div>
+                <div class="signature-box">
+                    <p style="margin-top: 30px;">Firma del Pastor General</p>
+                </div>
+            </div>
+
         </div>
 
     </main>
@@ -205,6 +383,7 @@
         const API_URL = "https://pagina-jeg-web.onrender.com";
         let currentUserRole = "secretary";
         let predicasCargadas = [];
+        let transaccionesGlobales = [];
 
         function parseJwt(token) {
             try {
@@ -322,7 +501,7 @@
             window.location.href = "login.html";
         });
 
-        // Cargar Lista de Prédicas en la Tabla
+        // Cargar Lista de Prédicas
         async function cargarPredicasAdmin() {
             const tbody = document.getElementById("admin-sermons-list");
             if (!tbody) return;
@@ -367,7 +546,6 @@
             }
         }
 
-        // Cargar datos en el formulario para Editar
         function prepararEdicion(index) {
             const sermon = predicasCargadas[index];
             if (!sermon) return;
@@ -392,7 +570,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Cancelar edición y limpiar campos
         function resetSermonForm() {
             document.getElementById("admin-sermon-form").reset();
             document.getElementById("sermon-id").value = "";
@@ -405,7 +582,6 @@
             badge.className = "bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full";
         }
 
-        // Guardar (POST o PUT según si hay ID)
         document.getElementById("admin-sermon-form").addEventListener("submit", async (e) => {
             e.preventDefault();
             const id = document.getElementById("sermon-id").value;
@@ -428,16 +604,7 @@
                         "Content-Type": "application/json",
                         "Authorization": "Bearer " + localStorage.getItem("token")
                     },
-                    body: JSON.stringify({ 
-                        title, 
-                        category, 
-                        speaker, 
-                        date, 
-                        description, 
-                        video_url, 
-                        link: video_url, 
-                        audio_url 
-                    })
+                    body: JSON.stringify({ title, category, speaker, date, description, video_url, link: video_url, audio_url })
                 });
                 const data = await res.json();
                 if (res.ok) {
@@ -455,16 +622,13 @@
             msgBox.classList.remove("hidden");
         });
 
-        // Eliminar Prédica
         async function eliminarPredica(id) {
             if (!confirm("¿Estás seguro de que deseas eliminar esta prédica?")) return;
 
             try {
                 const res = await fetch(`${API_URL}/api/sermons/${id}`, {
                     method: "DELETE",
-                    headers: { 
-                        "Authorization": "Bearer " + localStorage.getItem("token") 
-                    }
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
                 });
 
                 if (res.ok) {
@@ -479,48 +643,146 @@
             }
         }
 
-        // Cargar Datos Contables y Financieros en el Admin
+        // ==========================================
+        // MÓDULO CONTABLE: CARGA, FILTROS Y EXCEL
+        // ==========================================
         async function cargarContabilidad() {
-            const tbody = document.getElementById("admin-accounting-list");
-            const totalBox = document.getElementById("total-recaudado");
             const token = localStorage.getItem("token");
-            if (!tbody) return;
-
             try {
                 const res = await fetch(`${API_URL}/api/accounting`, {
                     headers: { "Authorization": "Bearer " + token }
                 });
                 const transactions = await res.json();
 
-                tbody.innerHTML = "";
-                let sumaTotal = 0;
-
-                if (!Array.isArray(transactions) || transactions.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">No hay registros financieros aún.</td></tr>`;
-                    totalBox.textContent = "Total: $0";
-                    return;
+                if (Array.isArray(transactions)) {
+                    transaccionesGlobales = transactions;
+                    renderizarTablaContabilidad(transactions);
+                } else {
+                    transaccionesGlobales = [];
+                    renderizarTablaContabilidad([]);
                 }
-
-                transactions.forEach(tx => {
-                    sumaTotal += parseFloat(tx.amount || 0);
-                    const fecha = tx.date ? new Date(tx.date).toLocaleDateString() : "Reciente";
-                    
-                    tbody.innerHTML += `
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="p-4 font-semibold text-slate-900"><span class="bg-blue-50 text-blue-600 text-xs px-2.5 py-1 rounded-md">${tx.type}</span></td>
-                            <td class="p-4 font-bold text-green-600">$${Number(tx.amount).toLocaleString()}</td>
-                            <td class="p-4 text-slate-700">${tx.donor_name}</td>
-                            <td class="p-4 text-xs text-slate-500">${tx.payment_method}</td>
-                            <td class="p-4 text-xs text-slate-500">${fecha}</td>
-                        </tr>
-                    `;
-                });
-
-                totalBox.textContent = `Total Recaudado: $${sumaTotal.toLocaleString()}`;
             } catch (err) {
                 console.error("Error al cargar contabilidad:", err);
-                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-red-500">Error al conectar con la base de datos financiera.</td></tr>`;
+                document.getElementById("admin-accounting-list").innerHTML = `<tr><td colspan="6" class="p-6 text-center text-red-500">Error al conectar con la base de datos financiera.</td></tr>`;
             }
+        }
+
+        function renderizarTablaContabilidad(lista) {
+            const tbody = document.getElementById("admin-accounting-list");
+            const statTotal = document.getElementById("stat-total");
+            const statDiezmos = document.getElementById("stat-diezmos");
+            const statOfrendas = document.getElementById("stat-ofrendas");
+            if (!tbody) return;
+
+            tbody.innerHTML = "";
+            let sumaTotal = 0;
+            let sumaDiezmos = 0;
+            let sumaOfrendas = 0;
+
+            if (lista.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-500">No se encontraron registros financieros.</td></tr>`;
+                statTotal.textContent = "$0";
+                statDiezmos.textContent = "$0";
+                statOfrendas.textContent = "$0";
+                return;
+            }
+
+            lista.forEach(tx => {
+                const monto = parseFloat(tx.amount || 0);
+                sumaTotal += monto;
+
+                const tipoLower = (tx.type || "").toLowerCase();
+                if (tipoLower.includes("diezmo")) {
+                    sumaDiezmos += monto;
+                } else {
+                    sumaOfrendas += monto;
+                }
+
+                const fecha = tx.date ? new Date(tx.date).toLocaleDateString() : "Reciente";
+                
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-4 font-semibold text-slate-900"><span class="bg-blue-50 text-blue-600 text-xs px-2.5 py-1 rounded-md">${tx.type}</span></td>
+                        <td class="p-4 font-bold text-green-600">$${Number(monto).toLocaleString()}</td>
+                        <td class="p-4 text-slate-700">${tx.donor_name || 'Anónimo'}</td>
+                        <td class="p-4 text-xs text-slate-500">${tx.payment_method}</td>
+                        <td class="p-4 text-xs font-mono text-slate-600">${tx.reference || 'N/A'}</td>
+                        <td class="p-4 text-xs text-slate-500">${fecha}</td>
+                    </tr>
+                `;
+            });
+
+            statTotal.textContent = `$${sumaTotal.toLocaleString()}`;
+            statDiezmos.textContent = `$${sumaDiezmos.toLocaleString()}`;
+            statOfrendas.textContent = `$${sumaOfrendas.toLocaleString()}`;
+        }
+
+        function filtrarTransacciones() {
+            const textoBusqueda = document.getElementById("filter-search").value.toLowerCase();
+            const tipoFiltro = document.getElementById("filter-type").value;
+            const fechaDesde = document.getElementById("filter-date-from").value;
+
+            const filtradas = transaccionesGlobales.filter(tx => {
+                const donante = (tx.donor_name || "").toLowerCase();
+                const referencia = (tx.reference || "").toLowerCase();
+                const coincideTexto = donante.includes(textoBusqueda) || referencia.includes(textoBusqueda);
+                
+                const coincideTipo = (tipoFiltro === "ALL" || tx.type === tipoFiltro);
+
+                let coincideFecha = true;
+                if (fechaDesde && tx.date) {
+                    const fechaTx = tx.date.split("T")[0];
+                    coincideFecha = (fechaTx >= fechaDesde);
+                }
+
+                return coincideTexto && coincideTipo && coincideFecha;
+            });
+
+            renderizarTablaContabilidad(filtradas);
+        }
+
+        function limpiarFiltros() {
+            document.getElementById("filter-search").value = "";
+            document.getElementById("filter-type").value = "ALL";
+            document.getElementById("filter-date-from").value = "";
+            renderizarTablaContabilidad(transaccionesGlobales);
+        }
+
+        function exportarAExcel() {
+            if (transaccionesGlobales.length === 0) {
+                alert("No hay datos para exportar.");
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,Tipo,Monto,Donante,Metodo de Pago,Referencia,Fecha\r\n";
+            
+            transaccionesGlobales.forEach(tx => {
+                const fila = [
+                    tx.type,
+                    tx.amount,
+                    `"${tx.donor_name || 'Anónimo'}"`,
+                    `"${tx.payment_method}"`,
+                    `"${tx.reference || 'N/A'}"`,
+                    tx.date ? tx.date.split("T")[0] : ""
+                ].join(",");
+                csvContent += fila + "\r\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `reporte_contable_jehova_es_gloria_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function imprimirReporteLimpio() {
+            const printDateEl = document.getElementById("print-date");
+            if (printDateEl) {
+                printDateEl.textContent = new Date().toLocaleDateString("es-CO", { year: 'numeric', month: 'long', day: 'numeric' });
+            }
+            window.print();
         }
 
         // Registrar Nuevo Usuario
