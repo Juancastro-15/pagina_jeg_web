@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diezmos y Ofrendas | Iglesia Jehová es Gloria</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 flex flex-col min-h-screen">
+
+    <!-- HEADER / NAVEGACIÓN PRINCIPAL -->
+    <header class="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="index.html" class="flex items-center space-x-3">
+                <img src="images/logo.png" alt="Logo Iglesia" class="w-10 h-10 object-cover rounded-full border border-blue-200 shadow-sm">
+                <span class="font-extrabold text-slate-900 text-lg tracking-tight">Jehová es Gloria</span>
+            </a>
+
+            <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-600">
+                <a href="index.html" class="hover:text-blue-600 transition">Inicio</a>
+                <a href="sermons.html" class="hover:text-blue-600 transition">Prédicas</a>
+                <a href="events.html" class="hover:text-blue-600 transition">Eventos</a>
+                <a href="prayer.html" class="hover:text-blue-600 transition">Peticiones</a>
+                <a href="donations.html" class="bg-blue-50 text-blue-700 hover:bg-blue-100 font-semibold px-4 py-2 rounded-xl transition border border-blue-200 shadow-sm flex items-center space-x-1">
+                    <span>💛 Donar / Ofrendar</span>
+                </a>
+            </nav>
+
+            <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs px-4 py-2 rounded-xl transition shadow-sm">
+                Acceso Admin 🔑
+            </a>
+        </div>
+    </header>
+
+    <!-- SECCIÓN PRINCIPAL -->
+    <main class="flex-grow max-w-2xl mx-auto px-6 py-12 space-y-8">
+        
+        <!-- ENCABEZADO Y VERSÍCULO -->
+        <div class="text-center space-y-3">
+            <span class="bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full border border-blue-100">Generosidad & Fe</span>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900">Diezmos, Ofrendas y Donaciones</h1>
+            <p class="text-slate-600 text-sm italic">
+                "Cada uno dé como propuso en su corazón: no con tristeza, ni por necesidad, porque Dios ama al dador alegre." 
+                <span class="font-semibold text-slate-800 text-xs block mt-1">— 2 Corintios 9:7</span>
+            </p>
+        </div>
+
+        <!-- FORMULARIO DE REGISTRO (PASO 1) - OBLIGATORIO EXCEPTO REFERENCIA -->
+        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
+            <div>
+                <h2 class="text-xl font-extrabold text-slate-900">✍️ Registrar tu Aporte</h2>
+                <p class="text-xs text-slate-500 mt-1">Completa los campos obligatorios para continuar con el pago y el registro contable.</p>
+            </div>
+
+            <form id="donation-form" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">Tipo de Aporte <span class="text-red-500">*</span></label>
+                    <select id="type" required class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
+                        <option value="" disabled selected>Selecciona una opción</option>
+                        <option value="Diezmo">Diezmo</option>
+                        <option value="Ofrenda">Ofrenda</option>
+                        <option value="Donación">Donación Especial</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">Monto ($ COP) <span class="text-red-500">*</span></label>
+                    <input type="number" id="amount" min="1" required class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600" placeholder="Ej. 50000">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">Nombre Completo (Opcional)</label>
+                    <input type="text" id="donor_name" class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600" placeholder="Déjalo vacío si prefieres que sea anónimo">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">Método de Pago Utilizado <span class="text-red-500">*</span></label>
+                    <select id="payment_method" required class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
+                        <option value="" disabled selected>Selecciona un método de pago</option>
+                        <option value="QR Bre-B">QR Bre-B (Llave: 0092960314)</option>
+                        <option value="Enlace de Pago">Nequi / Wompi Directo</option>
+                        <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+                        <option value="Efectivo">Efectivo (Entregado en Iglesia)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">Número de Referencia / Comprobante (Opcional)</label>
+                    <input type="text" id="reference" class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600" placeholder="Ej. #12345678">
+                </div>
+
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm flex items-center justify-center space-x-2">
+                    <span>Continuar al Pago y QR 📱</span>
+                </button>
+            </form>
+            <div id="donation-msg" class="hidden text-center text-sm font-medium p-3 rounded-xl"></div>
+        </div>
+    </main>
+
+    <!-- VENTANA EMERGENTE / MODAL DE PAGO (PASO 2) -->
+    <div id="payment-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 max-w-md w-full p-8 space-y-6 relative animate-in fade-in zoom-in duration-200">
+            
+            <!-- Botón cerrar modal -->
+            <button onclick="closeModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 font-bold text-lg bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition">
+                ✕
+            </button>
+
+            <div class="text-center space-y-1">
+                <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full">¡Registro Exitoso!</span>
+                <h3 class="text-2xl font-extrabold text-slate-900 mt-2">Realiza tu Pago</h3>
+                <p class="text-xs text-slate-500">Escanea el código QR o haz clic en el botón de la pasarela para completar tu aporte.</p>
+            </div>
+
+            <!-- Contenedor QR -->
+            <div class="text-center space-y-3">
+                <div class="p-3 bg-slate-50 rounded-2xl inline-block border border-slate-200 shadow-inner">
+                    <img src="images/qr-brebe.png" alt="QR Llave Bre-B Negocios" class="w-44 h-44 object-contain mx-auto rounded-xl">
+                </div>
+                
+                <div class="bg-blue-50/80 border border-blue-200 p-3 rounded-2xl text-left space-y-1">
+                    <p class="text-xs text-slate-700"><strong>Titular:</strong> Iglesia Jehová es Gloria</p>
+                    <p class="text-xs text-slate-700"><strong>Llave Bre-B:</strong> <span class="font-mono font-bold bg-white px-2 py-0.5 rounded border border-blue-100">0092960314</span></p>
+                </div>
+            </div>
+
+            <!-- Botón Grandecito para la Pasarela de Pago -->
+            <div>
+                <a href="https://checkout.nequi.wompi.co/l/VPOS_OAlESg" target="_blank" rel="noopener noreferrer" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold py-3.5 px-4 rounded-2xl shadow-lg transition flex items-center justify-center space-x-2 text-center text-sm">
+                    <span>💳 Ir a la Pasarela de Pago (Nequi/Wompi)</span>
+                </a>
+            </div>
+
+            <!-- Recordatorio WhatsApp -->
+            <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 font-medium flex items-start space-x-2">
+                <span>📌</span>
+                <span>Recuerda enviar tu comprobante al WhatsApp: <strong>3106235032</strong> para validar tu registro contable.</span>
+            </div>
+
+            <button onclick="closeModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl transition text-xs">
+                Cerrar Ventana ✖️
+            </button>
+        </div>
+    </div>
+
+    <!-- FOOTER / PIE DE PÁGINA -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12">
+        <div class="max-w-6xl mx-auto px-6 text-center text-xs text-slate-500">
+            <p>© 2026 Iglesia Jehová es Gloria. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- SCRIPT JS PARA VALIDAR FORMULARIO Y ABRIR MODAL -->
+    <script>
+        const API_URL = "https://pagina-jeg-web.onrender.com";
+
+        document.getElementById("donation-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const type = document.getElementById("type").value;
+            const amount = document.getElementById("amount").value;
+            const donor_name = document.getElementById("donor_name").value || "Anónimo";
+            const payment_method = document.getElementById("payment_method").value;
+            const reference = document.getElementById("reference").value || "N/A";
+            const msgBox = document.getElementById("donation-msg");
+
+            try {
+                // Paso 1: Enviar la transacción al backend en Render
+                const res = await fetch(`${API_URL}/api/accounting`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ type, amount, donor_name, payment_method, reference })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    // Limpiar formulario y mostrar la ventana emergente (Modal)
+                    document.getElementById("donation-form").reset();
+                    msgBox.classList.add("hidden");
+                    openModal();
+                } else {
+                    throw new Error(data.error || "No se pudo registrar el aporte.");
+                }
+            } catch (err) {
+                msgBox.className = "text-center text-sm font-medium p-3 rounded-xl bg-red-50 text-red-700 border border-red-200";
+                msgBox.textContent = "Error: " + err.message;
+                msgBox.classList.remove("hidden");
+            }
+        });
+
+        function openModal() {
+            document.getElementById("payment-modal").classList.remove("hidden");
+        }
+
+        function closeModal() {
+            document.getElementById("payment-modal").classList.add("hidden");
+        }
+    </script>
+</body>
+</html>

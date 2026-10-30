@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración | Iglesia Jehová es Gloria</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- ESTILOS ESPECIALES PARA IMPRESIÓN / REPORTE PDF -->
+    <style>
+        @media print {
+            /* 1. Ocultar header, navegación, botones de acción y filtros */
+            header, 
+            .no-print, 
+            #logout-btn, 
+            button, 
+            input, 
+            select, 
+            .border-b.pb-3 {
+                display: none !important;
+            }
+
+            /* 2. Resetear fondos y márgenes de la página */
+            body {
+                background-color: #ffffff !important;
+                color: #000000 !important;
+                font-size: 12pt;
+                margin: 0;
+                padding: 0;
+            }
+
+            main {
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            /* 3. Asegurar que solo la sección contable sea visible */
+            #section-sermons, #section-users {
+                display: none !important;
+            }
+
+            #section-accounting {
+                display: block !important;
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+            }
+
+            /* 4. Encabezado membretado para la impresión */
+            .print-header {
+                display: flex !important;
+                align-items: center;
+                justify-content: space-between;
+                border-b: 2px solid #1e3a8a;
+                padding-bottom: 12px;
+                margin-bottom: 20px;
+            }
+
+            /* 5. Estilo limpio de las tarjetas de resumen */
+            .grid {
+                display: flex !important;
+                justify-content: space-between;
+                gap: 10px !important;
+                margin-bottom: 20px !important;
+            }
+
+            .grid > div {
+                border: 1px solid #cbd5e1 !important;
+                background-color: #f8fafc !important;
+                padding: 10px !important;
+                border-radius: 8px !important;
+                flex: 1;
+            }
+
+            /* 6. Estilo formal de la tabla contable */
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+            }
+
+            th, td {
+                border: 1px solid #cbd5e1 !important;
+                padding: 8px 12px !important;
+                text-align: left !important;
+                font-size: 10pt !important;
+            }
+
+            th {
+                background-color: #f1f5f9 !important;
+                color: #0f172a !important;
+                font-weight: bold !important;
+            }
+
+            /* 7. Pie de página para firmas en la impresión */
+            .print-footer {
+                display: flex !important;
+                justify-content: space-between;
+                margin-top: 50px;
+                padding-top: 20px;
+            }
+
+            .signature-box {
+                border-top: 1px solid #000;
+                width: 200px;
+                text-align: center;
+                font-size: 9pt;
+            }
+        }
+
+        /* Estilos en pantalla normal para elementos de impresión */
+        .print-header, .print-footer {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans text-slate-800">
+
+    <!-- Header / Barra Superior del Admin -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img src="images/logo.png" alt="Logo" class="w-10 h-10 object-cover rounded-full border border-blue-200 shadow-sm">
+                <div>
+                    <h1 class="font-bold text-lg text-blue-700">Dashboard - Jehová es Gloria</h1>
+                    <span id="user-role-badge" class="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 font-medium">Cargando rol...</span>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="index.html" class="text-sm text-slate-600 hover:text-blue-600 transition font-medium">Ver sitio web 🌐</a>
+                <button id="logout-btn" class="text-sm bg-red-50 text-red-600 hover:bg-red-100 px-3 py-1.5 rounded-lg transition font-medium">Cerrar Sesión 🚪</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="max-w-6xl mx-auto px-6 py-10 space-y-8">
+        
+        <!-- Pestañas de navegación interna del Dashboard -->
+        <div class="flex space-x-4 border-b border-slate-200 pb-3 overflow-x-auto no-print">
+            <button onclick="switchTab('sermons')" id="tab-sermons" class="font-bold text-blue-600 border-b-2 border-blue-600 pb-2 px-2 transition whitespace-nowrap">📖 Gestión de Prédicas</button>
+            <button onclick="switchTab('users')" id="tab-users" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">👥 Registrar Usuario</button>
+            <button onclick="switchTab('accounting')" id="tab-accounting" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">📊 Contabilidad y Finanzas</button>
+        </div>
+
+        <!-- SECCIÓN 1: Gestión de Prédicas -->
+        <div id="section-sermons" class="space-y-8">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
+                <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-slate-900" id="form-title">Publicar Nueva Prédica</h2>
+                        <p class="text-slate-600 text-sm mt-1">Ingresa o modifica la información del mensaje y su transmisión de Facebook.</p>
+                    </div>
+                    <span id="form-mode-badge" class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">Modo: Crear</span>
+                </div>
+
+                <form id="admin-sermon-form" class="space-y-4">
+                    <input type="hidden" id="sermon-id">
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Título de la Prédica</label>
+                        <input type="text" id="title" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="Ej. El poder de la fe y la obediencia">
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Categoría / Tipo</label>
+                            <input type="text" id="category" placeholder="Ej. Culto, Escuela Bíblica" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Predicador / Pastor</label>
+                            <input type="text" id="speaker" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="Ej. Pastor Wilson Camacho">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Fecha de la Prédica</label>
+                            <input type="date" id="date" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Breve Descripción</label>
+                        <textarea id="description" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="De qué trató el mensaje..."></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Enlace del Video en Facebook (link/video_url)</label>
+                        <input type="url" id="video_url" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="https://www.facebook.com/iglesiajehovaesgloria/videos/...">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Enlace de Audio (Opcional)</label>
+                        <input type="url" id="audio_url" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="https://...">
+                    </div>
+
+                    <div class="flex space-x-3 pt-2">
+                        <button type="submit" id="submit-sermon-btn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow transition text-sm">
+                            Publicar Prédica 🚀
+                        </button>
+                        <button type="button" id="cancel-edit-btn" onclick="resetSermonForm()" class="hidden bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-6 py-3 rounded-xl transition text-sm">
+                            Cancelar ❌
+                        </button>
+                    </div>
+                </form>
+                <div id="admin-msg" class="hidden text-center text-sm font-medium mt-4 p-3 rounded-xl"></div>
+            </div>
+
+            <!-- Tabla de Prédicas -->
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-slate-900">Prédicas Registradas en la BD</h3>
+                    <button onclick="cargarPredicasAdmin()" class="text-xs text-blue-600 hover:underline font-medium">Recargar Lista 🔄</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+                                <th class="p-4">Título</th>
+                                <th class="p-4">Categoría / Autor</th>
+                                <th class="p-4">Fecha</th>
+                                <th class="p-4 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-sermons-list" class="text-sm divide-y divide-slate-100">
+                            <tr>
+                                <td colspan="4" class="p-6 text-center text-slate-500 animate-pulse">Cargando prédicas...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: Registro de Usuarios -->
+        <div id="section-users" class="hidden bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
+            <div>
+                <h2 class="text-2xl font-extrabold text-slate-900">Registrar Nuevo Usuario</h2>
+                <p class="text-slate-600 text-sm mt-1">Crea credenciales de acceso seguras asignando el rol correspondiente.</p>
+            </div>
+
+            <form id="admin-user-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Nombre Completo</label>
+                    <input type="text" id="new-name" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="Ej. Juan Pérez">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Correo Electrónico</label>
+                    <input type="email" id="new-email" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="colaborador@jehovaesgloria.com">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Contraseña Temporal</label>
+                    <input type="password" id="new-password" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="••••••••">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Rol en la Iglesia</label>
+                    <select id="new-role" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm">
+                        <option value="secretary">Secretario(a) / Comunicaciones</option>
+                        <option value="pastor">Pastor</option>
+                        <option value="contador">Contabilidad / Finanzas</option>
+                        <option value="admin">Administrador General</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow transition text-sm">
+                    Crear Cuenta de Usuario 🔑
+                </button>
+            </form>
+            <div id="user-msg" class="hidden text-center text-sm font-medium mt-4 p-3 rounded-xl"></div>
+        </div>
+
+        <!-- SECCIÓN 3: Contabilidad y Finanzas (Optimizado para Impresión) -->
+        <div id="section-accounting" class="hidden bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
+            
+            <!-- Encabezado exclusivo de Impresión -->
+            <div class="print-header">
+                <div>
+                    <h1 style="font-size: 16pt; font-weight: bold; margin: 0;">Iglesia Jehová es Gloria</h1>
+                    <p style="font-size: 10pt; color: #475569; margin: 0;">Reporte Oficial de Contabilidad y Tesorería</p>
+                </div>
+                <div style="text-align: right;">
+                    <p style="font-size: 9pt; margin: 0;"><strong>Fecha del Reporte:</strong> <span id="print-date"></span></p>
+                </div>
+            </div>
+
+            <!-- Encabezado del Módulo en Pantalla -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-4 gap-4 no-print">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">Módulo de Contabilidad y Finanzas</h2>
+                    <p class="text-slate-600 text-sm mt-1">Control avanzado de ingresos por diezmos, ofrendas y donaciones.</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="exportarAExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center space-x-1">
+                        <span>📥 Exportar Excel</span>
+                    </button>
+                    <button onclick="imprimirReporteLimpio()" class="bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center space-x-1">
+                        <span>🖨️ Imprimir Reporte</span>
+                    </button>
+                    <button onclick="cargarContabilidad()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 p-2 rounded-xl text-xs font-bold transition" title="Actualizar datos">
+                        🔄
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tarjetas de Balance / Resumen -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-green-50 border border-green-200 p-5 rounded-2xl shadow-sm">
+                    <span class="text-xs font-bold text-green-800 uppercase tracking-wider block">Total Recaudado</span>
+                    <h3 id="stat-total" class="text-2xl font-extrabold text-green-700 mt-1">$0</h3>
+                </div>
+                <div class="bg-blue-50 border border-blue-200 p-5 rounded-2xl shadow-sm">
+                    <span class="text-xs font-bold text-blue-800 uppercase tracking-wider block">Total Diezmos</span>
+                    <h3 id="stat-diezmos" class="text-2xl font-extrabold text-blue-700 mt-1">$0</h3>
+                </div>
+                <div class="bg-purple-50 border border-purple-200 p-5 rounded-2xl shadow-sm">
+                    <span class="text-xs font-bold text-purple-800 uppercase tracking-wider block">Total Ofrendas / Donaciones</span>
+                    <h3 id="stat-ofrendas" class="text-2xl font-extrabold text-purple-700 mt-1">$0</h3>
+                </div>
+            </div>
+
+            <!-- Barra de Filtros y Búsqueda -->
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 grid grid-cols-1 md:grid-cols-4 gap-4 items-end no-print">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Buscar Donante / Ref.</label>
+                    <input type="text" id="filter-search" oninput="filtrarTransacciones()" placeholder="Nombre o referencia..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Filtrar por Tipo</label>
+                    <select id="filter-type" onchange="filtrarTransacciones()" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                        <option value="ALL">Todos los tipos</option>
+                        <option value="Diezmo">Diezmo</option>
+                        <option value="Ofrenda">Ofrenda</option>
+                        <option value="Donación">Donación Especial</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Desde Fecha</label>
+                    <input type="date" id="filter-date-from" onchange="filtrarTransacciones()" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                </div>
+                <div>
+                    <button onclick="limpiarFiltros()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-xl transition text-xs">
+                        Limpiar Filtros ✖️
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tabla de Registros Contables -->
+            <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200">
+                            <th class="p-4">Tipo</th>
+                            <th class="p-4">Monto ($ COP)</th>
+                            <th class="p-4">Feligrés / Donante</th>
+                            <th class="p-4">Método de Pago</th>
+                            <th class="p-4">Referencia</th>
+                            <th class="p-4">Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-accounting-list" class="text-sm divide-y divide-slate-100">
+                        <tr><td colspan="6" class="p-6 text-center text-slate-500 animate-pulse">Cargando registros contables...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pie de página para firmas en la Impresión -->
+            <div class="print-footer">
+                <div class="signature-box">
+                    <p style="margin-top: 30px;">Firma del Tesorero / Contador</p>
+                </div>
+                <div class="signature-box">
+                    <p style="margin-top: 30px;">Firma del Pastor General</p>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Script JavaScript -->
+    <script>
+        const API_URL = "https://pagina-jeg-web.onrender.com";
+        let currentUserRole = "secretary";
+        let predicasCargadas = [];
+        let transaccionesGlobales = [];
+
+        function parseJwt(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                return JSON.parse(jsonPayload);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("Acceso no autorizado. Por favor inicia sesión.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            const payload = parseJwt(token);
+            if (payload && payload.role) {
+                currentUserRole = payload.role;
+            }
+
+            const roleBadge = document.getElementById("user-role-badge");
+            const roleNames = {
+                admin: "Administrador General",
+                pastor: "Pastor",
+                secretary: "Secretaría / Comunicaciones",
+                contador: "Contabilidad"
+            };
+            roleBadge.textContent = roleNames[currentUserRole] || currentUserRole;
+
+            applyRolePermissions(currentUserRole);
+            cargarPredicasAdmin();
+            cargarContabilidad();
+        });
+
+        function applyRolePermissions(role) {
+            const tabSermons = document.getElementById("tab-sermons");
+            const tabUsers = document.getElementById("tab-users");
+            const tabAccounting = document.getElementById("tab-accounting");
+
+            const normalizedRole = (role || "").toLowerCase().trim();
+
+            if (tabSermons) tabSermons.classList.add("hidden");
+            if (tabUsers) tabUsers.classList.add("hidden");
+            if (tabAccounting) tabAccounting.classList.add("hidden");
+
+            if (normalizedRole === "contador") {
+                if (tabAccounting) tabAccounting.classList.remove("hidden");
+                switchTab("accounting");
+            } else if (normalizedRole === "secretary" || normalizedRole === "secretario") {
+                if (tabSermons) tabSermons.classList.remove("hidden");
+                switchTab("sermons");
+            } else if (normalizedRole === "pastor" || normalizedRole === "admin") {
+                if (tabSermons) tabSermons.classList.remove("hidden");
+                if (tabUsers) tabUsers.classList.remove("hidden");
+                if (tabAccounting) tabAccounting.classList.remove("hidden");
+                switchTab("sermons");
+            } else {
+                if (tabSermons) tabSermons.classList.remove("hidden");
+                switchTab("sermons");
+            }
+        }
+
+        function switchTab(tab) {
+            const normalizedRole = (currentUserRole || "").toLowerCase().trim();
+
+            if (tab === 'users' && normalizedRole !== 'admin' && normalizedRole !== 'pastor') return;
+            if (tab === 'accounting' && normalizedRole !== 'admin' && normalizedRole !== 'pastor' && normalizedRole !== 'contador') return;
+
+            const secSermons = document.getElementById("section-sermons");
+            const secUsers = document.getElementById("section-users");
+            const secAccounting = document.getElementById("section-accounting");
+
+            const tabSermons = document.getElementById("tab-sermons");
+            const tabUsers = document.getElementById("tab-users");
+            const tabAccounting = document.getElementById("tab-accounting");
+
+            if (secSermons) secSermons.classList.add("hidden");
+            if (secUsers) secUsers.classList.add("hidden");
+            if (secAccounting) secAccounting.classList.add("hidden");
+
+            const inactiveClasses = ["font-medium", "text-slate-500", "hover:text-slate-800"];
+            const activeClasses = ["font-bold", "text-blue-600", "border-b-2", "border-blue-600"];
+
+            const updateTabStyle = (tabElement, isActive) => {
+                if (!tabElement) return;
+                if (tabElement.classList.contains("hidden")) return;
+
+                if (isActive) {
+                    tabElement.classList.remove(...inactiveClasses);
+                    tabElement.classList.add(...activeClasses);
+                } else {
+                    tabElement.classList.remove(...activeClasses);
+                    tabElement.classList.add(...inactiveClasses);
+                }
+            };
+
+            updateTabStyle(tabSermons, tab === 'sermons');
+            updateTabStyle(tabUsers, tab === 'users');
+            updateTabStyle(tabAccounting, tab === 'accounting');
+
+            if (tab === 'sermons' && secSermons) secSermons.classList.remove("hidden");
+            if (tab === 'users' && secUsers) secUsers.classList.remove("hidden");
+            if (tab === 'accounting' && secAccounting) secAccounting.classList.remove("hidden");
+        }
+
+        document.getElementById("logout-btn").addEventListener("click", () => {
+            localStorage.removeItem("token");
+            window.location.href = "login.html";
+        });
+
+        // Cargar Lista de Prédicas
+        async function cargarPredicasAdmin() {
+            const tbody = document.getElementById("admin-sermons-list");
+            if (!tbody) return;
+
+            try {
+                const res = await fetch(`${API_URL}/api/sermons`);
+                const sermons = await res.json();
+                predicasCargadas = sermons;
+
+                tbody.innerHTML = "";
+
+                if (!Array.isArray(sermons) || sermons.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">No hay prédicas registradas.</td></tr>`;
+                    return;
+                }
+
+                sermons.forEach((sermon, idx) => {
+                    const id = sermon.id || sermon._id;
+                    const titulo = sermon.title || sermon.titulo || "Transmisión";
+                    const categoria = sermon.category || sermon.categoria || "Culto";
+                    const speaker = sermon.speaker || sermon.predicador || "Pastor";
+                    const fecha = sermon.date ? sermon.date.split("T")[0] : "Reciente";
+
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-4 font-bold text-slate-900">${titulo}</td>
+                            <td class="p-4">
+                                <span class="bg-blue-50 text-blue-600 text-xs px-2.5 py-1 rounded-md font-semibold inline-block mb-1">${categoria}</span>
+                                <div class="text-xs text-slate-500">${speaker}</div>
+                            </td>
+                            <td class="p-4 text-xs text-slate-500">${fecha}</td>
+                            <td class="p-4 text-center space-x-2">
+                                <button onclick="prepararEdicion(${idx})" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm">Editar ✏️</button>
+                                <button onclick="eliminarPredica(${id})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm">Eliminar 🗑️</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error("Error al cargar prédicas:", err);
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-red-500">Error al conectar con la base de datos.</td></tr>`;
+            }
+        }
+
+        function prepararEdicion(index) {
+            const sermon = predicasCargadas[index];
+            if (!sermon) return;
+
+            document.getElementById("sermon-id").value = sermon.id || sermon._id;
+            document.getElementById("title").value = sermon.title || sermon.titulo || "";
+            document.getElementById("category").value = sermon.category || sermon.categoria || "";
+            document.getElementById("speaker").value = sermon.speaker || sermon.predicador || "";
+            document.getElementById("date").value = sermon.date ? sermon.date.split("T")[0] : "";
+            document.getElementById("description").value = sermon.description || sermon.descripcion || "";
+            document.getElementById("video_url").value = sermon.video_url || sermon.link || sermon.enlace || "";
+            document.getElementById("audio_url").value = sermon.audio_url || "";
+
+            document.getElementById("form-title").textContent = "Editar Prédica";
+            document.getElementById("submit-sermon-btn").textContent = "Guardar Cambios 🔄";
+            document.getElementById("cancel-edit-btn").classList.remove("hidden");
+            
+            const badge = document.getElementById("form-mode-badge");
+            badge.textContent = "Modo: Editar";
+            badge.className = "bg-amber-100 text-amber-800 text-xs font-semibold px-3 py-1 rounded-full";
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetSermonForm() {
+            document.getElementById("admin-sermon-form").reset();
+            document.getElementById("sermon-id").value = "";
+            document.getElementById("form-title").textContent = "Publicar Nueva Prédica";
+            document.getElementById("submit-sermon-btn").textContent = "Publicar Prédica 🚀";
+            document.getElementById("cancel-edit-btn").classList.add("hidden");
+
+            const badge = document.getElementById("form-mode-badge");
+            badge.textContent = "Modo: Crear";
+            badge.className = "bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full";
+        }
+
+        document.getElementById("admin-sermon-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const id = document.getElementById("sermon-id").value;
+            const title = document.getElementById("title").value;
+            const category = document.getElementById("category").value;
+            const speaker = document.getElementById("speaker").value;
+            const date = document.getElementById("date").value;
+            const description = document.getElementById("description").value;
+            const video_url = document.getElementById("video_url").value;
+            const audio_url = document.getElementById("audio_url").value || null;
+            const msgBox = document.getElementById("admin-msg");
+
+            const method = id ? "PUT" : "POST";
+            const url = id ? `${API_URL}/api/sermons/${id}` : `${API_URL}/api/sermons`;
+
+            try {
+                const res = await fetch(url, {
+                    method: method,
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("token")
+                    },
+                    body: JSON.stringify({ title, category, speaker, date, description, video_url, link: video_url, audio_url })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    msgBox.className = "text-center text-sm font-medium mt-4 p-3 rounded-xl bg-green-50 text-green-700 border border-green-200";
+                    msgBox.textContent = id ? "¡Prédica actualizada exitosamente! 🔄✨" : "¡Prédica publicada con éxito! 📖✨";
+                    resetSermonForm();
+                    cargarPredicasAdmin();
+                } else {
+                    throw new Error(data.error || "Error al procesar la solicitud");
+                }
+            } catch (err) {
+                msgBox.className = "text-center text-sm font-medium mt-4 p-3 rounded-xl bg-red-50 text-red-700 border border-red-200";
+                msgBox.textContent = "Hubo un error: " + err.message;
+            }
+            msgBox.classList.remove("hidden");
+        });
+
+        async function eliminarPredica(id) {
+            if (!confirm("¿Estás seguro de que deseas eliminar esta prédica?")) return;
+
+            try {
+                const res = await fetch(`${API_URL}/api/sermons/${id}`, {
+                    method: "DELETE",
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+                });
+
+                if (res.ok) {
+                    cargarPredicasAdmin();
+                } else {
+                    const data = await res.json();
+                    alert(data.error || "No se pudo eliminar la prédica.");
+                }
+            } catch (err) {
+                console.error("Error al eliminar:", err);
+                alert("Error de conexión al intentar eliminar.");
+            }
+        }
+
+        // ==========================================
+        // MÓDULO CONTABLE: CARGA, FILTROS Y EXCEL
+        // ==========================================
+        async function cargarContabilidad() {
+            const token = localStorage.getItem("token");
+            try {
+                const res = await fetch(`${API_URL}/api/accounting`, {
+                    headers: { "Authorization": "Bearer " + token }
+                });
+                const transactions = await res.json();
+
+                if (Array.isArray(transactions)) {
+                    transaccionesGlobales = transactions;
+                    renderizarTablaContabilidad(transactions);
+                } else {
+                    transaccionesGlobales = [];
+                    renderizarTablaContabilidad([]);
+                }
+            } catch (err) {
+                console.error("Error al cargar contabilidad:", err);
+                document.getElementById("admin-accounting-list").innerHTML = `<tr><td colspan="6" class="p-6 text-center text-red-500">Error al conectar con la base de datos financiera.</td></tr>`;
+            }
+        }
+
+        function renderizarTablaContabilidad(lista) {
+            const tbody = document.getElementById("admin-accounting-list");
+            const statTotal = document.getElementById("stat-total");
+            const statDiezmos = document.getElementById("stat-diezmos");
+            const statOfrendas = document.getElementById("stat-ofrendas");
+            if (!tbody) return;
+
+            tbody.innerHTML = "";
+            let sumaTotal = 0;
+            let sumaDiezmos = 0;
+            let sumaOfrendas = 0;
+
+            if (lista.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-500">No se encontraron registros financieros.</td></tr>`;
+                statTotal.textContent = "$0";
+                statDiezmos.textContent = "$0";
+                statOfrendas.textContent = "$0";
+                return;
+            }
+
+            lista.forEach(tx => {
+                const monto = parseFloat(tx.amount || 0);
+                sumaTotal += monto;
+
+                const tipoLower = (tx.type || "").toLowerCase();
+                if (tipoLower.includes("diezmo")) {
+                    sumaDiezmos += monto;
+                } else {
+                    sumaOfrendas += monto;
+                }
+
+                const fecha = tx.date ? new Date(tx.date).toLocaleDateString() : "Reciente";
+                
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-4 font-semibold text-slate-900"><span class="bg-blue-50 text-blue-600 text-xs px-2.5 py-1 rounded-md">${tx.type}</span></td>
+                        <td class="p-4 font-bold text-green-600">$${Number(monto).toLocaleString()}</td>
+                        <td class="p-4 text-slate-700">${tx.donor_name || 'Anónimo'}</td>
+                        <td class="p-4 text-xs text-slate-500">${tx.payment_method}</td>
+                        <td class="p-4 text-xs font-mono text-slate-600">${tx.reference || 'N/A'}</td>
+                        <td class="p-4 text-xs text-slate-500">${fecha}</td>
+                    </tr>
+                `;
+            });
+
+            statTotal.textContent = `$${sumaTotal.toLocaleString()}`;
+            statDiezmos.textContent = `$${sumaDiezmos.toLocaleString()}`;
+            statOfrendas.textContent = `$${sumaOfrendas.toLocaleString()}`;
+        }
+
+        function filtrarTransacciones() {
+            const textoBusqueda = document.getElementById("filter-search").value.toLowerCase();
+            const tipoFiltro = document.getElementById("filter-type").value;
+            const fechaDesde = document.getElementById("filter-date-from").value;
+
+            const filtradas = transaccionesGlobales.filter(tx => {
+                const donante = (tx.donor_name || "").toLowerCase();
+                const referencia = (tx.reference || "").toLowerCase();
+                const coincideTexto = donante.includes(textoBusqueda) || referencia.includes(textoBusqueda);
+                
+                const coincideTipo = (tipoFiltro === "ALL" || tx.type === tipoFiltro);
+
+                let coincideFecha = true;
+                if (fechaDesde && tx.date) {
+                    const fechaTx = tx.date.split("T")[0];
+                    coincideFecha = (fechaTx >= fechaDesde);
+                }
+
+                return coincideTexto && coincideTipo && coincideFecha;
+            });
+
+            renderizarTablaContabilidad(filtradas);
+        }
+
+        function limpiarFiltros() {
+            document.getElementById("filter-search").value = "";
+            document.getElementById("filter-type").value = "ALL";
+            document.getElementById("filter-date-from").value = "";
+            renderizarTablaContabilidad(transaccionesGlobales);
+        }
+
+        function exportarAExcel() {
+            if (transaccionesGlobales.length === 0) {
+                alert("No hay datos para exportar.");
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,Tipo,Monto,Donante,Metodo de Pago,Referencia,Fecha\r\n";
+            
+            transaccionesGlobales.forEach(tx => {
+                const fila = [
+                    tx.type,
+                    tx.amount,
+                    `"${tx.donor_name || 'Anónimo'}"`,
+                    `"${tx.payment_method}"`,
+                    `"${tx.reference || 'N/A'}"`,
+                    tx.date ? tx.date.split("T")[0] : ""
+                ].join(",");
+                csvContent += fila + "\r\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `reporte_contable_jehova_es_gloria_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function imprimirReporteLimpio() {
+            const printDateEl = document.getElementById("print-date");
+            if (printDateEl) {
+                printDateEl.textContent = new Date().toLocaleDateString("es-CO", { year: 'numeric', month: 'long', day: 'numeric' });
+            }
+            window.print();
+        }
+
+        // Registrar Nuevo Usuario
+        document.getElementById("admin-user-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const name = document.getElementById("new-name").value;
+            const email = document.getElementById("new-email").value;
+            const password = document.getElementById("new-password").value;
+            const role = document.getElementById("new-role").value;
+            const msgBox = document.getElementById("user-msg");
+
+            try {
+                const res = await fetch(`${API_URL}/api/auth/register`, {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("token")
+                    },
+                    body: JSON.stringify({ name, email, password, role })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    msgBox.className = "text-center text-sm font-medium mt-4 p-3 rounded-xl bg-green-50 text-green-700 border border-green-200";
+                    msgBox.textContent = "¡Usuario registrado con éxito! 🔐✨";
+                    document.getElementById("admin-user-form").reset();
+                } else {
+                    throw new Error(data.error || "Error al registrar usuario");
+                }
+            } catch (err) {
+                msgBox.className = "text-center text-sm font-medium mt-4 p-3 rounded-xl bg-red-50 text-red-700 border border-red-200";
+                msgBox.textContent = "Hubo un error: " + err.message;
+            }
+            msgBox.classList.remove("hidden");
+        });
+    </script>
+
+</body>
+</html>

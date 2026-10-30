@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iglesia Internacional Jehová es Gloria | Cartagena</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800">
+
+<!-- Header / Barra de Navegación Unificada -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            
+            <!-- LOGO Y NOMBRE DE LA IGLESIA -->
+            <div class="flex items-center space-x-3">
+                <img src="\images\logo.png" alt="Logo" class="w-12 h-12 object-cover rounded-full shadow-md border border-blue-200">
+                <span class="text-xl font-bold text-blue-700">Jehová es Gloria</span>
+            </div>
+
+            <!-- MENÚ DE NAVEGACIÓN ESTÁNDAR -->
+            <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-600">
+    <a href="index.html" class="hover:text-blue-600 transition">Inicio</a>
+    <a href="sermons.html" class="hover:text-blue-600 transition">Prédicas</a>
+    <a href="events.html" class="hover:text-blue-600 transition">Eventos</a>
+    <a href="prayer.html" class="hover:text-blue-600 transition">Peticiones</a>
+    <!-- Botón destacado o enlace directo a la pasarela y donaciones -->
+    <a href="donations.html" class="bg-blue-50 text-blue-700 hover:bg-blue-100 font-semibold px-4 py-2 rounded-xl transition border border-blue-200 shadow-sm flex items-center space-x-1">
+        <span>💛 Donar / Ofrendar</span>
+    </a>
+</nav>
+
+            <!-- ACCESOS RÁPIDOS Y LOGIN -->
+            <div class="flex items-center space-x-3">
+                <a href="https://linktr.ee/jehovaesgloria" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-md transition">
+                    Redes & Enlaces
+                </a>
+                <a href="login.html" class="text-xs text-slate-400 hover:text-blue-600 transition">
+                    🔒 Acceso Admin
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white py-20 px-6 text-center">
+        <div class="max-w-4xl mx-auto space-y-6">
+            <span class="bg-blue-800 text-blue-200 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Bienvenidos a Casa</span>
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight">Iglesia Internacional <br><span class="text-blue-400">Jehová es Gloria</span></h1>
+            <p class="text-lg text-slate-300">Pastores: Wilson Camacho y Ella Margarita Ribón</p>
+            <p class="text-sm text-slate-400 italic">"Un lugar de esperanza, restauración y poder de Dios en Cartagena."</p>
+            <div class="flex justify-center space-x-4 pt-4">
+                <a href="sermons.html" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-3 rounded-xl shadow-lg transition">
+                    Ver Prédicas
+                </a>
+                <a href="#services" class="bg-white hover:bg-slate-100 text-blue-900 font-bold px-6 py-3 rounded-xl shadow-lg transition">
+                    Nuestros Horarios
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Dinámica de Prédicas Recientes -->
+    <section id="sermons-section" class="py-16 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-12 space-y-2">
+            <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Palabra de Dios</span>
+            <h2 class="text-3xl font-extrabold text-slate-900">Prédicas y Transmisiones Recientes</h2>
+            <p class="text-slate-600 text-sm">Revive cada uno de nuestros mensajes compartidos y fortalece tu fe.</p>
+        </div>
+
+        <!-- Contenedor dinámico -->
+        <div id="sermons-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="col-span-full text-center py-12">
+                <p class="text-slate-500 animate-pulse text-sm">Cargando últimas prédicas...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Horarios y Servicios -->
+    <section id="services" class="bg-slate-100 py-16 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">Nuestros Servicios y Horarios</h2>
+                <p class="text-slate-600 mt-2">Acompaña a nuestra congregación en cada uno de nuestros espacios espirituales.</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="text-blue-600 font-bold text-lg">Martes</div>
+                    <div class="text-xl font-semibold text-slate-900 mt-1">Escuela Bíblica</div>
+                    <p class="text-slate-500 text-sm mt-2">7:00 PM</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="text-blue-600 font-bold text-lg">Viernes</div>
+                    <div class="text-xl font-semibold text-slate-900 mt-1">Servicio Evangelístico</div>
+                    <p class="text-slate-500 text-sm mt-2">7:00 PM</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="text-blue-600 font-bold text-lg">Sábados</div>
+                    <div class="text-xl font-semibold text-slate-900 mt-1">Ayuno Presencial</div>
+                    <p class="text-slate-500 text-sm mt-2">9:00 AM (En la iglesia)</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="text-blue-600 font-bold text-lg">Sábados</div>
+                    <div class="text-xl font-semibold text-slate-900 mt-1">Servicio de Jóvenes</div>
+                    <p class="text-slate-500 text-sm mt-2">6:30 PM</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="text-blue-600 font-bold text-lg">Domingos</div>
+                    <div class="text-xl font-semibold text-slate-900 mt-1">Escuela Dominical</div>
+                    <p class="text-slate-500 text-sm mt-2">8:00 AM</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="text-blue-600 font-bold text-lg">Lunes a Viernes</div>
+                    <div class="text-xl font-semibold text-slate-900 mt-1">Oración Virtual</div>
+                    <p class="text-slate-500 text-sm mt-2">4:00 AM (Por Facebook Live)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Ubicación y Contacto -->
+    <section id="location" class="py-16 px-6">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-4">
+                <span class="text-blue-600 font-semibold text-sm uppercase tracking-wider">¿Dónde nos reunimos?</span>
+                <h2 class="text-3xl font-bold text-slate-900">Visítanos en Cartagena</h2>
+                <p class="text-slate-600"><strong>Dirección:</strong> Barrio San Fernando, Sector Nueva Delhi (Frente a Tienda la Medusa).</p>
+                <p class="text-slate-600"><strong>Contactos:</strong> 313 5584881 - 310 6235032</p>
+                <div class="pt-4">
+                    <a href="https://maps.app.goo.gl/vRaLCr9WZDJeXqas9" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-xl shadow transition inline-block">
+                        Ver en Google Maps 📍
+                    </a>
+                </div>
+            </div>
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <h3 class="text-xl font-bold text-slate-900">Conéctate con nosotros</h3>
+                <p class="text-slate-600 text-sm">Síguenos en nuestras redes sociales oficiales y accede a todos nuestros recursos:</p>
+                <ul class="space-y-2 text-sm text-blue-600 font-medium">
+                    <li>👉 Instagram: <a href="https://instagram.com/iglesiajehovaesgloria" target="_blank" class="underline">@iglesiajehovaesgloria</a></li>
+                    <li>👉 Facebook: <a href="https://facebook.com/iglesiajehovaesgloria" target="_blank" class="underline">iglesiajehovaesgloria</a></li>
+                    <li>👉 Enlaces rápidos: <a href="https://linktr.ee/jehovaesgloria" target="_blank" class="underline">linktr.ee/jehovaesgloria</a></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+<!-- Footer Unificado con Ubicación, Contactos y Redes -->
+    <footer class="bg-slate-900 text-slate-400 pt-16 pb-8 border-t border-slate-800 mt-20">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10 pb-12 border-b border-slate-800 text-sm">
+            
+            <!-- Columna 1: Identidad -->
+            <div class="space-y-3">
+                <div class="flex items-center space-x-3">
+                    <img src="\images\logo.png" alt="Logo" class="w-10 h-10 object-cover rounded-full border border-blue-500">
+                    <span class="text-white font-bold text-base">Iglesia Jehová es Gloria</span>
+                </div>
+                <p class="text-slate-400 text-xs leading-relaxed">
+                    "Un lugar de esperanza, restauración y poder de Dios en Cartagena." Pastores Wilson Camacho y Ella Margarita Ribón.
+                </p>
+            </div>
+
+            <!-- Columna 2: Ubicación y Contacto -->
+            <div class="space-y-2">
+                <h4 class="text-white font-semibold text-sm mb-3">📍 Visítanos y Contáctanos</h4>
+                <p class="text-xs"><strong>Dirección:</strong> Barrio San Fernando, Sector Nueva Delhi (Frente a Tienda la Medusa).</p>
+                <p class="text-xs"><strong>Teléfonos:</strong> 313 5584881 - 310 6235032</p>
+                <div class="pt-2">
+                    <a href="https://maps.app.goo.gl/vRaLCr9WZDJeXqas9" target="_blank" class="text-blue-400 hover:text-blue-300 text-xs underline font-medium">
+                        Ver ubicación en Google Maps 📍
+                    </a>
+                </div>
+            </div>
+
+            <!-- Columna 3: Enlaces y Redes -->
+            <div class="space-y-2">
+                <h4 class="text-white font-semibold text-sm mb-3">🔗 Redes Oficiales</h4>
+                <p class="text-xs">Síguenos en nuestras plataformas:</p>
+                <div class="flex flex-col space-y-1.5 text-xs">
+                    <a href="https://facebook.com/iglesiajehovaesgloria" target="_blank" class="text-blue-400 hover:text-blue-300 underline">Facebook Oficial</a>
+                    <a href="https://instagram.com/iglesiajehovaesgloria" target="_blank" class="text-blue-400 hover:text-blue-300 underline">Instagram Oficial</a>
+                    <a href="https://linktr.ee/jehovaesgloria" target="_blank" class="text-blue-400 hover:text-blue-300 underline">Linktree (Todos los enlaces)</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Copyright inferior -->
+        <div class="max-w-7xl mx-auto px-6 pt-8 text-center text-xs text-slate-500">
+            <p>&copy; 2026 Iglesia Internacional Jehová es Gloria. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Script para cargar las prédicas desde Render -->
+    <script>
+        const API_URL = "https://pagina-jeg-web.onrender.com";
+
+        async function cargarPredicas() {
+            const container = document.getElementById("sermons-container");
+            if (!container) return;
+
+            try {
+                const res = await fetch(`${API_URL}/api/sermons`);
+                const sermons = await res.json();
+
+                container.innerHTML = "";
+
+                if (!Array.isArray(sermons) || sermons.length === 0) {
+                    container.innerHTML = `
+                        <div class="col-span-full text-center py-8">
+                            <p class="text-slate-500 text-sm">No hay prédicas publicadas por el momento.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                sermons.forEach(sermon => {
+                    const titulo = sermon.title || sermon.titulo || "Transmisión";
+                    const descripcion = sermon.description || sermon.descripcion || "Revive el mensaje compartido en nuestra congregación.";
+                    const categoria = sermon.category || sermon.categoria || "Culto Dominical";
+                    const enlace = sermon.link || sermon.enlace || "#";
+
+                    const card = `
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between space-y-4">
+                            <div class="space-y-2">
+                                <span class="inline-block text-xs font-semibold px-3 py-1 bg-blue-50 text-blue-600 rounded-full">${categoria}</span>
+                                <h3 class="text-xl font-bold text-slate-900">${titulo}</h3>
+                                <p class="text-slate-500 text-sm leading-relaxed">${descripcion}</p>
+                            </div>
+                            <a href="${enlace}" target="_blank" class="w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-xl transition text-sm shadow-sm inline-block">
+                                Ver Transmisión en Facebook 📺
+                            </a>
+                        </div>
+                    `;
+                    container.innerHTML += card;
+                });
+            } catch (err) {
+                console.error("Error al obtener prédicas:", err);
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-8">
+                        <p class="text-red-500 text-sm">No se pudieron cargar las prédicas en este momento.</p>
+                    </div>
+                `;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", cargarPredicas);
+    </script>
+</body>
+</html>
