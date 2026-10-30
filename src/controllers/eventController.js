@@ -14,31 +14,18 @@ const getEvents = async (req, res) => {
 // Crear un nuevo evento
 const createEvent = async (req, res) => {
     const { title, description, location, event_date, image_url } = req.body;
-    
-    // Validación estricta para evitar errores de restricción NOT NULL en la base de datos
-    if (!title || !event_date) {
-        return res.status(400).json({ error: 'El título y la fecha del evento son obligatorios.' });
-    }
-
     try {
         const query = `
             INSERT INTO events (title, description, location, event_date, image_url)
             VALUES ($1, $2, $3, $4, $5)
             RETURNING *;
         `;
-        const values = [
-            title, 
-            description || null, 
-            location || null, 
-            event_date, 
-            image_url || null
-        ];
-        
+        const values = [title, description, location, event_date, image_url];
         const result = await pool.query(query, values);
         res.status(201).json({ message: 'Evento creado con éxito 📅', event: result.rows[0] });
     } catch (error) {
         console.error('Error al crear evento:', error);
-        res.status(500).json({ error: 'Error interno del servidor al crear el evento' });
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
 
