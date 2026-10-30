@@ -3,214 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eventos y Actividades | Iglesia Internacional Jehová es Gloria</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Eventos | Iglesia Internacional Jehová es Gloria</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-50 font-sans text-slate-800">
 
-  <!-- Header / Barra de Navegación Unificada y Responsive -->
-<header class="bg-white shadow-sm sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex justify-between items-center">
-        
-        <!-- LOGO Y NOMBRE DE LA IGLESIA -->
-        <a href="index.html" class="flex items-center space-x-2.5 group">
-            <img src="images/logo.png" alt="Logo" class="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-full shadow-md border border-blue-200 group-hover:scale-105 transition-transform duration-300">
-            <span class="text-lg sm:text-xl font-bold text-blue-700 tracking-tight">Jehová es Gloria</span>
-        </a>
+<!-- Header / Barra de Navegación Unificada -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            
+            <!-- LOGO Y NOMBRE DE LA IGLESIA -->
+            <div class="flex items-center space-x-3">
+                <img src="\images\logo.png" alt="Logo" class="w-12 h-12 object-cover rounded-full shadow-md border border-blue-200">
+                <span class="text-xl font-bold text-blue-700">Jehová es Gloria</span>
+            </div>
 
-        <!-- MENÚ DE NAVEGACIÓN ESCRITORIO -->
-        <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-600">
-            <a href="index.html" class="text-blue-600 font-semibold transition-colors">Inicio</a>
-            <a href="ministerios.html" class="hover:text-blue-600 transition-colors">Ministerios 🤝</a> <!-- 👈 NUEVO ENLACE -->
-            <a href="sermons.html" class="hover:text-blue-600 transition-colors">Prédicas</a>
-            <a href="events.html" class="hover:text-blue-600 transition-colors">Eventos</a>
-            <a href="prayer.html" class="hover:text-blue-600 transition-colors">Peticiones</a>
-            <a href="donations.html" class="bg-blue-50 text-blue-700 hover:bg-blue-100 font-semibold px-4 py-2 rounded-xl transition border border-blue-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transform duration-200 flex items-center space-x-1">
-                <span>💛 Donar / Ofrendar</span>
-            </a>
-        </nav>
+            <!-- MENÚ DE NAVEGACIÓN ESTÁNDAR -->
+            <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-600">
+    <a href="index.html" class="hover:text-blue-600 transition">Inicio</a>
+    <a href="sermons.html" class="hover:text-blue-600 transition">Prédicas</a>
+    <a href="events.html" class="hover:text-blue-600 transition">Eventos</a>
+    <a href="prayer.html" class="hover:text-blue-600 transition">Peticiones</a>
+    <!-- Botón destacado o enlace directo a la pasarela y donaciones -->
+    <a href="donations.html" class="bg-blue-50 text-blue-700 hover:bg-blue-100 font-semibold px-4 py-2 rounded-xl transition border border-blue-200 shadow-sm flex items-center space-x-1">
+        <span>💛 Donar / Ofrendar</span>
+    </a>
+</nav>
 
-        <!-- ACCESOS RÁPIDOS + BOTÓN HAMBURGUESA -->
-        <div class="flex items-center space-x-2 sm:space-x-3">
-            <a href="https://linktr.ee/jehovaesgloria" target="_blank" class="hidden sm:inline-block bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium shadow-md transition hover:-translate-y-0.5 transform duration-200">
-                Redes & Enlaces
-            </a>
-            <a href="login.html" class="text-xs text-slate-400 hover:text-blue-600 transition-colors font-medium px-1">
-                🔒 Admin
-            </a>
-
-            <!-- BOTÓN HAMBURGUESA PARA CELULARES -->
-            <button type="button" id="mobile-menu-btn" class="md:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100 focus:outline-none transition-colors" aria-label="Abrir Menú">
-                <svg id="menu-icon-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                </svg>
-                <svg id="menu-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
-        </div>
-    </div>
-
-    <!-- MENÚ DESPLEGABLE MÓVIL (PANTALLAS PEQUEÑAS) -->
-    <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-6 py-4 space-y-3 shadow-lg transition-all duration-300">
-        <a href="index.html" class="block text-blue-700 font-semibold text-base py-1 transition-colors">🏠 Inicio</a>
-        <a href="ministerios.html" class="hover:text-blue-600 transition-colors">Ministerios 🤝</a> <!-- 👈 NUEVO ENLACE -->
-        <a href="sermons.html" class="block text-slate-700 font-medium hover:text-blue-600 text-base py-1 transition-colors">📖 Prédicas</a>
-        <a href="events.html" class="block text-slate-700 font-medium hover:text-blue-600 text-base py-1 transition-colors">📅 Eventos</a>
-        <a href="prayer.html" class="block text-slate-700 font-medium hover:text-blue-600 text-base py-1 transition-colors">🙏 Peticiones</a>
-        <a href="donations.html" class="block bg-blue-50 text-blue-700 font-semibold px-4 py-2.5 rounded-xl text-center border border-blue-200 mt-2 hover:bg-blue-100 transition-colors">
-            💛 Donar / Ofrendar
-        </a>
-    </div>
-</header>
-
-    <!-- Hero de la Sección de Eventos -->
-    <section class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white py-14 px-6 text-center">
-        <div class="max-w-3xl mx-auto space-y-4">
-            <span class="bg-blue-800 text-blue-200 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Comunión y Crecimiento</span>
-            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Próximos Eventos y Actividades</h1>
-            <p class="text-sm sm:text-base text-slate-300">Acompaña a nuestra congregación en cada vigilia, ayuno, congreso y reunión especial.</p>
-        </div>
-    </section>
-
-    <!-- Contenedor Dinámico de Eventos -->
-    <section class="py-16 px-6 max-w-7xl mx-auto">
-        <div id="events-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="col-span-full text-center py-12">
-                <p class="text-slate-500 animate-pulse text-sm">Cargando eventos programados...</p>
+            <!-- ACCESOS RÁPIDOS Y LOGIN -->
+            <div class="flex items-center space-x-3">
+                <a href="https://linktr.ee/jehovaesgloria" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-md transition">
+                    Redes & Enlaces
+                </a>
+                <a href="login.html" class="text-xs text-slate-400 hover:text-blue-600 transition">
+                    🔒 Acceso Admin
+                </a>
             </div>
         </div>
-    </section>
+    </header>
 
-    <!-- Footer Unificado -->
+    <!-- Contenido Principal -->
+    <main class="max-w-7xl mx-auto px-6 py-12">
+        <div class="text-center mb-12">
+            <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Comunidad</span>
+            <h1 class="text-4xl font-extrabold text-slate-900 mt-2">Próximos Eventos</h1>
+            <p class="text-slate-600 mt-2">Acompaña a nuestra familia en cada una de las actividades especiales preparadas para ti.</p>
+        </div>
+
+        <!-- Contenedor dinámico de eventos -->
+        <div id="events-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <div class="text-blue-600 font-bold text-sm">Sábado próximo</div>
+                <h3 class="text-xl font-bold text-slate-900 mt-1">Ayuno Congregacional Presencial</h3>
+                <p class="text-slate-500 text-sm mt-2">Te esperamos a las 9:00 AM en nuestra sede en San Fernando.</p>
+            </div>
+        </div>
+    </main>
+
+<!-- Footer Unificado con Ubicación, Contactos y Redes -->
     <footer class="bg-slate-900 text-slate-400 pt-16 pb-8 border-t border-slate-800 mt-20">
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10 pb-12 border-b border-slate-800 text-sm">
+            
+            <!-- Columna 1: Identidad -->
             <div class="space-y-3">
                 <div class="flex items-center space-x-3">
-                    <img src="images/logo.png" alt="Logo" class="w-10 h-10 object-cover rounded-full border border-blue-500">
+                    <img src="\images\logo.png" alt="Logo" class="w-10 h-10 object-cover rounded-full border border-blue-500">
                     <span class="text-white font-bold text-base">Iglesia Jehová es Gloria</span>
                 </div>
                 <p class="text-slate-400 text-xs leading-relaxed">
                     "Un lugar de esperanza, restauración y poder de Dios en Cartagena." Pastores Wilson Camacho y Ella Margarita Ribón.
                 </p>
             </div>
+
+            <!-- Columna 2: Ubicación y Contacto -->
             <div class="space-y-2">
                 <h4 class="text-white font-semibold text-sm mb-3">📍 Visítanos y Contáctanos</h4>
                 <p class="text-xs"><strong>Dirección:</strong> Barrio San Fernando, Sector Nueva Delhi (Frente a Tienda la Medusa).</p>
                 <p class="text-xs"><strong>Teléfonos:</strong> 313 5584881 - 310 6235032</p>
+                <div class="pt-2">
+                    <a href="https://maps.app.goo.gl/vRaLCr9WZDJeXqas9" target="_blank" class="text-blue-400 hover:text-blue-300 text-xs underline font-medium">
+                        Ver ubicación en Google Maps 📍
+                    </a>
+                </div>
             </div>
+
+            <!-- Columna 3: Enlaces y Redes -->
             <div class="space-y-2">
                 <h4 class="text-white font-semibold text-sm mb-3">🔗 Redes Oficiales</h4>
+                <p class="text-xs">Síguenos en nuestras plataformas:</p>
                 <div class="flex flex-col space-y-1.5 text-xs">
                     <a href="https://facebook.com/iglesiajehovaesgloria" target="_blank" class="text-blue-400 hover:text-blue-300 underline">Facebook Oficial</a>
                     <a href="https://instagram.com/iglesiajehovaesgloria" target="_blank" class="text-blue-400 hover:text-blue-300 underline">Instagram Oficial</a>
                     <a href="https://linktr.ee/jehovaesgloria" target="_blank" class="text-blue-400 hover:text-blue-300 underline">Linktree (Todos los enlaces)</a>
                 </div>
             </div>
+
         </div>
+
+        <!-- Copyright inferior -->
         <div class="max-w-7xl mx-auto px-6 pt-8 text-center text-xs text-slate-500">
             <p>&copy; 2026 Iglesia Internacional Jehová es Gloria. Todos los derechos reservados.</p>
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <script>
-        // Menú móvil
-        document.addEventListener("DOMContentLoaded", () => {
-            const btn = document.getElementById("mobile-menu-btn");
-            const menu = document.getElementById("mobile-menu");
-            const iconOpen = document.getElementById("menu-icon-open");
-            const iconClose = document.getElementById("menu-icon-close");
-
-            if (btn && menu) {
-                btn.addEventListener("click", () => {
-                    menu.classList.toggle("hidden");
-                    iconOpen.classList.toggle("hidden");
-                    iconClose.classList.toggle("hidden");
-                });
-            }
-            cargarEventosPublicos();
-        });
-
-        // Cargar Eventos desde la API
-        const API_URL = "https://pagina-jeg-web.onrender.com";
-
-        async function cargarEventosPublicos() {
-            const container = document.getElementById("events-container");
-            if (!container) return;
-
-            try {
-                const res = await fetch(`${API_URL}/api/events`);
-                const events = await res.json();
-
-                container.innerHTML = "";
-
-                if (!Array.isArray(events) || events.length === 0) {
-                    container.innerHTML = `
-                        <div class="col-span-full text-center py-12">
-                            <p class="text-slate-500 text-sm">No hay eventos programados por el momento. ¡Vuelve pronto!</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                events.forEach(ev => {
-                    const titulo = ev.title || ev.titulo || "Evento Especial";
-                    const categoria = ev.category || ev.categoria || "Comunidad";
-                    const descripcion = ev.description || ev.descripcion || "Te invitamos a ser parte de este espacio de bendición.";
-                    const fecha = ev.date ? new Date(ev.date).toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' }) : "Fecha por confirmar";
-                    const hora = ev.time || ev.hora || "";
-                    const costo = ev.cost || ev.costo || "Entrada libre";
-                    const ubicacion = ev.location || ev.ubicacion || "Sede Principal";
-                    const imagen = ev.image || ev.imagen || "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=800&q=80";
-                    const enlace = ev.link || ev.enlace;
-
-                    let botonInscripcion = "";
-                    if (enlace) {
-                        botonInscripcion = `
-                            <a href="${enlace}" target="_blank" class="w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-xl transition text-sm shadow-sm inline-block">
-                                Inscribirse / Más Info 📝
-                            </a>
-                        `;
-                    }
-
-                    const card = `
-                        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden flex flex-col justify-between hover:shadow-md transition">
-                            <div>
-                                <div class="relative h-48 w-full overflow-hidden bg-slate-100">
-                                    <img src="${imagen}" alt="${titulo}" class="w-full h-full object-cover">
-                                    <span class="absolute top-3 left-3 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow">
-                                        ${categoria}
-                                    </span>
-                                </div>
-                                <div class="p-6 space-y-3">
-                                    <h3 class="text-xl font-bold text-slate-900">${titulo}</h3>
-                                    <p class="text-slate-500 text-sm leading-relaxed">${descripcion}</p>
-                                    
-                                    <div class="pt-2 space-y-1.5 text-xs text-slate-600 border-t border-slate-100">
-                                        <p>📅 <strong>Fecha:</strong> ${fecha} ${hora ? 'a las ' + hora : ''}</p>
-                                        <p>📍 <strong>Lugar:</strong> ${ubicacion}</p>
-                                        <p>🏷️ <strong>Aporte / Costo:</strong> <span class="font-semibold text-emerald-600">${costo}</span></p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="p-6 pt-0">
-                                ${botonInscripcion}
-                            </div>
-                        </div>
-                    `;
-                    container.innerHTML += card;
-                });
-            } catch (err) {
-                console.error("Error al obtener eventos:", err);
-                container.innerHTML = `
-                    <div class="col-span-full text-center py-12">
-                        <p class="text-red-500 text-sm">No se pudieron cargar los eventos en este momento.</p>
-                    </div>
-                `;
-            }
-        }
-    </script>
 </body>
 </html>
