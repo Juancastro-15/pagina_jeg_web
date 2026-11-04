@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const path = require('path');
+const { v2: cloudinary } = require('cloudinary');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const { 
     getSermons, 
     createSermon, 
@@ -12,14 +13,19 @@ const {
 // Importar el middleware de autenticación
 const verifyToken = require('../middlewares/authMiddleware');
 
-// Configuración de Multer para almacenar las fotos localmente en public/uploads/
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'public/uploads/');
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, 'sermon-' + uniqueSuffix + path.extname(file.originalname));
+// Configuración de Cloudinary con tus credenciales oficiales
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'qonryvvs',
+  api_key: process.env.CLOUDINARY_API_KEY || '817954114899791',
+  api_secret: process.env.CLOUDINARY_API_SECRET || 'CryFPmpqDEFhAgKzyaoBF7MvFjw'
+});
+
+// Configuración del almacenamiento para subir directamente a la nube de Cloudinary
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'predicas_iglesia', // Carpeta en tu cuenta de Cloudinary
+        allowed_formats: ['jpg', 'png', 'jpeg', 'webp']
     }
 });
 
@@ -32,7 +38,7 @@ const upload = multer({
 // Ruta pública: Ver prédicas
 router.get('/', getSermons);
 
-// Ruta protegida: Crear prédica (Con autenticación y subida de 2 a 4 fotos)
+// Ruta protegida: Crear prédica (Con autenticación y subida de 2 a 4 fotos a Cloudinary)
 router.post('/', verifyToken, upload.array('images', 4), createSermon);
 
 // Ruta protegida: Actualizar prédica por ID (PUT)

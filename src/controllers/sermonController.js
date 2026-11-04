@@ -11,14 +11,14 @@ const getSermons = async (req, res) => {
     }
 };
 
-// Crear una nueva prédica (con soporte para múltiples fotos)
+// Crear una nueva prédica (con soporte para múltiples fotos en Cloudinary)
 const createSermon = async (req, res) => {
     const { title, description, speaker, video_url, audio_url, date, category } = req.body;
     const finalVideoUrl = video_url || req.body.link; 
 
     try {
-        // Mapear los archivos subidos por multer a un arreglo de URLs relativas
-        const images_urls = req.files ? req.files.map(file => `/uploads/${file.filename}`) : [];
+        // Mapear los archivos subidos a Cloudinary usando file.path (URL completa en la nube)
+        const images_urls = req.files ? req.files.map(file => file.path) : [];
 
         const query = `
             INSERT INTO sermons (title, description, speaker, video_url, audio_url, date, category, images_urls)
@@ -37,14 +37,14 @@ const createSermon = async (req, res) => {
         ];
 
         const result = await pool.query(query, values);
-        res.status(201).json({ message: 'Prédica creada con éxito 📖📷', sermon: result.rows[0] });
+        res.status(201).json({ message: 'Prédica creada con éxito en la nube 📖☁️', sermon: result.rows[0] });
     } catch (error) {
         console.error('Error al crear la prédica:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
 
-// Actualizar una prédica existente (PUT - soporte para conservar/eliminar fotos anteriores y agregar nuevas)
+// Actualizar una prédica existente (PUT - soporte para conservar/eliminar fotos anteriores y agregar nuevas a Cloudinary)
 const updateSermon = async (req, res) => {
     const { id } = req.params;
     const { title, description, speaker, video_url, audio_url, date, category, existing_images } = req.body;
@@ -61,9 +61,9 @@ const updateSermon = async (req, res) => {
             }
         }
 
-        // 2. Si se subieron fotos nuevas, las agregamos al arreglo
+        // 2. Si se subieron fotos nuevas a Cloudinary, agregamos sus URLs (file.path) al arreglo
         if (req.files && req.files.length > 0) {
-            const nuevasFotos = req.files.map(file => `/uploads/${file.filename}`);
+            const nuevasFotos = req.files.map(file => file.path);
             images_urls = [...images_urls, ...nuevasFotos];
         }
 

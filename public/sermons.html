@@ -103,7 +103,7 @@
 
             <!-- Galería de Fotos en Grande -->
             <div class="space-y-2">
-                <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Galería de Fotos</h4>
+                <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Galería de Fotos (Haz clic para ampliar)</h4>
                 <div id="modal-photos-grid" class="grid grid-cols-2 gap-2">
                     <!-- Fotos en grande inyectadas dinámicamente -->
                 </div>
@@ -114,6 +114,9 @@
                 <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Descripción del Mensaje</h4>
                 <p id="modal-description" class="text-slate-600 text-sm leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100">--</p>
             </div>
+
+            <!-- Reproductor de Audio (Inyectado dinámicamente si existe) -->
+            <div id="modal-audio-container"></div>
 
             <!-- Botón de Transmisión -->
             <div class="pt-2">
@@ -211,7 +214,10 @@
                     if (Array.isArray(fotos) && fotos.length > 0) {
                         fotosHtml = `
                             <div class="grid grid-cols-2 gap-1 p-2 bg-slate-100 rounded-t-2xl max-h-56 overflow-hidden">
-                                ${fotos.map(foto => `<img src="${API_URL}${foto}" class="w-full h-28 object-cover rounded-lg border border-slate-200" onerror="this.src='${foto}'">`).join('')}
+                                ${fotos.map(foto => {
+                                    const imgSrc = foto.startsWith('http') ? foto : `${API_URL}${foto}`;
+                                    return `<img src="${imgSrc}" class="w-full h-28 object-cover rounded-lg border border-slate-200" alt="Foto prédica">`;
+                                }).join('')}
                             </div>
                         `;
                     }
@@ -257,7 +263,7 @@
             const videoBtn = document.getElementById("modal-video-btn");
             videoBtn.href = sermon.link || sermon.video_url || sermon.enlace || "#";
 
-            // Llenar galería de fotos en grande dentro del modal
+            // Llenar galería de fotos interactiva en grande dentro del modal
             const photosGrid = document.getElementById("modal-photos-grid");
             photosGrid.innerHTML = "";
             const fotos = sermon.images_urls || [];
@@ -265,14 +271,33 @@
             if (fotos.length > 0) {
                 photosGrid.parentElement.classList.remove("hidden");
                 fotos.forEach(foto => {
+                    const imgSrc = foto.startsWith('http') ? foto : `${API_URL}${foto}`;
                     photosGrid.innerHTML += `
-                        <div class="rounded-xl overflow-hidden border border-slate-200 h-44 bg-slate-50 shadow-sm">
-                            <img src="${API_URL}${foto}" class="w-full h-full object-cover hover:scale-105 transition duration-300" onerror="this.src='${foto}'">
+                        <div class="rounded-xl overflow-hidden border border-slate-200 h-44 bg-slate-50 shadow-sm cursor-pointer" onclick="window.open('${imgSrc}', '_blank')" title="Haz clic para ver la imagen en grande">
+                            <img src="${imgSrc}" class="w-full h-full object-cover hover:scale-105 transition duration-300" alt="Foto ampliada">
                         </div>
                     `;
                 });
             } else {
                 photosGrid.parentElement.classList.add("hidden");
+            }
+
+            // Gestionar reproductor de audio condicional
+            const audioContainer = document.getElementById("modal-audio-container");
+            if (sermon.audio_url && sermon.audio_url.trim() !== "") {
+                audioContainer.innerHTML = `
+                    <div class="space-y-2 pt-2">
+                        <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">🎧 Audio del Mensaje</h4>
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 shadow-sm">
+                            <audio controls class="w-full">
+                                <source src="${sermon.audio_url}" type="audio/mpeg">
+                                Tu navegador no soporta el elemento de audio.
+                            </audio>
+                        </div>
+                    </div>
+                `;
+            } else {
+                audioContainer.innerHTML = "";
             }
 
             document.getElementById("sermon-modal").classList.remove("hidden");
