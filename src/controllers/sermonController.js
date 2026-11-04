@@ -11,41 +11,69 @@ const getSermons = async (req, res) => {
     }
 };
 
-// Crear una nueva prédica (para el CMS)
+// Crear una nueva prédica (con soporte para múltiples fotos)
 const createSermon = async (req, res) => {
     const { title, description, speaker, video_url, audio_url, date, category } = req.body;
-    // Manejo flexible por si en frontend envían video_url o link
     const finalVideoUrl = video_url || req.body.link; 
 
     try {
+        // Mapear los archivos subidos por multer a un arreglo de URLs relativas
+        const images_urls = req.files ? req.files.map(file => `/uploads/${file.filename}`) : [];
+
         const query = `
-            INSERT INTO sermons (title, description, speaker, video_url, audio_url, date, category)
-            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            INSERT INTO sermons (title, description, speaker, video_url, audio_url, date, category, images_urls)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
             RETURNING *;
         `;
-        const values = [title, description, speaker, finalVideoUrl, audio_url, date, category || 'Culto'];
+        const values = [
+            title, 
+            description, 
+            speaker, 
+            finalVideoUrl, 
+            audio_url || null, 
+            date, 
+            category || 'Culto', 
+            images_urls
+        ];
+
         const result = await pool.query(query, values);
-        res.status(201).json({ message: 'Prédica creada con éxito 📖', sermon: result.rows[0] });
+        res.status(201).json({ message: 'Prédica creada con éxito 📖📷', sermon: result.rows[0] });
     } catch (error) {
         console.error('Error al crear la prédica:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
 
-// Actualizar una prédica existente (PUT)
+// Actualizar una prédica existente (PUT - con soporte para nuevas fotos opcionales)
 const updateSermon = async (req, res) => {
     const { id } = req.params;
     const { title, description, speaker, video_url, audio_url, date, category } = req.body;
     const finalVideoUrl = video_url || req.body.link;
 
     try {
-        const query = `
-            UPDATE sermons 
-            SET title = $1, description = $2, speaker = $3, video_url = $4, audio_url = $5, date = $6, category = $7
-            WHERE id = $8
-            RETURNING *;
-        `;
-        const values = [title, description, speaker, finalVideoUrl, audio_url, date, category || 'Culto', id];
+        let query, values;
+
+        // Si el usuario adjuntó nuevas fotos en la edición, actualizamos también el arreglo images_urls
+        if (req.files && req.files.length > 0) {
+            const images_urls = req.files.map(file => `/uploads/${file.filename}`);
+            query = `
+                UPDATE sermons 
+                SET title = $1, description = $2, speaker = $3, video_url = $4, audio_url = $5, date = $6, category = $7, images_urls = $8
+                WHERE id = $9
+                RETURNING *;
+            `;
+            values = [title, description, speaker, finalVideoUrl, audio_url || null, date, category || 'Culto', images_urls, id];
+        } else {
+            // Si no subió fotos nuevas, dejamos intactas las imágenes que ya tenía guardadas
+            query = `
+                UPDATE sermons 
+                SET title = $1, description = $2, speaker = $3, video_url = $4, audio_url = $5, date = $6, category = $7
+                WHERE id = $8
+                RETURNING *;
+            `;
+            values = [title, description, speaker, finalVideoUrl, audio_url || null, date, category || 'Culto', id];
+        }
+
         const result = await pool.query(query, values);
 
         if (result.rows.length === 0) {
@@ -77,7 +105,6 @@ const deleteSermon = async (req, res) => {
     }
 };
 
-// Exportar todos los controladores correctamente
 module.exports = {
     getSermons,
     createSermon,

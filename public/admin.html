@@ -9,7 +9,6 @@
     <!-- ESTILOS ESPECIALES PARA IMPRESIÓN / REPORTE PDF -->
     <style>
         @media print {
-            /* 1. Ocultar header, navegación, botones de acción y filtros */
             header, 
             .no-print, 
             #logout-btn, 
@@ -20,7 +19,6 @@
                 display: none !important;
             }
 
-            /* 2. Resetear fondos y márgenes de la página */
             body {
                 background-color: #ffffff !important;
                 color: #000000 !important;
@@ -35,7 +33,6 @@
                 margin: 0 !important;
             }
 
-            /* 3. Asegurar que solo la sección contable sea visible */
             #section-sermons, #section-users {
                 display: none !important;
             }
@@ -47,7 +44,6 @@
                 padding: 0 !important;
             }
 
-            /* 4. Encabezado membretado para la impresión */
             .print-header {
                 display: flex !important;
                 align-items: center;
@@ -57,7 +53,6 @@
                 margin-bottom: 20px;
             }
 
-            /* 5. Estilo limpio de las tarjetas de resumen */
             .grid {
                 display: flex !important;
                 justify-content: space-between;
@@ -73,7 +68,6 @@
                 flex: 1;
             }
 
-            /* 6. Estilo formal de la tabla contable */
             table {
                 width: 100% !important;
                 border-collapse: collapse !important;
@@ -92,7 +86,6 @@
                 font-weight: bold !important;
             }
 
-            /* 7. Pie de página para firmas en la impresión */
             .print-footer {
                 display: flex !important;
                 justify-content: space-between;
@@ -108,7 +101,6 @@
             }
         }
 
-        /* Estilos en pantalla normal para elementos de impresión */
         .print-header, .print-footer {
             display: none;
         }
@@ -149,12 +141,12 @@
                 <div class="flex justify-between items-center border-b border-slate-100 pb-4">
                     <div>
                         <h2 class="text-2xl font-extrabold text-slate-900" id="form-title">Publicar Nueva Prédica</h2>
-                        <p class="text-slate-600 text-sm mt-1">Ingresa o modifica la información del mensaje y su transmisión de Facebook.</p>
+                        <p class="text-slate-600 text-sm mt-1">Ingresa la información de la prédica y adjunta de 2 a 4 fotos de la actividad.</p>
                     </div>
                     <span id="form-mode-badge" class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">Modo: Crear</span>
                 </div>
 
-                <form id="admin-sermon-form" class="space-y-4">
+                <form id="admin-sermon-form" class="space-y-4" enctype="multipart/form-data">
                     <input type="hidden" id="sermon-id">
 
                     <div>
@@ -180,6 +172,16 @@
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">Breve Descripción</label>
                         <textarea id="description" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="De qué trató el mensaje..."></textarea>
+                    </div>
+
+                    <!-- SUBIR MULTIPLES IMÁGENES (ENTRE 2 Y 4 FOTOS) -->
+                    <div class="bg-blue-50/60 p-4 rounded-2xl border border-blue-200 space-y-2">
+                        <label class="block text-sm font-semibold text-blue-900">📷 Subir Fotos de la Prédica (Selecciona entre 2 y 4 fotos)</label>
+                        <input type="file" id="sermon_images" accept="image/*" multiple onchange="validarSeleccionFotos(this)" class="w-full text-sm text-slate-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
+                        <p class="text-xs text-slate-500">Mantén presionada la tecla Ctrl o Shift en tu computadora para seleccionar varias fotos a la vez.</p>
+                        
+                        <!-- Previsualización dinámica de fotos seleccionadas -->
+                        <div id="images-preview-container" class="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2 hidden"></div>
                     </div>
 
                     <div>
@@ -273,7 +275,6 @@
         <!-- SECCIÓN 3: Contabilidad y Finanzas (Optimizado para Impresión) -->
         <div id="section-accounting" class="hidden bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
             
-            <!-- Encabezado exclusivo de Impresión -->
             <div class="print-header">
                 <div>
                     <h1 style="font-size: 16pt; font-weight: bold; margin: 0;">Iglesia Jehová es Gloria</h1>
@@ -284,7 +285,6 @@
                 </div>
             </div>
 
-            <!-- Encabezado del Módulo en Pantalla -->
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-4 gap-4 no-print">
                 <div>
                     <h2 class="text-2xl font-extrabold text-slate-900">Módulo de Contabilidad y Finanzas</h2>
@@ -303,7 +303,6 @@
                 </div>
             </div>
 
-            <!-- Tarjetas de Balance / Resumen -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-green-50 border border-green-200 p-5 rounded-2xl shadow-sm">
                     <span class="text-xs font-bold text-green-800 uppercase tracking-wider block">Total Recaudado</span>
@@ -319,7 +318,6 @@
                 </div>
             </div>
 
-            <!-- Barra de Filtros y Búsqueda -->
             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 grid grid-cols-1 md:grid-cols-4 gap-4 items-end no-print">
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">Buscar Donante / Ref.</label>
@@ -345,7 +343,6 @@
                 </div>
             </div>
 
-            <!-- Tabla de Registros Contables -->
             <div class="overflow-x-auto rounded-2xl border border-slate-200">
                 <table class="w-full text-left border-collapse">
                     <thead>
@@ -364,7 +361,6 @@
                 </table>
             </div>
 
-            <!-- Pie de página para firmas en la Impresión -->
             <div class="print-footer">
                 <div class="signature-box">
                     <p style="margin-top: 30px;">Firma del Tesorero / Contador</p>
@@ -373,9 +369,7 @@
                     <p style="margin-top: 30px;">Firma del Pastor General</p>
                 </div>
             </div>
-
         </div>
-
     </main>
 
     <!-- Script JavaScript -->
@@ -501,6 +495,39 @@
             window.location.href = "login.html";
         });
 
+        // VALIDAR Y PREVISUALIZAR FOTOS (ENTRE 2 Y 4 FOTOS)
+        function validarSeleccionFotos(input) {
+            const container = document.getElementById("images-preview-container");
+            container.innerHTML = "";
+            const files = input.files;
+
+            if (files.length > 0 && (files.length < 2 || files.length > 4)) {
+                alert("Por favor selecciona entre 2 y 4 fotos para publicar la prédica.");
+                input.value = ""; // Limpiar selección si no cumple la cantidad
+                container.classList.add("hidden");
+                return;
+            }
+
+            if (files.length >= 2 && files.length <= 4) {
+                container.classList.remove("hidden");
+                Array.from(files).forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = document.createElement("div");
+                        img.className = "relative rounded-xl overflow-hidden border border-blue-200 h-24 bg-slate-100";
+                        img.innerHTML = `
+                            <img src="${e.target.result}" class="w-full h-full object-cover">
+                            <span class="absolute bottom-1 right-1 bg-slate-900/70 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">Foto ${index + 1}</span>
+                        `;
+                        container.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            } else {
+                container.classList.add("hidden");
+            }
+        }
+
         // Cargar Lista de Prédicas
         async function cargarPredicasAdmin() {
             const tbody = document.getElementById("admin-sermons-list");
@@ -573,6 +600,8 @@
         function resetSermonForm() {
             document.getElementById("admin-sermon-form").reset();
             document.getElementById("sermon-id").value = "";
+            document.getElementById("images-preview-container").innerHTML = "";
+            document.getElementById("images-preview-container").classList.add("hidden");
             document.getElementById("form-title").textContent = "Publicar Nueva Prédica";
             document.getElementById("submit-sermon-btn").textContent = "Publicar Prédica 🚀";
             document.getElementById("cancel-edit-btn").classList.add("hidden");
@@ -582,17 +611,35 @@
             badge.className = "bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full";
         }
 
+        // ENVÍO DE FORMULARIO CON MULTIPART/FORM-DATA PARA IMÁGENES
         document.getElementById("admin-sermon-form").addEventListener("submit", async (e) => {
             e.preventDefault();
             const id = document.getElementById("sermon-id").value;
-            const title = document.getElementById("title").value;
-            const category = document.getElementById("category").value;
-            const speaker = document.getElementById("speaker").value;
-            const date = document.getElementById("date").value;
-            const description = document.getElementById("description").value;
-            const video_url = document.getElementById("video_url").value;
-            const audio_url = document.getElementById("audio_url").value || null;
+            const fileInput = document.getElementById("sermon_images");
+            const files = fileInput.files;
             const msgBox = document.getElementById("admin-msg");
+
+            if (!id && (files.length < 2 || files.length > 4)) {
+                msgBox.className = "text-center text-sm font-medium mt-4 p-3 rounded-xl bg-amber-50 text-amber-700 border border-amber-200";
+                msgBox.textContent = "Debes adjuntar entre 2 y 4 fotografías de la prédica.";
+                msgBox.classList.remove("hidden");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("title", document.getElementById("title").value);
+            formData.append("category", document.getElementById("category").value);
+            formData.append("speaker", document.getElementById("speaker").value);
+            formData.append("date", document.getElementById("date").value);
+            formData.append("description", document.getElementById("description").value);
+            formData.append("video_url", document.getElementById("video_url").value);
+            formData.append("link", document.getElementById("video_url").value);
+            formData.append("audio_url", document.getElementById("audio_url").value || "");
+
+            // Adjuntar cada archivo de imagen seleccionado
+            for (let i = 0; i < files.length; i++) {
+                formData.append("images", files[i]);
+            }
 
             const method = id ? "PUT" : "POST";
             const url = id ? `${API_URL}/api/sermons/${id}` : `${API_URL}/api/sermons`;
@@ -601,15 +648,14 @@
                 const res = await fetch(url, {
                     method: method,
                     headers: { 
-                        "Content-Type": "application/json",
                         "Authorization": "Bearer " + localStorage.getItem("token")
                     },
-                    body: JSON.stringify({ title, category, speaker, date, description, video_url, link: video_url, audio_url })
+                    body: formData
                 });
                 const data = await res.json();
                 if (res.ok) {
                     msgBox.className = "text-center text-sm font-medium mt-4 p-3 rounded-xl bg-green-50 text-green-700 border border-green-200";
-                    msgBox.textContent = id ? "¡Prédica actualizada exitosamente! 🔄✨" : "¡Prédica publicada con éxito! 📖✨";
+                    msgBox.textContent = id ? "¡Prédica actualizada exitosamente! 🔄✨" : "¡Prédica publicada con fotos con éxito! 📖📷✨";
                     resetSermonForm();
                     cargarPredicasAdmin();
                 } else {
@@ -818,6 +864,5 @@
             msgBox.classList.remove("hidden");
         });
     </script>
-
 </body>
 </html>
