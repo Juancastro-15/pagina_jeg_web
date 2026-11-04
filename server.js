@@ -1,5 +1,5 @@
 const express = require('express');
-const path = require('path');
+const path = path = require('path');
 const fs = require('fs'); // 👈 1. Importar el módulo de sistema de archivos
 const cors = require('cors'); 
 const app = express();
@@ -20,10 +20,12 @@ if (!fs.existsSync(uploadDir)) {
 const sermonRoutes = require('./src/routes/sermonRoutes'); 
 const authRoutes = require('./src/routes/authRoutes');
 const accountingRoutes = require('./src/routes/accountingRoutes'); 
+const ministryRoutes = require('./src/routes/ministryRoutes'); // 👈 ¡Importamos las rutas de ministerios!
 
 app.use('/api/sermons', sermonRoutes); 
 app.use('/api/auth', authRoutes);     
 app.use('/api/accounting', accountingRoutes); 
+app.use('/api/ministerios', ministryRoutes); // 👈 ¡Montamos las rutas en el endpoint /api/ministerios!
 
 // Puerto del servidor
 const PORT = process.env.PORT || 4000;
