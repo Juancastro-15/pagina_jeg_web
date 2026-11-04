@@ -546,11 +546,22 @@ function renderizarFotosActualesAdmin() {
     if (Array.isArray(fotosActualesGuardadas) && fotosActualesGuardadas.length > 0) {
         container.classList.remove("hidden");
         fotosActualesGuardadas.forEach((foto, i) => {
-            // Si la foto ya empieza con http, la usamos tal cual; si no, le anteponemos el API_URL
-            const rutaImagen = foto.startsWith('http') ? foto : `${API_URL}${foto}`;
+            if (!foto) return;
+
+            let rutaFinal = foto;
+            
+            // Si la ruta contiene "uploads/", extraemos únicamente el nombre del archivo para evitar errores con rutas de C: o absolutas
+            if (foto.includes("uploads/")) {
+                const partes = foto.split("uploads/");
+                const nombreArchivo = partes[partes.length - 1];
+                rutaFinal = `${API_URL}/uploads/${nombreArchivo}`;
+            } else if (!foto.startsWith('http')) {
+                rutaFinal = `${API_URL}${foto.startsWith('/') ? '' : '/'}${foto}`;
+            }
+
             grid.innerHTML += `
                 <div class="relative rounded-xl overflow-hidden border border-slate-300 h-24 bg-white shadow-sm">
-                    <img src="${rutaImagen}" class="w-full h-full object-cover" onerror="this.src='${foto}'">
+                    <img src="${rutaFinal}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/150?text=Error+Img'">
                     <button type="button" onclick="eliminarFotoActual(${i})" class="absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold hover:bg-red-700 shadow" title="Quitar foto">✕</button>
                 </div>
             `;
