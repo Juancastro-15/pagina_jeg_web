@@ -538,25 +538,27 @@
         }
 
         // RENDERIZAR FOTOS GUARDADAS EN MODO EDICIÓN CON BOTÓN DE ELIMINACIÓN
-        function renderizarFotosActualesAdmin() {
-            const container = document.getElementById("existing-images-container");
-            const grid = document.getElementById("current-photos-grid");
-            grid.innerHTML = "";
+function renderizarFotosActualesAdmin() {
+    const container = document.getElementById("existing-images-container");
+    const grid = document.getElementById("current-photos-grid");
+    grid.innerHTML = "";
 
-            if (fotosActualesGuardadas.length > 0) {
-                container.classList.remove("hidden");
-                fotosActualesGuardadas.forEach((foto, i) => {
-                    grid.innerHTML += `
-                        <div class="relative rounded-xl overflow-hidden border border-slate-300 h-24 bg-white shadow-sm">
-                            <img src="${API_URL}${foto}" class="w-full h-full object-cover" onerror="this.src='${foto}'">
-                            <button type="button" onclick="eliminarFotoActual(${i})" class="absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold hover:bg-red-700 shadow" title="Quitar foto">✕</button>
-                        </div>
-                    `;
-                });
-            } else {
-                container.classList.add("hidden");
-            }
-        }
+    if (Array.isArray(fotosActualesGuardadas) && fotosActualesGuardadas.length > 0) {
+        container.classList.remove("hidden");
+        fotosActualesGuardadas.forEach((foto, i) => {
+            // Si la foto ya empieza con http, la usamos tal cual; si no, le anteponemos el API_URL
+            const rutaImagen = foto.startsWith('http') ? foto : `${API_URL}${foto}`;
+            grid.innerHTML += `
+                <div class="relative rounded-xl overflow-hidden border border-slate-300 h-24 bg-white shadow-sm">
+                    <img src="${rutaImagen}" class="w-full h-full object-cover" onerror="this.src='${foto}'">
+                    <button type="button" onclick="eliminarFotoActual(${i})" class="absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold hover:bg-red-700 shadow" title="Quitar foto">✕</button>
+                </div>
+            `;
+        });
+    } else {
+        container.classList.add("hidden");
+    }
+}
 
         function eliminarFotoActual(index) {
             fotosActualesGuardadas.splice(index, 1);

@@ -44,35 +44,46 @@ const createSermon = async (req, res) => {
     }
 };
 
-// Actualizar una prédica existente (PUT - con soporte para nuevas fotos opcionales)
+// Actualizar una prédica existente (PUT - soporte para conservar/eliminar fotos anteriores y agregar nuevas)
 const updateSermon = async (req, res) => {
     const { id } = req.params;
-    const { title, description, speaker, video_url, audio_url, date, category } = req.body;
+    const { title, description, speaker, video_url, audio_url, date, category, existing_images } = req.body;
     const finalVideoUrl = video_url || req.body.link;
 
     try {
-        let query, values;
-
-        // Si el usuario adjuntó nuevas fotos en la edición, actualizamos también el arreglo images_urls
-        if (req.files && req.files.length > 0) {
-            const images_urls = req.files.map(file => `/uploads/${file.filename}`);
-            query = `
-                UPDATE sermons 
-                SET title = $1, description = $2, speaker = $3, video_url = $4, audio_url = $5, date = $6, category = $7, images_urls = $8
-                WHERE id = $9
-                RETURNING *;
-            `;
-            values = [title, description, speaker, finalVideoUrl, audio_url || null, date, category || 'Culto', images_urls, id];
-        } else {
-            // Si no subió fotos nuevas, dejamos intactas las imágenes que ya tenía guardadas
-            query = `
-                UPDATE sermons 
-                SET title = $1, description = $2, speaker = $3, video_url = $4, audio_url = $5, date = $6, category = $7
-                WHERE id = $8
-                RETURNING *;
-            `;
-            values = [title, description, speaker, finalVideoUrl, audio_url || null, date, category || 'Culto', id];
+        // 1. Procesar las fotos anteriores que el administrador decidió conservar
+        let images_urls = [];
+        if (existing_images) {
+            try {
+                images_urls = JSON.parse(existing_images);
+            } catch (e) {
+                images_urls = [];
+            }
         }
+
+        // 2. Si se subieron fotos nuevas, las agregamos al arreglo
+        if (req.files && req.files.length > 0) {
+            const nuevasFotos = req.files.map(file => `/uploads/${file.filename}`);
+            images_urls = [...images_urls, ...nuevasFotos];
+        }
+
+        const query = `
+            UPDATE sermons 
+            SET title = $1, description = $2, speaker = $3, video_url = $4, audio_url = $5, date = $6, category = $7, images_urls = $8
+            WHERE id = $9
+            RETURNING *;
+        `;
+        const values = [
+            title, 
+            description, 
+            speaker, 
+            finalVideoUrl, 
+            audio_url || null, 
+            date, 
+            category || 'Culto', 
+            images_urls, 
+            id
+        ];
 
         const result = await pool.query(query, values);
 
