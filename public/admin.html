@@ -174,13 +174,20 @@
                         <textarea id="description" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" placeholder="De qué trató el mensaje..."></textarea>
                     </div>
 
-                    <!-- SUBIR MULTIPLES IMÁGENES (ENTRE 2 Y 4 FOTOS) -->
-                    <div class="bg-blue-50/60 p-4 rounded-2xl border border-blue-200 space-y-2">
-                        <label class="block text-sm font-semibold text-blue-900">📷 Subir Fotos de la Prédica (Selecciona entre 2 y 4 fotos)</label>
-                        <input type="file" id="sermon_images" accept="image/*" multiple onchange="validarSeleccionFotos(this)" class="w-full text-sm text-slate-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
-                        <p class="text-xs text-slate-500">Mantén presionada la tecla Ctrl o Shift en tu computadora para seleccionar varias fotos a la vez.</p>
+                    <!-- GESTIÓN Y SUBIDA DE FOTOS (ENTRE 2 Y 4 FOTOS) -->
+                    <div class="bg-blue-50/60 p-4 rounded-2xl border border-blue-200 space-y-3">
+                        <label class="block text-sm font-semibold text-blue-900">📷 Fotografías de la Prédica (2 a 4 fotos)</label>
                         
-                        <!-- Previsualización dinámica de fotos seleccionadas -->
+                        <!-- Fotos actuales cargadas al editar -->
+                        <div id="existing-images-container" class="space-y-1.5 hidden">
+                            <span class="text-xs font-semibold text-slate-700">Fotos guardadas actualmente (puedes eliminar las que no quieras):</span>
+                            <div id="current-photos-grid" class="grid grid-cols-2 md:grid-cols-4 gap-2"></div>
+                        </div>
+
+                        <input type="file" id="sermon_images" accept="image/*" multiple onchange="validarSeleccionFotos(this)" class="w-full text-sm text-slate-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
+                        <p class="text-xs text-slate-500">Puedes seleccionar fotos nuevas para agregar o reemplazar.</p>
+                        
+                        <!-- Previsualización de nuevas fotos seleccionadas -->
                         <div id="images-preview-container" class="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2 hidden"></div>
                     </div>
 
@@ -378,6 +385,7 @@
         let currentUserRole = "secretary";
         let predicasCargadas = [];
         let transaccionesGlobales = [];
+        let fotosActualesGuardadas = []; // Fotos existentes al editar
 
         function parseJwt(token) {
             try {
@@ -495,20 +503,21 @@
             window.location.href = "login.html";
         });
 
-        // VALIDAR Y PREVISUALIZAR FOTOS (ENTRE 2 Y 4 FOTOS)
+        // VALIDAR Y PREVISUALIZAR NUEVAS FOTOS SELECCIONADAS
         function validarSeleccionFotos(input) {
             const container = document.getElementById("images-preview-container");
             container.innerHTML = "";
             const files = input.files;
+            const isEditing = Boolean(document.getElementById("sermon-id").value);
 
-            if (files.length > 0 && (files.length < 2 || files.length > 4)) {
+            if (!isEditing && files.length > 0 && (files.length < 2 || files.length > 4)) {
                 alert("Por favor selecciona entre 2 y 4 fotos para publicar la prédica.");
-                input.value = ""; // Limpiar selección si no cumple la cantidad
+                input.value = "";
                 container.classList.add("hidden");
                 return;
             }
 
-            if (files.length >= 2 && files.length <= 4) {
+            if (files.length > 0) {
                 container.classList.remove("hidden");
                 Array.from(files).forEach((file, index) => {
                     const reader = new FileReader();
@@ -517,7 +526,7 @@
                         img.className = "relative rounded-xl overflow-hidden border border-blue-200 h-24 bg-slate-100";
                         img.innerHTML = `
                             <img src="${e.target.result}" class="w-full h-full object-cover">
-                            <span class="absolute bottom-1 right-1 bg-slate-900/70 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">Foto ${index + 1}</span>
+                            <span class="absolute bottom-1 right-1 bg-slate-900/70 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">Nueva ${index + 1}</span>
                         `;
                         container.appendChild(img);
                     };
@@ -526,6 +535,32 @@
             } else {
                 container.classList.add("hidden");
             }
+        }
+
+        // RENDERIZAR FOTOS GUARDADAS EN MODO EDICIÓN CON BOTÓN DE ELIMINACIÓN
+        function renderizarFotosActualesAdmin() {
+            const container = document.getElementById("existing-images-container");
+            const grid = document.getElementById("current-photos-grid");
+            grid.innerHTML = "";
+
+            if (fotosActualesGuardadas.length > 0) {
+                container.classList.remove("hidden");
+                fotosActualesGuardadas.forEach((foto, i) => {
+                    grid.innerHTML += `
+                        <div class="relative rounded-xl overflow-hidden border border-slate-300 h-24 bg-white shadow-sm">
+                            <img src="${API_URL}${foto}" class="w-full h-full object-cover" onerror="this.src='${foto}'">
+                            <button type="button" onclick="eliminarFotoActual(${i})" class="absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold hover:bg-red-700 shadow" title="Quitar foto">✕</button>
+                        </div>
+                    `;
+                });
+            } else {
+                container.classList.add("hidden");
+            }
+        }
+
+        function eliminarFotoActual(index) {
+            fotosActualesGuardadas.splice(index, 1);
+            renderizarFotosActualesAdmin();
         }
 
         // Cargar Lista de Prédicas
@@ -586,6 +621,10 @@
             document.getElementById("video_url").value = sermon.video_url || sermon.link || sermon.enlace || "";
             document.getElementById("audio_url").value = sermon.audio_url || "";
 
+            // Manejar fotos existentes para poder visualizarlas y eliminarlas
+            fotosActualesGuardadas = sermon.images_urls ? [...sermon.images_urls] : [];
+            renderizarFotosActualesAdmin();
+
             document.getElementById("form-title").textContent = "Editar Prédica";
             document.getElementById("submit-sermon-btn").textContent = "Guardar Cambios 🔄";
             document.getElementById("cancel-edit-btn").classList.remove("hidden");
@@ -602,6 +641,8 @@
             document.getElementById("sermon-id").value = "";
             document.getElementById("images-preview-container").innerHTML = "";
             document.getElementById("images-preview-container").classList.add("hidden");
+            document.getElementById("existing-images-container").classList.add("hidden");
+            fotosActualesGuardadas = [];
             document.getElementById("form-title").textContent = "Publicar Nueva Prédica";
             document.getElementById("submit-sermon-btn").textContent = "Publicar Prédica 🚀";
             document.getElementById("cancel-edit-btn").classList.add("hidden");
@@ -636,7 +677,12 @@
             formData.append("link", document.getElementById("video_url").value);
             formData.append("audio_url", document.getElementById("audio_url").value || "");
 
-            // Adjuntar cada archivo de imagen seleccionado
+            // Si está editando, enviamos la lista de fotos conservadas
+            if (id) {
+                formData.append("existing_images", JSON.stringify(fotosActualesGuardadas));
+            }
+
+            // Adjuntar las fotos nuevas seleccionadas
             for (let i = 0; i < files.length; i++) {
                 formData.append("images", files[i]);
             }
