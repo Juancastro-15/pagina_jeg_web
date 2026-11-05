@@ -21,8 +21,9 @@
         <!-- MENÚ DE NAVEGACIÓN COMPUTADOR (Escritorio) -->
         <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-600">
             <a href="index.html" class="hover:text-blue-600 transition">Inicio</a>
+            <a href="ministerios.html" class="hover:text-blue-600 transition">Ministerios 🤝</a>
             <a href="sermons.html" class="hover:text-blue-600 transition">Prédicas</a>
-            <a href="events.html" class="hover:text-blue-600 transition">Eventos</a>
+            <a href="events.html" class="text-blue-600 font-bold transition">Eventos</a>
             <a href="prayer.html" class="hover:text-blue-600 transition">Peticiones</a>
             <a href="donations.html" class="bg-blue-50 text-blue-700 hover:bg-blue-100 font-semibold px-4 py-2 rounded-xl transition border border-blue-200 shadow-sm flex items-center space-x-1">
                 <span>💛 Donar / Ofrendar</span>
@@ -46,6 +47,7 @@
     <!-- MENÚ DESPLEGABLE MÓVIL (Oculto por defecto) -->
     <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-6 py-4 space-y-3 shadow-lg">
         <a href="index.html" class="block text-sm font-medium text-slate-700 hover:text-blue-600 py-1.5">🏠 Inicio</a>
+        <a href="ministerios.html" class="block text-sm font-medium text-slate-700 hover:text-blue-600 py-1.5">🤝 Ministerios</a>
         <a href="sermons.html" class="block text-sm font-medium text-slate-700 hover:text-blue-600 py-1.5">📖 Prédicas</a>
         <a href="events.html" class="block text-sm font-medium text-slate-700 hover:text-blue-600 py-1.5">📅 Eventos</a>
         <a href="prayer.html" class="block text-sm font-medium text-slate-700 hover:text-blue-600 py-1.5">🙏 Peticiones de Oración</a>
@@ -67,13 +69,20 @@
 
         <!-- Contenedor dinámico de eventos -->
         <div id="events-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                <div class="text-blue-600 font-bold text-sm">Sábado próximo</div>
-                <h3 class="text-xl font-bold text-slate-900 mt-1">Ayuno Congregacional Presencial</h3>
-                <p class="text-slate-500 text-sm mt-2">Te esperamos a las 9:00 AM en nuestra sede en San Fernando.</p>
+            <div class="col-span-full text-center py-12">
+                <p class="text-slate-500 animate-pulse text-sm">Cargando eventos programados...</p>
             </div>
         </div>
     </main>
+
+    <!-- MODAL DE VISUALIZACIÓN / ZOOM DE FOTOS DE EVENTOS -->
+    <div id="image-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex flex-col items-center justify-center p-4">
+        <button onclick="cerrarModal()" class="absolute top-6 right-6 text-white text-3xl font-bold hover:text-slate-300">✕</button>
+        <div class="relative max-w-4xl max-h-[80vh] flex items-center justify-center">
+            <img id="modal-img" src="" class="max-w-full max-h-[75vh] object-contain rounded-2xl shadow-2xl">
+        </div>
+        <div id="modal-thumbnails" class="flex space-x-3 mt-4"></div>
+    </div>
 
 <!-- Footer Unificado con Ubicación, Contactos y Redes -->
     <footer class="bg-slate-900 text-slate-400 pt-16 pb-8 border-t border-slate-800 mt-20">
@@ -83,7 +92,7 @@
             <div class="space-y-3">
                 <div class="flex items-center space-x-3">
                     <img src="\images\logo.png" alt="Logo" class="w-10 h-10 object-cover rounded-full border border-blue-500">
-                    <span class="text-white font-bold text-base">Iglesia Jehová es Gloria</span>
+                    <span class="text-white font-bold text-base">Jehová es Gloria</span>
                 </div>
                 <p class="text-slate-400 text-xs leading-relaxed">
                     "Un lugar de esperanza, restauración y poder de Dios en Cartagena." Pastores Wilson Camacho y Ella Margarita Ribón.
@@ -126,6 +135,95 @@
         const menu = document.getElementById("mobile-menu");
         menu.classList.toggle("hidden");
     }
+
+    const API_URL = "https://pagina-jeg-web.onrender.com";
+    let eventosGlobales = [];
+
+    async function cargarEventosPublicos() {
+        const container = document.getElementById("events-container");
+        if (!container) return;
+
+        try {
+            const res = await fetch(`${API_URL}/api/events`);
+            const events = await res.json();
+            eventosGlobales = events;
+            container.innerHTML = "";
+
+            if (!Array.isArray(events) || events.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <p class="text-slate-500 text-sm">No hay eventos programados en este momento.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            events.forEach((ev, idx) => {
+                const fotos = ev.images_urls && ev.images_urls.length > 0 ? ev.images_urls : ['images/logo.png'];
+                const fotoPortada = fotos[0];
+                const fecha = ev.event_date ? new Date(ev.event_date).toLocaleString('es-CO', { dateStyle: 'full', timeStyle: 'short' }) : "Fecha por confirmar";
+                
+                const costoBadge = ev.is_free 
+                    ? `<span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full">Entrada Libre 🎉</span>`
+                    : `<span class="bg-blue-100 text-blue-900 text-xs font-bold px-3 py-1 rounded-full">Valor: $${Number(ev.cost).toLocaleString('es-CO')} COP 💰</span>`;
+
+                container.innerHTML += `
+                    <div class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-52 w-full overflow-hidden bg-slate-100 cursor-pointer group" onclick="abrirModal(${idx})">
+                                <img src="${fotoPortada}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                <div class="absolute bottom-2 right-2 bg-slate-900/70 text-white text-[10px] px-2.5 py-1 rounded-lg backdrop-blur-sm">🔍 Ver Galería (${fotos.length})</div>
+                            </div>
+                            <div class="p-6 space-y-3">
+                                <div class="flex justify-between items-center">
+                                    ${costoBadge}
+                                </div>
+                                <h3 class="text-xl font-bold text-slate-900">${ev.title}</h3>
+                                <p class="text-xs text-slate-500 font-medium">📍 ${ev.location || 'Sede Principal'}</p>
+                                <p class="text-xs text-slate-600 leading-relaxed">${ev.description || ''}</p>
+                            </div>
+                        </div>
+                        <div class="p-6 pt-0 border-t border-slate-100 mt-4 flex items-center justify-between text-xs text-slate-400">
+                            <span>📅 ${fecha}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        } catch (err) {
+            console.error("Error al cargar eventos:", err);
+            container.innerHTML = `
+                <div class="col-span-full text-center py-12">
+                    <p class="text-red-500 text-sm">No se pudieron cargar los eventos en este momento.</p>
+                </div>
+            `;
+        }
+    }
+
+    function abrirModal(index) {
+        const evento = eventosGlobales[index];
+        if (!evento || !evento.images_urls || evento.images_urls.length === 0) return;
+
+        const modal = document.getElementById("image-modal");
+        const modalImg = document.getElementById("modal-img");
+        const thumbnails = document.getElementById("modal-thumbnails");
+
+        modalImg.src = evento.images_urls[0];
+        thumbnails.innerHTML = "";
+
+        evento.images_urls.forEach((url) => {
+            thumbnails.innerHTML += `
+                <img src="${url}" onclick="document.getElementById('modal-img').src='${url}'" class="w-12 h-12 object-cover rounded-lg border-2 border-white cursor-pointer hover:opacity-80 transition">
+            `;
+        });
+
+        modal.classList.remove("hidden");
+    }
+
+    function cerrarModal() {
+        document.getElementById("image-modal").classList.add("hidden");
+    }
+
+    document.addEventListener("DOMContentLoaded", cargarEventosPublicos);
 </script>
 
 </body>

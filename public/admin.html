@@ -33,7 +33,7 @@
                 margin: 0 !important;
             }
 
-            #section-sermons, #section-users, #section-ministerios {
+            #section-sermons, #section-users, #section-ministerios, #section-events {
                 display: none !important;
             }
 
@@ -133,6 +133,7 @@
             <button onclick="switchTab('sermons')" id="tab-sermons" class="font-bold text-blue-600 border-b-2 border-blue-600 pb-2 px-2 transition whitespace-nowrap">📖 Gestión de Prédicas</button>
             <button onclick="switchTab('users')" id="tab-users" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">👥 Registrar Usuario</button>
             <button onclick="switchTab('ministerios')" id="tab-ministerios" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">🤝 Solicitudes de Ministerios</button>
+            <button onclick="switchTab('events')" id="tab-events" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">📅 Gestión de Eventos</button>
             <button onclick="switchTab('accounting')" id="tab-accounting" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">📊 Contabilidad y Finanzas</button>
         </div>
 
@@ -338,7 +339,91 @@
             </div>
         </div>
 
-        <!-- SECCIÓN 4: Contabilidad y Finanzas (Optimizado para Impresión) -->
+        <!-- SECCIÓN 4: Gestión de Eventos -->
+        <div id="section-events" class="hidden space-y-8">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
+                <div class="border-b border-slate-100 pb-4">
+                    <h2 class="text-2xl font-extrabold text-slate-900">Crear Nuevo Evento</h2>
+                    <p class="text-slate-600 text-sm mt-1">Publica eventos especiales y adjunta de 1 a 3 fotografías promocionales.</p>
+                </div>
+
+                <form id="admin-event-form" class="space-y-4" enctype="multipart/form-data">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Título del Evento</label>
+                        <input type="text" id="event-title" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 text-sm" placeholder="Ej. Congreso de Damas 2026">
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Lugar / Ubicación</label>
+                            <input type="text" id="event-location" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 text-sm" placeholder="Ej. Sede Principal - San Fernando">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Fecha y Hora</label>
+                            <input type="datetime-local" id="event-date" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 text-sm">
+                        </div>
+                    </div>
+
+                    <!-- Costo del Evento -->
+                    <div class="grid md:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Tipo de Ingreso</label>
+                            <select id="event-is-free" onchange="toggleCostoInput(this.value)" class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm bg-white">
+                                <option value="true">Entrada Gratuita 🎉</option>
+                                <option value="false">Evento con Costo / Valor 💰</option>
+                            </select>
+                        </div>
+                        <div id="cost-input-container" class="hidden">
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Valor por Persona ($ COP)</label>
+                            <input type="number" id="event-cost" min="0" step="500" placeholder="Ej. 25000" class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Descripción del Evento</label>
+                        <textarea id="event-description" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 text-sm" placeholder="Detalles de la programación, invitados, etc..."></textarea>
+                    </div>
+
+                    <!-- Subida de Fotos (Máximo 3) -->
+                    <div class="bg-blue-50/60 p-4 rounded-2xl border border-blue-200 space-y-2">
+                        <label class="block text-sm font-semibold text-blue-900">📷 Fotos del Evento (Máximo 3 fotos)</label>
+                        <input type="file" id="event_images" accept="image/*" multiple onchange="validarFotosEvento(this)" class="w-full text-sm text-slate-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
+                        <div id="event-images-preview" class="grid grid-cols-3 gap-2 pt-2 hidden"></div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow transition text-sm">
+                        Publicar Evento 🚀
+                    </button>
+                </form>
+                <div id="event-msg" class="hidden text-center text-sm font-medium mt-4 p-3 rounded-xl"></div>
+            </div>
+
+            <!-- Tabla de Eventos Registrados -->
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-slate-900">Eventos Programados</h3>
+                    <button onclick="cargarEventosAdmin()" class="text-xs text-blue-600 hover:underline font-medium">Recargar Lista 🔄</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+                                <th class="p-4">Evento</th>
+                                <th class="p-4">Lugar</th>
+                                <th class="p-4">Fecha / Hora</th>
+                                <th class="p-4">Costo ($ COP)</th>
+                                <th class="p-4 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-events-list" class="text-sm divide-y divide-slate-100">
+                            <tr><td colspan="5" class="p-6 text-center text-slate-500 animate-pulse">Cargando eventos...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 5: Contabilidad y Finanzas (Optimizado para Impresión) -->
         <div id="section-accounting" class="hidden bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
             
             <div class="print-header">
@@ -485,6 +570,7 @@
             cargarPredicasAdmin();
             cargarUsuariosAdmin();
             cargarMinisteriosAdmin();
+            cargarEventosAdmin();
             cargarContabilidad();
         });
 
@@ -493,6 +579,7 @@
             const tabUsers = document.getElementById("tab-users");
             const tabAccounting = document.getElementById("tab-accounting");
             const tabMinisterios = document.getElementById("tab-ministerios");
+            const tabEvents = document.getElementById("tab-events");
 
             const normalizedRole = (role || "").toLowerCase().trim();
 
@@ -500,6 +587,7 @@
             if (tabUsers) tabUsers.classList.add("hidden");
             if (tabAccounting) tabAccounting.classList.add("hidden");
             if (tabMinisterios) tabMinisterios.classList.add("hidden");
+            if (tabEvents) tabEvents.classList.add("hidden");
 
             if (normalizedRole === "contador") {
                 if (tabAccounting) tabAccounting.classList.remove("hidden");
@@ -507,12 +595,14 @@
             } else if (normalizedRole === "secretary" || normalizedRole === "secretario") {
                 if (tabSermons) tabSermons.classList.remove("hidden");
                 if (tabMinisterios) tabMinisterios.classList.remove("hidden");
+                if (tabEvents) tabEvents.classList.remove("hidden");
                 switchTab("sermons");
             } else if (normalizedRole === "pastor" || normalizedRole === "admin") {
                 if (tabSermons) tabSermons.classList.remove("hidden");
                 if (tabUsers) tabUsers.classList.remove("hidden");
                 if (tabAccounting) tabAccounting.classList.remove("hidden");
                 if (tabMinisterios) tabMinisterios.classList.remove("hidden");
+                if (tabEvents) tabEvents.classList.remove("hidden");
                 switchTab("sermons");
             } else {
                 if (tabSermons) tabSermons.classList.remove("hidden");
@@ -530,16 +620,19 @@
             const secUsers = document.getElementById("section-users");
             const secAccounting = document.getElementById("section-accounting");
             const secMinisterios = document.getElementById("section-ministerios");
+            const secEvents = document.getElementById("section-events");
 
             const tabSermons = document.getElementById("tab-sermons");
             const tabUsers = document.getElementById("tab-users");
             const tabAccounting = document.getElementById("tab-accounting");
             const tabMinisterios = document.getElementById("tab-ministerios");
+            const tabEvents = document.getElementById("tab-events");
 
             if (secSermons) secSermons.classList.add("hidden");
             if (secUsers) secUsers.classList.add("hidden");
             if (secAccounting) secAccounting.classList.add("hidden");
             if (secMinisterios) secMinisterios.classList.add("hidden");
+            if (secEvents) secEvents.classList.add("hidden");
 
             const inactiveClasses = ["font-medium", "text-slate-500", "hover:text-slate-800"];
             const activeClasses = ["font-bold", "text-blue-600", "border-b-2", "border-blue-600"];
@@ -561,11 +654,13 @@
             updateTabStyle(tabUsers, tab === 'users');
             updateTabStyle(tabAccounting, tab === 'accounting');
             updateTabStyle(tabMinisterios, tab === 'ministerios');
+            updateTabStyle(tabEvents, tab === 'events');
 
             if (tab === 'sermons' && secSermons) secSermons.classList.remove("hidden");
             if (tab === 'users' && secUsers) secUsers.classList.remove("hidden");
             if (tab === 'accounting' && secAccounting) secAccounting.classList.remove("hidden");
             if (tab === 'ministerios' && secMinisterios) secMinisterios.classList.remove("hidden");
+            if (tab === 'events' && secEvents) secEvents.classList.remove("hidden");
         }
 
         document.getElementById("logout-btn").addEventListener("click", () => {
@@ -573,7 +668,7 @@
             window.location.href = "login.html";
         });
 
-        // VALIDAR Y PREVISUALIZAR NUEVAS FOTOS SELECCIONADAS
+        // VALIDAR Y PREVISUALIZAR NUEVAS FOTOS SELECCIONADAS (PRÉDICAS)
         function validarSeleccionFotos(input) {
             const container = document.getElementById("images-preview-container");
             container.innerHTML = "";
@@ -1013,6 +1108,138 @@
             } catch (err) {
                 console.error("Error al eliminar solicitud:", err);
                 alert("Error de conexión al intentar eliminar.");
+            }
+        }
+
+        // ==========================================
+        // MÓDULO DE GESTIÓN DE EVENTOS
+        // ==========================================
+        function toggleCostoInput(val) {
+            const container = document.getElementById("cost-input-container");
+            if (val === "false") {
+                container.classList.remove("hidden");
+            } else {
+                container.classList.add("hidden");
+                document.getElementById("event-cost").value = "";
+            }
+        }
+
+        function validarFotosEvento(input) {
+            const container = document.getElementById("event-images-preview");
+            container.innerHTML = "";
+            if (input.files.length > 3) {
+                alert("Máximo puedes seleccionar 3 imágenes por evento.");
+                input.value = "";
+                container.classList.add("hidden");
+                return;
+            }
+            if (input.files.length > 0) {
+                container.classList.remove("hidden");
+                Array.from(input.files).forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        container.innerHTML += `
+                            <div class="relative rounded-xl overflow-hidden border border-blue-200 h-20 bg-slate-100">
+                                <img src="${e.target.result}" class="w-full h-full object-cover">
+                            </div>`;
+                    };
+                    reader.readAsDataURL(file);
+                });
+            } else {
+                container.classList.add("hidden");
+            }
+        }
+
+        async function cargarEventosAdmin() {
+            const tbody = document.getElementById("admin-events-list");
+            if (!tbody) return;
+
+            try {
+                const res = await fetch(`${API_URL}/api/events`);
+                const events = await res.json();
+                tbody.innerHTML = "";
+
+                if (!Array.isArray(events) || events.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">No hay eventos registrados.</td></tr>`;
+                    return;
+                }
+
+                events.forEach(ev => {
+                    const id = ev.id;
+                    const titulo = ev.title;
+                    const lugar = ev.location || "Por definir";
+                    const fecha = ev.event_date ? new Date(ev.event_date).toLocaleString('es-CO') : "Sin fecha";
+                    const costoText = ev.is_free ? '<span class="bg-green-100 text-green-800 text-xs px-2.5 py-1 rounded-md font-bold">Gratuito</span>' : `<span class="text-blue-700 font-bold">$${Number(ev.cost).toLocaleString('es-CO')} COP</span>`;
+
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-4 font-bold text-slate-900">${titulo}</td>
+                            <td class="p-4 text-xs text-slate-600">${lugar}</td>
+                            <td class="p-4 text-xs text-slate-500">${fecha}</td>
+                            <td class="p-4 text-xs">${costoText}</td>
+                            <td class="p-4 text-center">
+                                <button onclick="eliminarEvento(${id})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm">Eliminar 🗑️</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error("Error al cargar eventos:", err);
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-red-500">Error al cargar la lista de eventos.</td></tr>`;
+            }
+        }
+
+        document.getElementById("admin-event-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append("title", document.getElementById("event-title").value);
+            formData.append("location", document.getElementById("event-location").value);
+            formData.append("event_date", document.getElementById("event-date").value);
+            formData.append("description", document.getElementById("event-description").value);
+            
+            const isFree = document.getElementById("event-is-free").value;
+            formData.append("is_free", isFree);
+            formData.append("cost", isFree === "true" ? 0 : document.getElementById("event-cost").value);
+
+            const files = document.getElementById("event_images").files;
+            for (let i = 0; i < files.length; i++) {
+                formData.append("images", files[i]);
+            }
+
+            const msgBox = document.getElementById("event-msg");
+            try {
+                const res = await fetch(`${API_URL}/api/events`, {
+                    method: "POST",
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("token") },
+                    body: formData
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    msgBox.className = "text-center text-sm font-medium mt-4 p-3 rounded-xl bg-green-50 text-green-700 border border-green-200";
+                    msgBox.textContent = "¡Evento publicado con éxito! 📅✨";
+                    document.getElementById("admin-event-form").reset();
+                    document.getElementById("event-images-preview").classList.add("hidden");
+                    cargarEventosAdmin();
+                } else {
+                    throw new Error(data.error || "Error al registrar evento");
+                }
+            } catch (err) {
+                msgBox.className = "text-center text-sm font-medium mt-4 p-3 rounded-xl bg-red-50 text-red-700 border border-red-200";
+                msgBox.textContent = "Error: " + err.message;
+            }
+            msgBox.classList.remove("hidden");
+        });
+
+        async function eliminarEvento(id) {
+            if (!confirm("¿Deseas eliminar este evento?")) return;
+            try {
+                const res = await fetch(`${API_URL}/api/events/${id}`, {
+                    method: "DELETE",
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+                });
+                if (res.ok) cargarEventosAdmin();
+            } catch (err) {
+                alert("Error al eliminar evento.");
             }
         }
 

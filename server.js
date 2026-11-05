@@ -1,6 +1,6 @@
 const express = require('express');
-const path = path = require('path');
-const fs = require('fs'); // 👈 1. Importar el módulo de sistema de archivos
+const path = require('path');
+const fs = require('fs');
 const cors = require('cors'); 
 const app = express();
 
@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 📂 2. ASEGURAR QUE LA CARPETA PUBLIC/UPLOADS EXISTA AUTOMÁTICAMENTE
+// 📂 Asegurar que la carpeta public/uploads exista automáticamente
 const uploadDir = path.join(__dirname, 'public', 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
@@ -20,12 +20,14 @@ if (!fs.existsSync(uploadDir)) {
 const sermonRoutes = require('./src/routes/sermonRoutes'); 
 const authRoutes = require('./src/routes/authRoutes');
 const accountingRoutes = require('./src/routes/accountingRoutes'); 
-const ministryRoutes = require('./src/routes/ministryRoutes'); // 👈 ¡Importamos las rutas de ministerios!
+const ministryRoutes = require('./src/routes/ministryRoutes');
+const eventRoutes = require('./src/routes/eventRoutes'); // 👈 ¡Importamos las rutas de eventos!
 
 app.use('/api/sermons', sermonRoutes); 
 app.use('/api/auth', authRoutes);     
 app.use('/api/accounting', accountingRoutes); 
-app.use('/api/ministerios', ministryRoutes); // 👈 ¡Montamos las rutas en el endpoint /api/ministerios!
+app.use('/api/ministerios', ministryRoutes); 
+app.use('/api/events', eventRoutes); // 👈 ¡Montamos las rutas de eventos en /api/events!
 
 // Puerto del servidor
 const PORT = process.env.PORT || 4000;
