@@ -21,7 +21,7 @@
 
         <!-- MENÚ DE NAVEGACIÓN COMPUTADOR (Escritorio) -->
         <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-600">
-            <a href="index.html" class="hover:text-blue-600 transition">Inicio</a>
+            <a href="index.html" class="text-blue-600 font-bold transition">Inicio</a>
             <a href="ministerios.html" class="hover:text-blue-600 transition">Ministerios 🤝</a>
             <a href="sermons.html" class="hover:text-blue-600 transition">Prédicas</a>
             <a href="events.html" class="hover:text-blue-600 transition">Eventos</a>
@@ -78,18 +78,48 @@
         </div>
     </section>
 
-    <!-- Sección Dinámica de Prédicas Recientes -->
-    <section id="sermons-section" class="py-16 px-6 max-w-7xl mx-auto">
-        <div class="text-center mb-12 space-y-2">
-            <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Palabra de Dios</span>
+    <!-- Sección Dinámica de Transmisión en Vivo y Prédicas Recientes -->
+    <section id="sermons-section" class="py-16 px-6 max-w-7xl mx-auto space-y-8">
+        
+        <div class="text-center space-y-2">
+            <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Palabra de Dios</span>
             <h2 class="text-3xl font-extrabold text-slate-900">Prédicas y Transmisiones Recientes</h2>
             <p class="text-slate-600 text-sm">Revive cada uno de nuestros mensajes compartidos y fortalece tu fe.</p>
         </div>
 
-        <!-- Contenedor dinámico -->
-        <div id="sermons-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="col-span-full text-center py-12">
-                <p class="text-slate-500 animate-pulse text-sm">Cargando últimas prédicas...</p>
+        <!-- REPRODUCTOR EN VIVO (SE MUESTRA AUTOMÁTICAMENTE EN HORARIO DE CULTO) -->
+        <div id="live-stream-container" class="hidden bg-slate-900 text-white rounded-3xl p-6 md:p-8 shadow-xl border border-slate-800 space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div class="space-y-1">
+                    <div class="inline-flex items-center space-x-2 bg-red-600/20 border border-red-500/30 px-3 py-1 rounded-full text-red-400 text-xs font-bold uppercase tracking-wider">
+                        <span class="w-2.5 h-2.5 bg-red-500 rounded-full animate-ping"></span>
+                        <span>Transmisión en Directo / EN VIVO</span>
+                    </div>
+                    <h3 class="text-2xl font-bold">Culto Congregacional en Directo</h3>
+                    <p class="text-slate-400 text-xs">Sintoniza nuestro servicio en tiempo real a continuación.</p>
+                </div>
+                <a href="https://facebook.com/iglesiajehovaesgloria" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-xl transition text-xs shadow">
+                    Ver en Facebook 📺
+                </a>
+            </div>
+
+            <!-- Contenedor del reproductor en vivo -->
+            <div class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden border border-slate-800 flex items-center justify-center">
+                <iframe id="live-iframe" src="" width="100%" height="100%" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+            </div>
+        </div>
+
+        <!-- CONTENEDOR DINÁMICO DE PRÉDICAS GUARDADAS -->
+        <div class="pt-4">
+            <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
+                <h3 class="text-xl font-bold text-slate-900">Mensajes Anteriores</h3>
+                <a href="sermons.html" class="text-xs text-blue-600 hover:underline font-bold">Ver catálogo completo 📖</a>
+            </div>
+
+            <div id="sermons-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="col-span-full text-center py-12">
+                    <p class="text-slate-500 animate-pulse text-sm">Cargando últimas prédicas...</p>
+                </div>
             </div>
         </div>
     </section>
@@ -169,7 +199,7 @@
             <!-- Columna 1: Identidad -->
             <div class="space-y-3">
                 <div class="flex items-center space-x-3">
-                    <img src="\images\logo.png" alt="Logo" class="w-10 h-10 object-cover rounded-full border border-blue-500">
+                    <img src="images/logo.png" alt="Logo" class="w-10 h-10 object-cover rounded-full border border-blue-500">
                     <span class="text-white font-bold text-base">Jehová es Gloria</span>
                 </div>
                 <p class="text-slate-400 text-xs leading-relaxed">
@@ -208,15 +238,58 @@
         </div>
     </footer>
 
-    <!-- Script completo con toggleMobileMenu y carga de prédicas -->
+    <!-- Script completo con automatización de en vivo y carga de prédicas -->
     <script>
-        // FUNCIÓN DEL MENÚ MÓVIL (¡ESTA ERA LA QUE FALTABA!)
         function toggleMobileMenu() {
             const menu = document.getElementById("mobile-menu");
             menu.classList.toggle("hidden");
         }
 
         const API_URL = "https://pagina-jeg-web.onrender.com";
+        const URL_VIDEO_FACEBOOK_LIVE = "https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Figlesiajehovaesgloria%2Fvideos%2F";
+
+        // VERIFICACIÓN AUTOMÁTICA DE HORARIOS DE CULTO
+        function esHoraDeTransmision() {
+            const ahora = new Date();
+            const dia = ahora.getDay(); // 0 = Domingo, 1 = Lunes, ..., 5 = Viernes
+            const minutosActuales = ahora.getHours() * 60 + ahora.getMinutes();
+
+            // 1. Lunes a Viernes: 4:00 AM a 5:30 AM (240 min a 330 min)
+            if (dia >= 1 && dia <= 5) {
+                if (minutosActuales >= 240 && minutosActuales <= 330) {
+                    return true;
+                }
+            }
+
+            // 2. Viernes: 7:00 PM a 9:00 PM (1140 min a 1260 min)
+            if (dia === 5) {
+                if (minutosActuales >= 1140 && minutosActuales <= 1260) {
+                    return true;
+                }
+            }
+
+            // 3. Domingo: 8:00 AM a 11:00 AM (480 min a 660 min)
+            if (dia === 0) {
+                if (minutosActuales >= 480 && minutosActuales <= 660) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        function gestionarTransmisionEnVivo() {
+            const container = document.getElementById("live-stream-container");
+            const iframe = document.getElementById("live-iframe");
+
+            if (esHoraDeTransmision()) {
+                iframe.src = URL_VIDEO_FACEBOOK_LIVE;
+                container.classList.remove("hidden");
+            } else {
+                container.classList.add("hidden");
+                iframe.src = "";
+            }
+        }
 
         async function cargarPredicas() {
             const container = document.getElementById("sermons-container");
@@ -241,18 +314,26 @@
                     const titulo = sermon.title || sermon.titulo || "Transmisión";
                     const descripcion = sermon.description || sermon.descripcion || "Revive el mensaje compartido en nuestra congregación.";
                     const categoria = sermon.category || sermon.categoria || "Culto Dominical";
-                    const enlace = sermon.link || sermon.enlace || "#";
+                    const enlace = sermon.link || sermon.enlace || sermon.video_url || "#";
+                    const fotos = sermon.images_urls && sermon.images_urls.length > 0 ? sermon.images_urls : ['images/logo.png'];
 
                     const card = `
-                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between space-y-4">
-                            <div class="space-y-2">
-                                <span class="inline-block text-xs font-semibold px-3 py-1 bg-blue-50 text-blue-600 rounded-full">${categoria}</span>
-                                <h3 class="text-xl font-bold text-slate-900">${titulo}</h3>
-                                <p class="text-slate-500 text-sm leading-relaxed">${descripcion}</p>
+                        <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                            <div>
+                                <div class="relative h-48 w-full bg-slate-100 overflow-hidden">
+                                    <img src="${fotos[0]}" class="w-full h-full object-cover">
+                                    <span class="absolute top-3 left-3 text-xs font-semibold px-3 py-1 bg-blue-600 text-white rounded-full shadow-sm">${categoria}</span>
+                                </div>
+                                <div class="p-6 space-y-2">
+                                    <h3 class="text-xl font-bold text-slate-900">${titulo}</h3>
+                                    <p class="text-slate-500 text-sm leading-relaxed line-clamp-3">${descripcion}</p>
+                                </div>
                             </div>
-                            <a href="${enlace}" target="_blank" class="w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-xl transition text-sm shadow-sm inline-block">
-                                Ver Transmisión en Facebook 📺
-                            </a>
+                            <div class="p-6 pt-0">
+                                <a href="${enlace}" target="_blank" class="w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-xl transition text-sm shadow-sm inline-block">
+                                    Ver Mensaje en Facebook 📺
+                                </a>
+                            </div>
                         </div>
                     `;
                     container.innerHTML += card;
@@ -267,7 +348,10 @@
             }
         }
 
-        document.addEventListener("DOMContentLoaded", cargarPredicas);
+        document.addEventListener("DOMContentLoaded", () => {
+            gestionarTransmisionEnVivo();
+            cargarPredicas();
+        });
     </script>
 </body>
 </html>
