@@ -21,6 +21,15 @@ const createEvent = async (req, res) => {
         // Evaluar si la entrada es gratuita o con costo
         const isFreeEvent = is_free === 'true' || is_free === true || !cost || parseFloat(cost) === 0;
 
+        // 🕒 CORRECCIÓN DE ZONA HORARIA (Servidor UTC vs Colombia UTC-5)
+        let finalEventDate = event_date;
+        if (event_date) {
+            const dateObj = new Date(event_date);
+            // Sumamos 5 horas para compensar el desfase del servidor en la nube
+            dateObj.setHours(dateObj.getHours() + 5);
+            finalEventDate = dateObj;
+        }
+
         const query = `
             INSERT INTO events (title, description, location, event_date, images_urls, cost, is_free)
             VALUES ($1, $2, $3, $4, $5, $6, $7)
@@ -30,7 +39,7 @@ const createEvent = async (req, res) => {
             title, 
             description || '', 
             location || 'Sede Principal', 
-            event_date, 
+            finalEventDate, 
             images_urls, 
             isFreeEvent ? 0 : parseFloat(cost), 
             isFreeEvent
