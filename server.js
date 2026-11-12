@@ -22,12 +22,14 @@ const authRoutes = require('./src/routes/authRoutes');
 const accountingRoutes = require('./src/routes/accountingRoutes'); 
 const ministryRoutes = require('./src/routes/ministryRoutes');
 const eventRoutes = require('./src/routes/eventRoutes'); // 👈 ¡Importamos las rutas de eventos!
+const prayerRoutes = require('./src/routes/prayerRoutes'); // 🙏 Rutas de peticiones de oración
 
 app.use('/api/sermons', sermonRoutes); 
 app.use('/api/auth', authRoutes);     
 app.use('/api/accounting', accountingRoutes); 
 app.use('/api/ministerios', ministryRoutes); 
 app.use('/api/events', eventRoutes); // 👈 ¡Montamos las rutas de eventos en /api/events!
+app.use('/api/prayers', prayerRoutes); // 🙏 Montamos las peticiones de oración en /api/prayers
 
 // Puerto del servidor
 const PORT = process.env.PORT || 4000;

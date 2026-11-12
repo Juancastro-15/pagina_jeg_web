@@ -144,6 +144,26 @@
         .view-enter{animation:viewin .45s cubic-bezier(.2,.8,.2,1)}
         @media (prefers-reduced-motion:reduce){#bg-layer .orb,.logo-wrap i,.gestor-card,.view-enter{animation:none!important}}
         @media print{#section-home,#bg-layer,#btn-home{display:none!important}}
+
+        /* ===== MENÚ LATERAL DE GESTORES (al entrar a un módulo) ===== */
+        main.modo-modulo{max-width:80rem;display:grid;grid-template-columns:270px minmax(0,1fr);gap:2rem;align-items:start}
+        main.modo-modulo>*{margin:0!important}
+        main.modo-modulo>#tabs-bar{grid-column:1;grid-row:1;position:sticky;top:5.5rem}
+        main.modo-modulo>div[id^="section-"]{grid-column:2;grid-row:1;min-width:0}
+        #tabs-bar:not(.hidden){display:flex;flex-direction:column;gap:.3rem;overflow:visible;padding:.75rem;border:1px solid rgba(255,255,255,.9);border-radius:1.5rem;background:rgba(255,255,255,.74);backdrop-filter:blur(14px);box-shadow:0 12px 32px -14px rgba(15,42,94,.2)}
+        #tabs-bar>*{margin:0!important}
+        #tabs-bar button:not(.btn-home){width:100%;text-align:left;white-space:normal;padding:.7rem .9rem;border-radius:1rem;border-bottom-width:0!important;transition:background .2s}
+        #tabs-bar button:not(.btn-home):hover{background:rgba(37,99,235,.07)}
+        #tabs-bar button.border-b-2{background:#eff6ff;box-shadow:inset 3px 0 0 #2563eb}
+        #tabs-bar .btn-home{width:100%;justify-content:center;margin-bottom:.4rem;padding:.6rem}
+        @media (max-width:767px){
+            main.modo-modulo{display:block}
+            main.modo-modulo>*+*{margin-top:1.25rem!important}
+            #tabs-bar:not(.hidden){display:grid;grid-template-columns:1fr 1fr;position:static}
+            #tabs-bar .btn-home{grid-column:1/-1}
+            #tabs-bar button:not(.btn-home){font-size:.8rem;padding:.6rem .7rem}
+        }
+        @media print{main.modo-modulo{display:block!important;max-width:100%!important}}
     </style>
 </head>
 <body class="bg-slate-100 font-sans text-slate-800">
@@ -1469,7 +1489,10 @@
                     headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
                 });
 
-                if (!res.ok) throw new Error("No se pudieron cargar las peticiones");
+                if (!res.ok) {
+                    const detalle = await res.text().catch(() => "");
+                    throw new Error("No se pudieron cargar las peticiones (HTTP " + res.status + ") " + detalle.slice(0, 160));
+                }
 
                 const prayers = await res.json();
                 tbody.innerHTML = "";
@@ -1481,8 +1504,8 @@
 
                 prayers.forEach(item => {
                     const id = item.id || item._id;
-                    const nombre = item.name || item.nombre || "Anónimo";
-                    const peticion = item.prayer || item.peticion || item.message || "Sin detalles";
+                    const nombre = escaparHtml(item.name || item.nombre || item.author_name || "Anónimo");
+                    const peticion = escaparHtml(item.prayer || item.peticion || item.message || item.petition || "Sin detalles");
                     const fecha = item.created_at ? new Date(item.created_at).toLocaleDateString('es-CO') : "Reciente";
 
                     tbody.innerHTML += `
@@ -1498,7 +1521,7 @@
                 });
             } catch (err) {
                 console.error("Error al cargar peticiones:", err);
-                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-red-500">Error al conectar con la base de datos.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-red-500">Error al conectar con la base de datos.<br><span class="text-xs text-slate-500">${String(err.message).replace(/</g, "&lt;")}</span></td></tr>`;
             }
         }
 
@@ -1832,6 +1855,7 @@
     </script>
     <!-- Navegación del panel principal, rutas #hash y fondo animado -->
     <script>
+        function escaparHtml(v) { return String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
         const MODULOS = ['sermons','users','ministerios','events','prayers','accounting'];
         let appListo = false;
         function _hash(h, reemplazar) {
@@ -1841,6 +1865,7 @@
         function mostrarModulo(tab) {
             document.getElementById('section-home').classList.add('hidden');
             document.getElementById('tabs-bar').classList.remove('hidden');
+            document.querySelector('main').classList.add('modo-modulo');
             if (appListo) _hash(tab);
             requestAnimationFrame(() => {
                 const s = document.getElementById('section-' + tab);
@@ -1855,6 +1880,7 @@
                 c.style.display = (!t || t.classList.contains('hidden')) ? 'none' : '';
             });
             document.getElementById('tabs-bar').classList.add('hidden');
+            document.querySelector('main').classList.remove('modo-modulo');
             document.getElementById('section-home').classList.remove('hidden');
             if (appListo) _hash('inicio', desdeRuta === true);
         }

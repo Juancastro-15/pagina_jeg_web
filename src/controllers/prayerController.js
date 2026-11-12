@@ -29,7 +29,34 @@ const createPrayer = async (req, res) => {
     }
 };
 
+// Obtener TODAS las peticiones (pendientes y aprobadas) para el panel de administración
+const getAllPrayers = async (req, res) => {
+    try {
+        const result = await pool.query("SELECT * FROM prayers ORDER BY created_at DESC");
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error al obtener todas las oraciones:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
+// Marcar una petición como atendida (la retira del muro)
+const deletePrayer = async (req, res) => {
+    try {
+        const result = await pool.query("DELETE FROM prayers WHERE id = $1 RETURNING id", [req.params.id]);
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Petición no encontrada' });
+        }
+        res.json({ message: 'Petición atendida y retirada del muro' });
+    } catch (error) {
+        console.error('Error al eliminar petición de oración:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
 module.exports = {
     getPrayers,
-    createPrayer
+    getAllPrayers,
+    createPrayer,
+    deletePrayer
 };
