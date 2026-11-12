@@ -87,40 +87,25 @@
             <p class="text-slate-600 text-sm">Revive cada uno de nuestros mensajes compartidos y fortalece tu fe.</p>
         </div>
 
-        <!-- REPRODUCTOR EN VIVO INTELIGENTE (SIN ERROR DE VÍDEO NO DISPONIBLE) -->
+        <!-- REPRODUCTOR EN VIVO OFICIAL DE FACEBOOK -->
         <div id="live-stream-container" class="bg-slate-900 text-white rounded-3xl p-6 md:p-8 shadow-xl border border-slate-800 space-y-6">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div class="space-y-1">
-                    <div class="inline-flex items-center space-x-2 bg-blue-600/20 border border-blue-500/30 px-3 py-1 rounded-full text-blue-400 text-xs font-bold uppercase tracking-wider">
-                        <span>📺 Transmisiones y Cultos Online</span>
+                    <div class="inline-flex items-center space-x-2 bg-red-600/20 border border-red-500/30 px-3 py-1 rounded-full text-red-400 text-xs font-bold uppercase tracking-wider">
+                        <span class="w-2.5 h-2.5 bg-red-500 rounded-full animate-ping"></span>
+                        <span>Transmisión en Directo / EN VIVO</span>
                     </div>
-                    <h3 class="text-2xl font-bold">Conéctate a nuestras Transmisiones</h3>
-                    <p class="text-slate-400 text-xs">Sintoniza nuestros servicios en vivo o revive los mensajes anteriores.</p>
+                    <h3 class="text-2xl font-bold">Culto Congregacional en Directo</h3>
+                    <p class="text-slate-400 text-xs">Sintoniza nuestro servicio en tiempo real a continuación.</p>
                 </div>
                 <a href="https://www.facebook.com/iglesiajehovaesgloria" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-xl transition text-xs shadow flex items-center space-x-1">
-                    <span>Ir a Facebook 🔴</span>
+                    <span>Ver en Facebook 📺</span>
                 </a>
             </div>
 
-            <!-- Contenedor amigable fuera de hora o sin en vivo activo -->
-            <div class="relative w-full bg-slate-950 rounded-2xl overflow-hidden border border-slate-800 p-8 text-center space-y-4">
-                <div class="max-w-md mx-auto space-y-3">
-                    <div class="w-16 h-16 bg-blue-600/20 text-blue-400 rounded-full flex items-center justify-center mx-auto text-2xl font-bold border border-blue-500/30">
-                        ⛪
-                    </div>
-                    <h4 class="text-lg font-bold text-white">¡Alabado sea el Señor!</h4>
-                    <p class="text-xs text-slate-400 leading-relaxed">
-                        Te invitamos a unirte a nuestros servicios presenciales o explorar las prédicas guardadas abajo.
-                    </p>
-                    <div class="pt-2 flex justify-center space-x-3">
-                        <a href="https://www.facebook.com/iglesiajehovaesgloria" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow">
-                            Visitar Facebook Live 📺
-                        </a>
-                        <a href="sermons.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-xl text-xs font-bold transition">
-                            Ver Prédicas 📖
-                        </a>
-                    </div>
-                </div>
+            <!-- Contenedor del reproductor oficial de Facebook -->
+            <div class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden border border-slate-800 flex items-center justify-center">
+                <iframe src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Figlesiajehovaesgloria%2Fvideos%2F&show_text=false&width=560&t=0" width="100%" height="100%" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
             </div>
         </div>
 
