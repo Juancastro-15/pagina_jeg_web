@@ -7,6 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Librería Chart.js para los Gráficos Financieros -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&display=swap" rel="stylesheet">
     
     <!-- ESTILOS ESPECIALES PARA IMPRESIÓN / REPORTE PDF -->
     <style>
@@ -106,12 +108,54 @@
         .print-header, .print-footer {
             display: none;
         }
+
+        /* ===== DASHBOARD: fondo animado, logo y panel de gestores ===== */
+        #bg-layer{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;background:linear-gradient(160deg,#eaf2ff 0%,#f7faff 45%,#fff7e6 100%)}
+        #bg-layer .orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;animation:orbit 32s ease-in-out infinite alternate}
+        #bg-layer .o1{width:46vmax;height:46vmax;left:-12vmax;top:-14vmax;background:#60a5fa}
+        #bg-layer .o2{width:38vmax;height:38vmax;right:-10vmax;top:10vh;background:#f5c864;--dx:-9vmax;animation-duration:40s;animation-delay:-8s}
+        #bg-layer .o3{width:42vmax;height:42vmax;left:20vw;bottom:-22vmax;background:#a5b4fc;--dy:-7vmax;animation-duration:36s;animation-delay:-16s}
+        @keyframes orbit{to{transform:translate(var(--dx,8vmax),var(--dy,6vmax)) scale(1.15)}}
+        #bg-canvas{position:absolute;inset:0}
+        #app-header{background:rgba(255,255,255,.78)!important;backdrop-filter:blur(14px)}
+        .home-hero{display:flex;align-items:center;gap:1.75rem;flex-wrap:wrap}
+        .logo-wrap{position:relative;width:132px;height:132px;flex:none}
+        .logo-wrap i{position:absolute;inset:-7px;border-radius:50%;background:conic-gradient(#e8b04a,#7cc4ff,#2563eb,#e8b04a);animation:spin 14s linear infinite}
+        .logo-wrap i.glow{filter:blur(22px);opacity:.5}
+        .logo-core{position:absolute;inset:0;border-radius:50%;background:#fff;border:4px solid #fff;overflow:hidden;display:grid;place-items:center;font-size:3rem}
+        .logo-core img{width:100%;height:100%;object-fit:cover}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .home-title{font-family:'Fraunces',Georgia,serif;font-weight:600;color:#0f2a5e;font-size:clamp(1.9rem,4.5vw,3rem);line-height:1.1}
+        .gestor-grid{display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+        .gestor-card{--c1:#2563eb;--c2:#60a5fa;position:relative;display:flex;flex-direction:column;gap:1rem;text-align:left;padding:1.5rem;border-radius:1.75rem;overflow:hidden;cursor:pointer;background:rgba(255,255,255,.74);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.9);box-shadow:0 1px 2px rgba(15,42,94,.06),0 12px 32px -14px rgba(15,42,94,.2);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s;animation:viewin .6s both cubic-bezier(.2,.8,.2,1);animation-delay:calc(var(--i)*70ms)}
+        .gestor-card::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 100% 0%,color-mix(in srgb,var(--c1) 18%,transparent),transparent 60%);opacity:0;transition:opacity .4s}
+        .gestor-card:hover{transform:translateY(-6px);box-shadow:0 2px 4px rgba(15,42,94,.06),0 24px 40px -16px var(--c1)}
+        .gestor-card:hover::before{opacity:1}
+        .gestor-icon{position:relative;width:3.5rem;height:3.5rem;border-radius:1.1rem;display:grid;place-items:center;font-size:1.6rem;background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 10px 20px -8px var(--c1);transition:transform .35s}
+        .gestor-card:hover .gestor-icon{transform:rotate(-6deg) scale(1.08)}
+        .gestor-card h3{position:relative;font-weight:800;font-size:1.1rem;color:#0f172a}
+        .gestor-card p{position:relative;font-size:.85rem;color:#475569;line-height:1.45}
+        .gestor-chev{position:absolute;right:1.25rem;top:1.5rem;width:1.5rem;height:1.5rem;color:var(--c1);opacity:.35;transition:transform .35s,opacity .35s}
+        .gestor-card:hover .gestor-chev{transform:translateX(4px);opacity:1}
+        .btn-home{display:inline-flex;align-items:center;gap:.4rem;flex:none;font-size:.8rem;font-weight:700;color:#1d4ed8;background:#eff6ff;border:1px solid #bfdbfe;padding:.35rem .8rem;border-radius:999px;margin-bottom:.4rem;transition:background .2s}
+        .btn-home:hover{background:#dbeafe}
+        .gestor-card:focus-visible,.btn-home:focus-visible{outline:3px solid #2563eb;outline-offset:3px}
+        @keyframes viewin{from{opacity:0;transform:translateY(14px)}}
+        .view-enter{animation:viewin .45s cubic-bezier(.2,.8,.2,1)}
+        @media (prefers-reduced-motion:reduce){#bg-layer .orb,.logo-wrap i,.gestor-card,.view-enter{animation:none!important}}
+        @media print{#section-home,#bg-layer,#btn-home{display:none!important}}
     </style>
 </head>
 <body class="bg-slate-100 font-sans text-slate-800">
 
+    <!-- Fondo animado -->
+    <div id="bg-layer" aria-hidden="true">
+        <div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+        <canvas id="bg-canvas"></canvas>
+    </div>
+
     <!-- Header / Barra Superior del Admin -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
+    <header id="app-header" class="bg-white shadow-sm sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-3">
                 <img src="images/logo.png" alt="Logo" class="w-10 h-10 object-cover rounded-full border border-blue-200 shadow-sm">
@@ -129,9 +173,43 @@
 
     <!-- Contenido Principal -->
     <main class="max-w-6xl mx-auto px-6 py-10 space-y-8">
+
+        <!-- PANEL PRINCIPAL: aquí llega todo usuario al iniciar sesión -->
+        <section id="section-home" class="space-y-10">
+            <div class="home-hero">
+                <div class="logo-wrap"><i class="glow"></i><i></i><div class="logo-core"><img src="images/logo.png" alt="Logo de la iglesia" onerror="this.parentNode.textContent='✝️'"></div></div>
+                <div>
+                    <p id="home-greeting" class="text-blue-700 font-bold">Bienvenido</p>
+                    <h2 class="home-title">Iglesia Jehová es Gloria</h2>
+                    <p id="home-date" class="text-slate-600 text-sm mt-2 capitalize"></p>
+                </div>
+            </div>
+            <div class="gestor-grid">
+            <button type="button" class="gestor-card" data-tab="sermons" style="--i:0;--c1:#2563eb;--c2:#60a5fa" onclick="switchTab('sermons')">
+                <svg class="gestor-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg><span class="gestor-icon">📖</span><h3>Prédicas</h3><p>Publica, edita y elimina prédicas con sus fotos.</p>
+            </button>
+            <button type="button" class="gestor-card" data-tab="users" style="--i:1;--c1:#6366f1;--c2:#a78bfa" onclick="switchTab('users')">
+                <svg class="gestor-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg><span class="gestor-icon">👥</span><h3>Usuarios</h3><p>Crea cuentas y asigna el rol de cada persona.</p>
+            </button>
+            <button type="button" class="gestor-card" data-tab="ministerios" style="--i:2;--c1:#0d9488;--c2:#5eead4" onclick="switchTab('ministerios')">
+                <svg class="gestor-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg><span class="gestor-icon">🤝</span><h3>Ministerios</h3><p>Revisa quién quiere servir y en qué área.</p>
+            </button>
+            <button type="button" class="gestor-card" data-tab="events" style="--i:3;--c1:#f59e0b;--c2:#fcd34d" onclick="switchTab('events')">
+                <svg class="gestor-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg><span class="gestor-icon">📅</span><h3>Eventos</h3><p>Programa eventos con fecha, costo y fotos.</p>
+            </button>
+            <button type="button" class="gestor-card" data-tab="prayers" style="--i:4;--c1:#e11d48;--c2:#fb7185" onclick="switchTab('prayers')">
+                <svg class="gestor-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg><span class="gestor-icon">🙏</span><h3>Peticiones de oración</h3><p>Lee los motivos que envía la comunidad.</p>
+            </button>
+            <button type="button" class="gestor-card" data-tab="accounting" style="--i:5;--c1:#059669;--c2:#6ee7b7" onclick="switchTab('accounting')">
+                <svg class="gestor-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg><span class="gestor-icon">📊</span><h3>Contabilidad y finanzas</h3><p>Ingresos, egresos y balance de la iglesia.</p>
+            </button>
+            </div>
+        </section>
+
         
         <!-- Pestañas de navegación interna del Dashboard -->
-        <div class="flex space-x-4 border-b border-slate-200 pb-3 overflow-x-auto no-print">
+        <div id="tabs-bar" class="flex space-x-4 border-b border-slate-200 pb-3 overflow-x-auto no-print">
+            <button onclick="goHome()" id="btn-home" class="btn-home">🏠 Panel principal</button>
             <button onclick="switchTab('sermons')" id="tab-sermons" class="font-bold text-blue-600 border-b-2 border-blue-600 pb-2 px-2 transition whitespace-nowrap">📖 Gestión de Prédicas</button>
             <button onclick="switchTab('users')" id="tab-users" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">👥 Registrar Usuario</button>
             <button onclick="switchTab('ministerios')" id="tab-ministerios" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">🤝 Solicitudes de Ministerios</button>
@@ -718,13 +796,13 @@
 
             if (normalizedRole === "contador") {
                 if (tabAccounting) tabAccounting.classList.remove("hidden");
-                switchTab("accounting");
+                goHome();
             } else if (normalizedRole === "secretary" || normalizedRole === "secretario") {
                 if (tabSermons) tabSermons.classList.remove("hidden");
                 if (tabMinisterios) tabMinisterios.classList.remove("hidden");
                 if (tabEvents) tabEvents.classList.remove("hidden");
                 if (tabPrayers) tabPrayers.classList.remove("hidden");
-                switchTab("sermons");
+                goHome();
             } else if (normalizedRole === "pastor" || normalizedRole === "admin") {
                 if (tabSermons) tabSermons.classList.remove("hidden");
                 if (tabUsers) tabUsers.classList.remove("hidden");
@@ -732,10 +810,10 @@
                 if (tabMinisterios) tabMinisterios.classList.remove("hidden");
                 if (tabEvents) tabEvents.classList.remove("hidden");
                 if (tabPrayers) tabPrayers.classList.remove("hidden");
-                switchTab("sermons");
+                goHome();
             } else {
                 if (tabSermons) tabSermons.classList.remove("hidden");
-                switchTab("sermons");
+                goHome();
             }
         }
 
@@ -745,6 +823,7 @@
             if (tab === 'users' && normalizedRole !== 'admin' && normalizedRole !== 'pastor') return;
             if (tab === 'accounting' && normalizedRole !== 'admin' && normalizedRole !== 'pastor' && normalizedRole !== 'contador') return;
             if (tab === 'prayers' && normalizedRole !== 'admin' && normalizedRole !== 'pastor' && normalizedRole !== 'secretary' && normalizedRole !== 'secretario') return;
+            mostrarModulo(tab);
 
             const secSermons = document.getElementById("section-sermons");
             const secUsers = document.getElementById("section-users");
@@ -1751,5 +1830,79 @@
             window.print();
         }
     </script>
+    <!-- Navegación del panel principal, rutas #hash y fondo animado -->
+    <script>
+        const MODULOS = ['sermons','users','ministerios','events','prayers','accounting'];
+        let appListo = false;
+        function _hash(h, reemplazar) {
+            if (location.hash === '#' + h) return;
+            try { history[reemplazar ? 'replaceState' : 'pushState'](null, '', '#' + h); } catch (e) { location.hash = h; }
+        }
+        function mostrarModulo(tab) {
+            document.getElementById('section-home').classList.add('hidden');
+            document.getElementById('tabs-bar').classList.remove('hidden');
+            if (appListo) _hash(tab);
+            requestAnimationFrame(() => {
+                const s = document.getElementById('section-' + tab);
+                if (s) { s.classList.remove('view-enter'); void s.offsetWidth; s.classList.add('view-enter'); }
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        function goHome(desdeRuta) {
+            MODULOS.forEach(m => { const s = document.getElementById('section-' + m); if (s) s.classList.add('hidden'); });
+            document.querySelectorAll('.gestor-card').forEach(c => {
+                const t = document.getElementById('tab-' + c.dataset.tab);
+                c.style.display = (!t || t.classList.contains('hidden')) ? 'none' : '';
+            });
+            document.getElementById('tabs-bar').classList.add('hidden');
+            document.getElementById('section-home').classList.remove('hidden');
+            if (appListo) _hash('inicio', desdeRuta === true);
+        }
+        function enrutar() {
+            const h = location.hash.slice(1);
+            const t = document.getElementById('tab-' + h);
+            if (MODULOS.includes(h) && t && !t.classList.contains('hidden')) switchTab(h);
+            else goHome(true);
+        }
+        window.addEventListener('hashchange', enrutar);
+        window.addEventListener('popstate', enrutar);
+        document.addEventListener('DOMContentLoaded', () => {
+            const p = parseJwt(localStorage.getItem('token') || '');
+            const n = p && (p.name || p.nombre);
+            document.getElementById('home-greeting').textContent = n ? 'Hola, ' + String(n).split(' ')[0] : 'Bienvenido';
+            document.getElementById('home-date').textContent = new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' });
+            appListo = true;
+            enrutar();
+        });
+
+        // Luces flotantes del fondo
+        (function () {
+            const c = document.getElementById('bg-canvas'); if (!c) return;
+            const ctx = c.getContext('2d');
+            const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+            let w, h, parts = [], raf;
+            const mk = () => ({ x: Math.random() * w, y: Math.random() * h, r: 1.2 + Math.random() * 3.2, vy: .12 + Math.random() * .35, vx: (Math.random() - .5) * .18, ph: Math.random() * 6.28, col: Math.random() < .4 ? '232,176,74' : '59,130,246', a: .18 + Math.random() * .32 });
+            function resize() {
+                const d = Math.min(devicePixelRatio || 1, 2); w = innerWidth; h = innerHeight;
+                c.width = w * d; c.height = h * d; c.style.width = w + 'px'; c.style.height = h + 'px'; ctx.setTransform(d, 0, 0, d, 0, 0);
+                parts = Array.from({ length: Math.round(Math.min(70, Math.max(24, w * h / 26000))) }, mk);
+            }
+            function draw(t) {
+                ctx.clearRect(0, 0, w, h);
+                for (const p of parts) {
+                    p.y -= p.vy; p.x += p.vx + Math.sin(t / 1800 + p.ph) * .15;
+                    if (p.y < -10) { p.y = h + 10; p.x = Math.random() * w; }
+                    const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 4), tw = .6 + .4 * Math.sin(t / 900 + p.ph);
+                    g.addColorStop(0, `rgba(${p.col},${p.a * tw})`); g.addColorStop(1, `rgba(${p.col},0)`);
+                    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 4, 0, 6.283); ctx.fill();
+                }
+            }
+            const loop = t => { draw(t); raf = requestAnimationFrame(loop); };
+            resize(); addEventListener('resize', resize);
+            if (reduce) draw(0); else raf = requestAnimationFrame(loop);
+            document.addEventListener('visibilitychange', () => { if (reduce) return; if (document.hidden) cancelAnimationFrame(raf); else raf = requestAnimationFrame(loop); });
+        })();
+    </script>
+
 </body>
 </html>
