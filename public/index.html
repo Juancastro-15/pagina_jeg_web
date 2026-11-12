@@ -238,7 +238,8 @@
         </div>
     </footer>
 
-    <!-- Script completo con automatización de en vivo y carga de prédicas -->
+    
+<!-- Script completo con automatización inteligente y reintentos para Render -->
     <script>
         function toggleMobileMenu() {
             const menu = document.getElementById("mobile-menu");
@@ -256,23 +257,15 @@
 
             // 1. Lunes a Viernes: 4:00 AM a 5:30 AM (240 min a 330 min)
             if (dia >= 1 && dia <= 5) {
-                if (minutosActuales >= 240 && minutosActuales <= 330) {
-                    return true;
-                }
+                if (minutosActuales >= 240 && minutosActuales <= 330) return true;
             }
-
             // 2. Viernes: 7:00 PM a 9:00 PM (1140 min a 1260 min)
             if (dia === 5) {
-                if (minutosActuales >= 1140 && minutosActuales <= 1260) {
-                    return true;
-                }
+                if (minutosActuales >= 1140 && minutosActuales <= 1260) return true;
             }
-
             // 3. Domingo: 8:00 AM a 11:00 AM (480 min a 660 min)
             if (dia === 0) {
-                if (minutosActuales >= 480 && minutosActuales <= 660) {
-                    return true;
-                }
+                if (minutosActuales >= 480 && minutosActuales <= 660) return true;
             }
 
             return false;
@@ -282,76 +275,99 @@
             const container = document.getElementById("live-stream-container");
             const iframe = document.getElementById("live-iframe");
 
+            // Si es hora de culto o si deseas forzarlo para pruebas, muestra el iframe
             if (esHoraDeTransmision()) {
                 iframe.src = URL_VIDEO_FACEBOOK_LIVE;
                 container.classList.remove("hidden");
             } else {
-                container.classList.add("hidden");
-                iframe.src = "";
-            }
-        }
-
-        async function cargarPredicas() {
-            const container = document.getElementById("sermons-container");
-            if (!container) return;
-
-            try {
-                const res = await fetch(`${API_URL}/api/sermons`);
-                const sermons = await res.json();
-
-                container.innerHTML = "";
-
-                if (!Array.isArray(sermons) || sermons.length === 0) {
-                    container.innerHTML = `
-                        <div class="col-span-full text-center py-8">
-                            <p class="text-slate-500 text-sm">No hay prédicas publicadas por el momento.</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                sermons.forEach(sermon => {
-                    const titulo = sermon.title || sermon.titulo || "Transmisión";
-                    const descripcion = sermon.description || sermon.descripcion || "Revive el mensaje compartido en nuestra congregación.";
-                    const categoria = sermon.category || sermon.categoria || "Culto Dominical";
-                    const enlace = sermon.link || sermon.enlace || sermon.video_url || "#";
-                    const fotos = sermon.images_urls && sermon.images_urls.length > 0 ? sermon.images_urls : ['images/logo.png'];
-
-                    const card = `
-                        <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
-                            <div>
-                                <div class="relative h-48 w-full bg-slate-100 overflow-hidden">
-                                    <img src="${fotos[0]}" class="w-full h-full object-cover">
-                                    <span class="absolute top-3 left-3 text-xs font-semibold px-3 py-1 bg-blue-600 text-white rounded-full shadow-sm">${categoria}</span>
-                                </div>
-                                <div class="p-6 space-y-2">
-                                    <h3 class="text-xl font-bold text-slate-900">${titulo}</h3>
-                                    <p class="text-slate-500 text-sm leading-relaxed line-clamp-3">${descripcion}</p>
-                                </div>
-                            </div>
-                            <div class="p-6 pt-0">
-                                <a href="${enlace}" target="_blank" class="w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-xl transition text-sm shadow-sm inline-block">
-                                    Ver Mensaje en Facebook 📺
-                                </a>
-                            </div>
-                        </div>
-                    `;
-                    container.innerHTML += card;
-                });
-            } catch (err) {
-                console.error("Error al obtener prédicas:", err);
+                // En lugar de ocultarlo por completo, dejamos un banner interactivo fuera de horario
+                container.classList.remove("hidden");
                 container.innerHTML = `
-                    <div class="col-span-full text-center py-8">
-                        <p class="text-red-500 text-sm">No se pudieron cargar las prédicas en este momento.</p>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div class="space-y-1">
+                            <div class="inline-flex items-center space-x-2 bg-blue-600/20 border border-blue-500/30 px-3 py-1 rounded-full text-blue-400 text-xs font-bold uppercase tracking-wider">
+                                <span>📺 Transmisiones Anteriores y En Vivo</span>
+                            </div>
+                            <h3 class="text-2xl font-bold">Visita nuestro canal de Facebook</h3>
+                            <p class="text-slate-400 text-xs">Conéctate a nuestras programaciones en los horarios habituales de culto.</p>
+                        </div>
+                        <a href="https://facebook.com/iglesiajehovaesgloria" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-xl transition text-xs shadow">
+                            Ir a Facebook Live 🔴
+                        </a>
                     </div>
                 `;
             }
         }
 
+        // FUNCIÓN CON REINTENTO AUTOMÁTICO (Despierta el servidor de Render)
+        async function cargarPredicasConReintento(intentos = 3) {
+            const container = document.getElementById("sermons-container");
+            if (!container) return;
+
+            for (let i = 0; i < intentos; i++) {
+                try {
+                    const res = await fetch(`${API_URL}/api/sermons`, { signal: AbortSignal.timeout(10000) });
+                    if (!res.ok) throw new Error("Error en el servidor");
+                    const sermons = await res.json();
+
+                    container.innerHTML = "";
+
+                    if (!Array.isArray(sermons) || sermons.length === 0) {
+                        container.innerHTML = `
+                            <div class="col-span-full text-center py-8">
+                                <p class="text-slate-500 text-sm">No hay prédicas publicadas por el momento.</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    sermons.forEach(sermon => {
+                        const titulo = sermon.title || sermon.titulo || "Transmisión";
+                        const descripcion = sermon.description || sermon.descripcion || "Revive el mensaje compartido en nuestra congregación.";
+                        const categoria = sermon.category || sermon.categoria || "Culto Dominical";
+                        const enlace = sermon.link || sermon.enlace || sermon.video_url || "#";
+                        const fotos = sermon.images_urls && sermon.images_urls.length > 0 ? sermon.images_urls : ['images/logo.png'];
+
+                        container.innerHTML += `
+                            <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                                <div>
+                                    <div class="relative h-48 w-full bg-slate-100 overflow-hidden">
+                                        <img src="${fotos[0]}" class="w-full h-full object-cover">
+                                        <span class="absolute top-3 left-3 text-xs font-semibold px-3 py-1 bg-blue-600 text-white rounded-full shadow-sm">${categoria}</span>
+                                    </div>
+                                    <div class="p-6 space-y-2">
+                                        <h3 class="text-xl font-bold text-slate-900">${titulo}</h3>
+                                        <p class="text-slate-500 text-sm leading-relaxed line-clamp-3">${descripcion}</p>
+                                    </div>
+                                </div>
+                                <div class="p-6 pt-0">
+                                    <a href="${enlace}" target="_blank" class="w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-xl transition text-sm shadow-sm inline-block">
+                                        Ver Mensaje en Facebook 📺
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    return; // Si cargó con éxito, rompe el ciclo de reintentos
+                } catch (err) {
+                    console.warn(`Intento ${i + 1} fallido. Despertando servidor...`);
+                    if (i === intentos - 1) {
+                        container.innerHTML = `
+                            <div class="col-span-full text-center py-8 space-y-3">
+                                <p class="text-slate-500 text-sm">El servidor está despertando, por favor recarga la página en unos segundos.</p>
+                                <button onclick="cargarPredicasConReintento()" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Reintentar conexión 🔄</button>
+                            </div>
+                        `;
+                    }
+                }
+            }
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             gestionarTransmisionEnVivo();
-            cargarPredicas();
+            cargarPredicasConReintento();
         });
     </script>
+
 </body>
 </html>
