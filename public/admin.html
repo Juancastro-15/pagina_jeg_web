@@ -35,7 +35,7 @@
                 margin: 0 !important;
             }
 
-            #section-sermons, #section-users, #section-ministerios, #section-events {
+            #section-sermons, #section-users, #section-ministerios, #section-events, #section-prayers {
                 display: none !important;
             }
 
@@ -50,7 +50,7 @@
                 display: flex !important;
                 align-items: center;
                 justify-content: space-between;
-                border-b: 2px solid #1e3a8a;
+                border-bottom: 2px solid #1e3a8a;
                 padding-bottom: 12px;
                 margin-bottom: 20px;
             }
@@ -136,6 +136,7 @@
             <button onclick="switchTab('users')" id="tab-users" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">👥 Registrar Usuario</button>
             <button onclick="switchTab('ministerios')" id="tab-ministerios" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">🤝 Solicitudes de Ministerios</button>
             <button onclick="switchTab('events')" id="tab-events" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">📅 Gestión de Eventos</button>
+            <button onclick="switchTab('prayers')" id="tab-prayers" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">🙏 Peticiones de Oración</button>
             <button onclick="switchTab('accounting')" id="tab-accounting" class="font-medium text-slate-500 hover:text-slate-800 pb-2 px-2 transition whitespace-nowrap">📊 Contabilidad y Finanzas</button>
         </div>
 
@@ -425,6 +426,36 @@
             </div>
         </div>
 
+        <!-- NUEVA SECCIÓN: Gestor de Peticiones de Oración -->
+        <div id="section-prayers" class="hidden space-y-8">
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900">Muro de Peticiones de Oración</h3>
+                        <p class="text-slate-600 text-sm mt-1">Motivos de fe enviados por la comunidad para el equipo pastoral e intercesión.</p>
+                    </div>
+                    <button onclick="cargarPeticionesAdmin()" class="text-xs text-blue-600 hover:underline font-medium">Recargar Lista 🔄</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+                                <th class="p-4">Feligrés / Solicitante</th>
+                                <th class="p-4">Motivo de Oración</th>
+                                <th class="p-4">Fecha</th>
+                                <th class="p-4 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-prayers-list" class="text-sm divide-y divide-slate-100">
+                            <tr>
+                                <td colspan="4" class="p-6 text-center text-slate-500 animate-pulse">Cargando peticiones...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <!-- SECCIÓN 5: Contabilidad y Finanzas (Optimizado con Gráficos, Egresos, Rango y Edición) -->
         <div id="section-accounting" class="hidden bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-8">
             
@@ -664,6 +695,7 @@
             cargarUsuariosAdmin();
             cargarMinisteriosAdmin();
             cargarEventosAdmin();
+            cargarPeticionesAdmin();
             cargarContabilidad();
         });
 
@@ -673,6 +705,7 @@
             const tabAccounting = document.getElementById("tab-accounting");
             const tabMinisterios = document.getElementById("tab-ministerios");
             const tabEvents = document.getElementById("tab-events");
+            const tabPrayers = document.getElementById("tab-prayers");
 
             const normalizedRole = (role || "").toLowerCase().trim();
 
@@ -681,6 +714,7 @@
             if (tabAccounting) tabAccounting.classList.add("hidden");
             if (tabMinisterios) tabMinisterios.classList.add("hidden");
             if (tabEvents) tabEvents.classList.add("hidden");
+            if (tabPrayers) tabPrayers.classList.add("hidden");
 
             if (normalizedRole === "contador") {
                 if (tabAccounting) tabAccounting.classList.remove("hidden");
@@ -689,6 +723,7 @@
                 if (tabSermons) tabSermons.classList.remove("hidden");
                 if (tabMinisterios) tabMinisterios.classList.remove("hidden");
                 if (tabEvents) tabEvents.classList.remove("hidden");
+                if (tabPrayers) tabPrayers.classList.remove("hidden");
                 switchTab("sermons");
             } else if (normalizedRole === "pastor" || normalizedRole === "admin") {
                 if (tabSermons) tabSermons.classList.remove("hidden");
@@ -696,6 +731,7 @@
                 if (tabAccounting) tabAccounting.classList.remove("hidden");
                 if (tabMinisterios) tabMinisterios.classList.remove("hidden");
                 if (tabEvents) tabEvents.classList.remove("hidden");
+                if (tabPrayers) tabPrayers.classList.remove("hidden");
                 switchTab("sermons");
             } else {
                 if (tabSermons) tabSermons.classList.remove("hidden");
@@ -708,24 +744,28 @@
 
             if (tab === 'users' && normalizedRole !== 'admin' && normalizedRole !== 'pastor') return;
             if (tab === 'accounting' && normalizedRole !== 'admin' && normalizedRole !== 'pastor' && normalizedRole !== 'contador') return;
+            if (tab === 'prayers' && normalizedRole !== 'admin' && normalizedRole !== 'pastor' && normalizedRole !== 'secretary' && normalizedRole !== 'secretario') return;
 
             const secSermons = document.getElementById("section-sermons");
             const secUsers = document.getElementById("section-users");
             const secAccounting = document.getElementById("section-accounting");
             const secMinisterios = document.getElementById("section-ministerios");
             const secEvents = document.getElementById("section-events");
+            const secPrayers = document.getElementById("section-prayers");
 
             const tabSermons = document.getElementById("tab-sermons");
             const tabUsers = document.getElementById("tab-users");
             const tabAccounting = document.getElementById("tab-accounting");
             const tabMinisterios = document.getElementById("tab-ministerios");
             const tabEvents = document.getElementById("tab-events");
+            const tabPrayers = document.getElementById("tab-prayers");
 
             if (secSermons) secSermons.classList.add("hidden");
             if (secUsers) secUsers.classList.add("hidden");
             if (secAccounting) secAccounting.classList.add("hidden");
             if (secMinisterios) secMinisterios.classList.add("hidden");
             if (secEvents) secEvents.classList.add("hidden");
+            if (secPrayers) secPrayers.classList.add("hidden");
 
             const inactiveClasses = ["font-medium", "text-slate-500", "hover:text-slate-800"];
             const activeClasses = ["font-bold", "text-blue-600", "border-b-2", "border-blue-600"];
@@ -748,12 +788,14 @@
             updateTabStyle(tabAccounting, tab === 'accounting');
             updateTabStyle(tabMinisterios, tab === 'ministerios');
             updateTabStyle(tabEvents, tab === 'events');
+            updateTabStyle(tabPrayers, tab === 'prayers');
 
             if (tab === 'sermons' && secSermons) secSermons.classList.remove("hidden");
             if (tab === 'users' && secUsers) secUsers.classList.remove("hidden");
             if (tab === 'accounting' && secAccounting) secAccounting.classList.remove("hidden");
             if (tab === 'ministerios' && secMinisterios) secMinisterios.classList.remove("hidden");
             if (tab === 'events' && secEvents) secEvents.classList.remove("hidden");
+            if (tab === 'prayers' && secPrayers) secPrayers.classList.remove("hidden");
         }
 
         document.getElementById("logout-btn").addEventListener("click", () => {
@@ -1333,6 +1375,70 @@
                 if (res.ok) cargarEventosAdmin();
             } catch (err) {
                 alert("Error al eliminar evento.");
+            }
+        }
+
+        // ==========================================
+        // MÓDULO DE GESTIÓN DE PETICIONES DE ORACIÓN
+        // ==========================================
+        async function cargarPeticionesAdmin() {
+            const tbody = document.getElementById("admin-prayers-list");
+            if (!tbody) return;
+
+            try {
+                const res = await fetch(`${API_URL}/api/prayers`, {
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+                });
+
+                if (!res.ok) throw new Error("No se pudieron cargar las peticiones");
+
+                const prayers = await res.json();
+                tbody.innerHTML = "";
+
+                if (!Array.isArray(prayers) || prayers.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">No hay peticiones de oración registradas.</td></tr>`;
+                    return;
+                }
+
+                prayers.forEach(item => {
+                    const id = item.id || item._id;
+                    const nombre = item.name || item.nombre || "Anónimo";
+                    const peticion = item.prayer || item.peticion || item.message || "Sin detalles";
+                    const fecha = item.created_at ? new Date(item.created_at).toLocaleDateString('es-CO') : "Reciente";
+
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-4 font-bold text-slate-900">${nombre}</td>
+                            <td class="p-4 text-xs text-slate-700 leading-relaxed max-w-md">${peticion}</td>
+                            <td class="p-4 text-xs text-slate-500">${fecha}</td>
+                            <td class="p-4 text-center">
+                                <button onclick="atenderPeticion(${id})" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm">Orado / Atendido ✓</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error("Error al cargar peticiones:", err);
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-red-500">Error al conectar con la base de datos.</td></tr>`;
+            }
+        }
+
+        async function atenderPeticion(id) {
+            if (!confirm("¿Marcar esta petición como atendida y retirarla del muro?")) return;
+            try {
+                const res = await fetch(`${API_URL}/api/prayers/${id}`, {
+                    method: "DELETE",
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+                });
+                if (res.ok) {
+                    cargarPeticionesAdmin();
+                } else {
+                    const data = await res.json();
+                    alert(data.error || "No se pudo actualizar el registro.");
+                }
+            } catch (err) {
+                console.error("Error al actualizar petición:", err);
+                alert("Error de conexión al procesar la solicitud.");
             }
         }
 
