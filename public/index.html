@@ -87,25 +87,40 @@
             <p class="text-slate-600 text-sm">Revive cada uno de nuestros mensajes compartidos y fortalece tu fe.</p>
         </div>
 
-        <!-- REPRODUCTOR EN VIVO (SE MUESTRA AUTOMÁTICAMENTE EN HORARIO DE CULTO) -->
-        <div id="live-stream-container" class="hidden bg-slate-900 text-white rounded-3xl p-6 md:p-8 shadow-xl border border-slate-800 space-y-6">
+        <!-- REPRODUCTOR EN VIVO INTELIGENTE (SIN ERROR DE VÍDEO NO DISPONIBLE) -->
+        <div id="live-stream-container" class="bg-slate-900 text-white rounded-3xl p-6 md:p-8 shadow-xl border border-slate-800 space-y-6">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div class="space-y-1">
-                    <div class="inline-flex items-center space-x-2 bg-red-600/20 border border-red-500/30 px-3 py-1 rounded-full text-red-400 text-xs font-bold uppercase tracking-wider">
-                        <span class="w-2.5 h-2.5 bg-red-500 rounded-full animate-ping"></span>
-                        <span>Transmisión en Directo / EN VIVO</span>
+                    <div class="inline-flex items-center space-x-2 bg-blue-600/20 border border-blue-500/30 px-3 py-1 rounded-full text-blue-400 text-xs font-bold uppercase tracking-wider">
+                        <span>📺 Transmisiones y Cultos Online</span>
                     </div>
-                    <h3 class="text-2xl font-bold">Culto Congregacional en Directo</h3>
-                    <p class="text-slate-400 text-xs">Sintoniza nuestro servicio en tiempo real a continuación.</p>
+                    <h3 class="text-2xl font-bold">Conéctate a nuestras Transmisiones</h3>
+                    <p class="text-slate-400 text-xs">Sintoniza nuestros servicios en vivo o revive los mensajes anteriores.</p>
                 </div>
-                <a href="https://facebook.com/iglesiajehovaesgloria" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-xl transition text-xs shadow">
-                    Ver en Facebook 📺
+                <a href="https://www.facebook.com/iglesiajehovaesgloria" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-xl transition text-xs shadow flex items-center space-x-1">
+                    <span>Ir a Facebook 🔴</span>
                 </a>
             </div>
 
-            <!-- Contenedor del reproductor en vivo -->
-            <div class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden border border-slate-800 flex items-center justify-center">
-                <iframe id="live-iframe" src="" width="100%" height="100%" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+            <!-- Contenedor amigable fuera de hora o sin en vivo activo -->
+            <div class="relative w-full bg-slate-950 rounded-2xl overflow-hidden border border-slate-800 p-8 text-center space-y-4">
+                <div class="max-w-md mx-auto space-y-3">
+                    <div class="w-16 h-16 bg-blue-600/20 text-blue-400 rounded-full flex items-center justify-center mx-auto text-2xl font-bold border border-blue-500/30">
+                        ⛪
+                    </div>
+                    <h4 class="text-lg font-bold text-white">¡Alabado sea el Señor!</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Te invitamos a unirte a nuestros servicios presenciales o explorar las prédicas guardadas abajo.
+                    </p>
+                    <div class="pt-2 flex justify-center space-x-3">
+                        <a href="https://www.facebook.com/iglesiajehovaesgloria" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow">
+                            Visitar Facebook Live 📺
+                        </a>
+                        <a href="sermons.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-xl text-xs font-bold transition">
+                            Ver Prédicas 📖
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -192,7 +207,7 @@
         </div>
     </section>
 
-<!-- Footer Unificado con Ubicación, Contactos y Redes -->
+    <!-- Footer Unificado con Ubicación, Contactos y Redes -->
     <footer class="bg-slate-900 text-slate-400 pt-16 pb-8 border-t border-slate-800 mt-20">
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10 pb-12 border-b border-slate-800 text-sm">
             
@@ -238,8 +253,7 @@
         </div>
     </footer>
 
-    
-<!-- Script completo con automatización inteligente y reintentos para Render -->
+    <!-- Script con funciones de menú móvil y reintentos automáticos para Render -->
     <script>
         function toggleMobileMenu() {
             const menu = document.getElementById("mobile-menu");
@@ -247,59 +261,8 @@
         }
 
         const API_URL = "https://pagina-jeg-web.onrender.com";
-        const URL_VIDEO_FACEBOOK_LIVE = "https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Figlesiajehovaesgloria%2Fvideos%2F";
 
-        // VERIFICACIÓN AUTOMÁTICA DE HORARIOS DE CULTO
-        function esHoraDeTransmision() {
-            const ahora = new Date();
-            const dia = ahora.getDay(); // 0 = Domingo, 1 = Lunes, ..., 5 = Viernes
-            const minutosActuales = ahora.getHours() * 60 + ahora.getMinutes();
-
-            // 1. Lunes a Viernes: 4:00 AM a 5:30 AM (240 min a 330 min)
-            if (dia >= 1 && dia <= 5) {
-                if (minutosActuales >= 240 && minutosActuales <= 330) return true;
-            }
-            // 2. Viernes: 7:00 PM a 9:00 PM (1140 min a 1260 min)
-            if (dia === 5) {
-                if (minutosActuales >= 1140 && minutosActuales <= 1260) return true;
-            }
-            // 3. Domingo: 8:00 AM a 11:00 AM (480 min a 660 min)
-            if (dia === 0) {
-                if (minutosActuales >= 480 && minutosActuales <= 660) return true;
-            }
-
-            return false;
-        }
-
-        function gestionarTransmisionEnVivo() {
-            const container = document.getElementById("live-stream-container");
-            const iframe = document.getElementById("live-iframe");
-
-            // Si es hora de culto o si deseas forzarlo para pruebas, muestra el iframe
-            if (esHoraDeTransmision()) {
-                iframe.src = URL_VIDEO_FACEBOOK_LIVE;
-                container.classList.remove("hidden");
-            } else {
-                // En lugar de ocultarlo por completo, dejamos un banner interactivo fuera de horario
-                container.classList.remove("hidden");
-                container.innerHTML = `
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                        <div class="space-y-1">
-                            <div class="inline-flex items-center space-x-2 bg-blue-600/20 border border-blue-500/30 px-3 py-1 rounded-full text-blue-400 text-xs font-bold uppercase tracking-wider">
-                                <span>📺 Transmisiones Anteriores y En Vivo</span>
-                            </div>
-                            <h3 class="text-2xl font-bold">Visita nuestro canal de Facebook</h3>
-                            <p class="text-slate-400 text-xs">Conéctate a nuestras programaciones en los horarios habituales de culto.</p>
-                        </div>
-                        <a href="https://facebook.com/iglesiajehovaesgloria" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-xl transition text-xs shadow">
-                            Ir a Facebook Live 🔴
-                        </a>
-                    </div>
-                `;
-            }
-        }
-
-        // FUNCIÓN CON REINTENTO AUTOMÁTICO (Despierta el servidor de Render)
+        // FUNCIÓN CON REINTENTO AUTOMÁTICO PARA DESPERTAR EL SERVIDOR DE RENDER
         async function cargarPredicasConReintento(intentos = 3) {
             const container = document.getElementById("sermons-container");
             if (!container) return;
@@ -348,7 +311,7 @@
                             </div>
                         `;
                     });
-                    return; // Si cargó con éxito, rompe el ciclo de reintentos
+                    return; 
                 } catch (err) {
                     console.warn(`Intento ${i + 1} fallido. Despertando servidor...`);
                     if (i === intentos - 1) {
@@ -364,7 +327,6 @@
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            gestionarTransmisionEnVivo();
             cargarPredicasConReintento();
         });
     </script>
