@@ -440,7 +440,7 @@
             </div>
         </div>
 
-        <!-- SECCIÓN 4: Gestión de Eventos -->
+        <!-- SECCIÓN 4: Gestión de Eventos e Inscripciones -->
         <div id="section-events" class="hidden space-y-8">
             <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
                 <div class="border-b border-slate-100 pb-4">
@@ -505,37 +505,8 @@
                 <div id="event-msg" class="hidden text-center text-sm font-medium mt-4 p-3 rounded-xl"></div>
             </div>
 
-            <!-- Tabla de Eventos Registrados -->
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-                    <h3 class="text-xl font-bold text-slate-900">Eventos Programados</h3>
-                    <button onclick="cargarEventosAdmin()" class="text-xs text-blue-600 hover:underline font-medium">Recargar Lista 🔄</button>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
-                                <th class="p-4">Evento</th>
-                                <th class="p-4">Lugar</th>
-                                <th class="p-4">Fecha / Hora</th>
-                                <th class="p-4">Costo ($ COP)</th>
-                                <th class="p-4 text-center">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-events-list" class="text-sm divide-y divide-slate-100">
-                            <tr><td colspan="5" class="p-6 text-center text-slate-500 animate-pulse">Cargando eventos...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- SECCIÓN 4: Gestión de Eventos e Inscripciones -->
-        <div id="section-events" class="hidden space-y-8">
-            <!-- (Tu formulario de crear eventos actual se mantiene aquí arriba) -->
-
             <!-- Tabla de Eventos Programados -->
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden mt-8">
                 <div class="p-6 border-b border-slate-100 flex justify-between items-center">
                     <h3 class="text-xl font-bold text-slate-900">Eventos Programados</h3>
                     <button onclick="cargarEventosAdmin()" class="text-xs text-blue-600 hover:underline font-medium">Recargar Lista 🔄</button>
@@ -558,7 +529,7 @@
                 </div>
             </div>
 
-            <!-- NUEVA SECCIÓN: Listado de Inscritos a Eventos y Comprobantes de Pago -->
+            <!-- Listado de Inscritos a Eventos y Comprobantes de Pago -->
             <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden mt-8">
                 <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-blue-50/50">
                     <div>
@@ -871,7 +842,7 @@
             }
         }
 
-document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", () => {
             const token = localStorage.getItem("token");
             if (!token) {
                 alert("Acceso no autorizado. Por favor inicia sesión.");
@@ -898,7 +869,7 @@ document.addEventListener("DOMContentLoaded", () => {
             cargarUsuariosAdmin();
             cargarMinisteriosAdmin();
             cargarEventosAdmin();
-            cargarInscripcionesAdmin(); // 👈 ¡Inscripciones a eventos añadidas con éxito!
+            cargarInscripcionesAdmin(); // 👈 ¡Inscripciones a eventos cargadas con éxito!
             cargarPeticionesAdmin();
             cargarContabilidad();
         });
@@ -2134,7 +2105,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-red-500">Error al conectar con la base de datos de inscripciones.</td></tr>`;
             }
         }
-
     </script>
 </body>
 </html>
