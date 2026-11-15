@@ -4,6 +4,7 @@ const {
     registerAdmin, 
     loginAdmin, 
     getUsers, 
+    updateUser,        // 👈 1. Importamos la nueva función del controlador
     deleteUser, 
     updateUserPassword 
 } = require('../controllers/authController');
@@ -16,6 +17,7 @@ router.post('/login', loginAdmin);
 // Rutas protegidas (🔒 Solo Administradores y Pastores pueden gestionar usuarios)
 router.post('/register', verifyToken, verifyRole(['admin', 'pastor']), registerAdmin);
 router.get('/users', verifyToken, verifyRole(['admin', 'pastor']), getUsers);
+router.put('/users/:id', verifyToken, verifyRole(['admin', 'pastor']), updateUser); // 👈 2. ¡Agregamos esta línea aquí!
 router.delete('/users/:id', verifyToken, verifyRole(['admin', 'pastor']), deleteUser);
 router.put('/users/:id/password', verifyToken, verifyRole(['admin', 'pastor']), updateUserPassword);
 
