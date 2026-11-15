@@ -460,9 +460,15 @@
                             <input type="text" id="event-location" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 text-sm" placeholder="Ej. Sede Principal - San Fernando">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Fecha y Hora</label>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Fecha y Hora del Evento</label>
                             <input type="datetime-local" id="event-date" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 text-sm">
                         </div>
+                    </div>
+
+                    <!-- ⏱️ FECHA LÍMITE DE INSCRIPCIÓN -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Fecha Límite de Inscripción</label>
+                        <input type="datetime-local" id="event-deadline" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 text-sm">
                     </div>
 
                     <!-- Costo del Evento -->
@@ -524,7 +530,7 @@
             </div>
         </div>
 
-        <!-- NUEVA SECCIÓN: Gestor de Peticiones de Oración -->
+        <!-- SECCIÓN: Gestor de Peticiones de Oración -->
         <div id="section-prayers" class="hidden space-y-8">
             <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="p-6 border-b border-slate-100 flex justify-between items-center">
@@ -554,7 +560,7 @@
             </div>
         </div>
 
-        <!-- SECCIÓN 5: Contabilidad y Finanzas (Optimizado con Gráficos, Egresos, Rango y Edición) -->
+        <!-- SECCIÓN 5: Contabilidad y Finanzas -->
         <div id="section-accounting" class="hidden bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-8">
             
             <div class="print-header">
@@ -606,7 +612,7 @@
                 </div>
             </div>
 
-            <!-- GRÁFICOS ESTADÍSTICOS (CHART.JS) -->
+            <!-- GRÁFICOS ESTADÍSTICOS -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 no-print bg-slate-50 p-6 rounded-3xl border border-slate-200">
                 <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                     <h4 class="text-xs font-bold text-slate-700 uppercase mb-3 text-center">Distribución Financiera</h4>
@@ -622,7 +628,7 @@
                 </div>
             </div>
 
-            <!-- FORMULARIO PARA REGISTRAR / EDITAR TRANSACCIÓN (INGRESO O EGRESO) -->
+            <!-- FORMULARIO PARA REGISTRAR / EDITAR TRANSACCIÓN -->
             <div class="bg-slate-50 p-6 rounded-3xl border border-slate-200 space-y-4 no-print">
                 <div class="flex justify-between items-center border-b pb-2">
                     <h3 id="accounting-form-title" class="text-lg font-bold text-slate-900">➕ Registrar Transacción (Ingreso o Egreso)</h3>
@@ -681,7 +687,7 @@
                 <div id="accounting-msg" class="hidden text-center text-xs font-medium p-2 rounded-xl"></div>
             </div>
 
-            <!-- FILTROS AVANZADOS (BUSCAR + TIPO + RANGO DESDE / HASTA) -->
+            <!-- FILTROS AVANZADOS -->
             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 grid grid-cols-1 md:grid-cols-5 gap-3 items-end no-print">
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">Buscar Nombre / Ref.</label>
@@ -712,7 +718,7 @@
                 </div>
             </div>
 
-            <!-- TABLA CONTABLE CON BOTONES DE EDITAR Y ELIMINAR -->
+            <!-- TABLA CONTABLE -->
             <div class="overflow-x-auto rounded-2xl border border-slate-200">
                 <table class="w-full text-left border-collapse">
                     <thead>
@@ -743,12 +749,55 @@
         </div>
     </main>
 
-    <!-- Script JavaScript -->
+    <!-- MODAL PARA EDITAR INFORMACIÓN COMPLETA DE USUARIOS -->
+    <div id="edit-user-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl relative space-y-6">
+            <button onclick="cerrarModalEdicionUsuario()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-700 font-bold text-xl">✕</button>
+            
+            <div>
+                <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full">Gestión de Accesos</span>
+                <h3 class="text-2xl font-extrabold text-slate-900 mt-2">Editar Datos de Usuario</h3>
+                <p class="text-xs text-slate-500 mt-1">Actualiza el nombre, correo electrónico o rol de permisos del colaborador.</p>
+            </div>
+
+            <form id="edit-user-form" class="space-y-4">
+                <input type="hidden" id="edit-user-id">
+                
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Nombre Completo</label>
+                    <input type="text" id="edit-user-name" required class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Correo Electrónico</label>
+                    <input type="email" id="edit-user-email" required class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Rol en la Iglesia</label>
+                    <select id="edit-user-role" class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-blue-600">
+                        <option value="secretary">Secretario(a) / Comunicaciones</option>
+                        <option value="pastor">Pastor</option>
+                        <option value="contador">Contabilidad / Finanzas</option>
+                        <option value="admin">Administrador General</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow transition text-sm">
+                    Guardar Cambios 🔄
+                </button>
+            </form>
+            <div id="edit-user-msg" class="hidden text-center text-xs font-medium p-3 rounded-xl"></div>
+        </div>
+    </div>
+
+    <!-- Script JavaScript Principal -->
     <script>
         const API_URL = "https://pagina-jeg-web.onrender.com";
         let currentUserRole = "secretary";
         let predicasCargadas = [];
         let transaccionesGlobales = [];
+        let usuariosGlobales = []; // Array temporal para la edición completa de usuarios
         let fotosActualesGuardadas = [];
         let pieChartInstance = null;
         let barChartInstance = null;
@@ -902,7 +951,7 @@
             window.location.href = "login.html";
         });
 
-        // VALIDAR Y PREVISUALIZAR NUEVAS FOTOS SELECCIONADAS (PRÉDICAS)
+        // VALIDAR Y PREVISUALIZAR FOTOS DE PRÉDICAS
         function validarSeleccionFotos(input) {
             const container = document.getElementById("images-preview-container");
             container.innerHTML = "";
@@ -936,7 +985,6 @@
             }
         }
 
-        // RENDERIZAR FOTOS GUARDADAS EN MODO EDICIÓN
         function renderizarFotosActualesAdmin() {
             const container = document.getElementById("existing-images-container");
             const grid = document.getElementById("current-photos-grid");
@@ -965,7 +1013,7 @@
             renderizarFotosActualesAdmin();
         }
 
-        // Cargar Lista de Prédicas
+        // CARGAR PRÉDICAS
         async function cargarPredicasAdmin() {
             const tbody = document.getElementById("admin-sermons-list");
             if (!tbody) return;
@@ -1053,7 +1101,6 @@
             badge.className = "bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full";
         }
 
-        // ENVÍO DE FORMULARIO DE PRÉDICAS
         document.getElementById("admin-sermon-form").addEventListener("submit", async (e) => {
             e.preventDefault();
             const id = document.getElementById("sermon-id").value;
@@ -1092,9 +1139,7 @@
             try {
                 const res = await fetch(url, {
                     method: method,
-                    headers: { 
-                        "Authorization": "Bearer " + localStorage.getItem("token")
-                    },
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("token") },
                     body: formData
                 });
                 const data = await res.json();
@@ -1135,7 +1180,7 @@
         }
 
         // ==========================================
-        // MÓDULO DE GESTIÓN DE USUARIOS
+        // MÓDULO DE GESTIÓN DE USUARIOS (CON EDICIÓN COMPLETA)
         // ==========================================
         async function cargarUsuariosAdmin() {
             const tbody = document.getElementById("admin-users-list");
@@ -1149,6 +1194,7 @@
                 if (!res.ok) throw new Error("No se pudo obtener la lista de usuarios");
 
                 const users = await res.json();
+                usuariosGlobales = users; // Guardamos en memoria para el modal de edición
                 tbody.innerHTML = "";
 
                 if (!Array.isArray(users) || users.length === 0) {
@@ -1163,7 +1209,7 @@
                     contador: "Contabilidad"
                 };
 
-                users.forEach(user => {
+                users.forEach((user, index) => {
                     const id = user.id || user._id;
                     const nombre = user.name || "Sin nombre";
                     const correo = user.email || "Sin correo";
@@ -1177,9 +1223,10 @@
                             <td class="p-4">
                                 <span class="bg-indigo-50 text-indigo-700 text-xs px-2.5 py-1 rounded-md font-semibold">${rolFormateado}</span>
                             </td>
-                            <td class="p-4 text-center space-x-2">
-                                <button onclick="cambiarPasswordUsuario(${id}, '${nombre}')" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm">Cambiar Clave 🔑</button>
-                                <button onclick="eliminarUsuario(${id})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm">Eliminar 🗑️</button>
+                            <td class="p-4 text-center space-x-1">
+                                <button onclick="abrirModalEdicionUsuario(${index})" class="bg-amber-500 hover:bg-amber-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm" title="Editar info">✏️</button>
+                                <button onclick="cambiarPasswordUsuario(${id}, '${nombre}')" class="bg-blue-500 hover:bg-blue-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm" title="Cambiar clave">🔑</button>
+                                <button onclick="eliminarUsuario(${id})" class="bg-red-500 hover:bg-red-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm" title="Eliminar">🗑️</button>
                             </td>
                         </tr>
                     `;
@@ -1189,6 +1236,60 @@
                 tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-red-500">Error al cargar la lista de usuarios.</td></tr>`;
             }
         }
+
+        function abrirModalEdicionUsuario(index) {
+            const user = usuariosGlobales[index];
+            if (!user) return;
+
+            document.getElementById("edit-user-id").value = user.id || user._id;
+            document.getElementById("edit-user-name").value = user.name || "";
+            document.getElementById("edit-user-email").value = user.email || "";
+            document.getElementById("edit-user-role").value = user.role || "secretary";
+            
+            document.getElementById("edit-user-msg").classList.add("hidden");
+            document.getElementById("edit-user-modal").classList.remove("hidden");
+        }
+
+        function cerrarModalEdicionUsuario() {
+            document.getElementById("edit-user-modal").classList.add("hidden");
+        }
+
+        document.getElementById("edit-user-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const id = document.getElementById("edit-user-id").value;
+            const name = document.getElementById("edit-user-name").value;
+            const email = document.getElementById("edit-user-email").value;
+            const role = document.getElementById("edit-user-role").value;
+            const msgBox = document.getElementById("edit-user-msg");
+
+            try {
+                const res = await fetch(`${API_URL}/api/auth/users/${id}`, {
+                    method: "PUT",
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("token")
+                    },
+                    body: JSON.stringify({ name, email, role })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    msgBox.className = "text-center text-xs font-medium p-3 rounded-xl bg-green-50 text-green-700 border border-green-200";
+                    msgBox.textContent = "¡Usuario actualizado con éxito! 🔄✨";
+                    msgBox.classList.remove("hidden");
+                    setTimeout(() => {
+                        cerrarModalEdicionUsuario();
+                        cargarUsuariosAdmin();
+                    }, 1500);
+                } else {
+                    throw new Error(data.error || "No se pudo actualizar el usuario");
+                }
+            } catch (err) {
+                msgBox.className = "text-center text-xs font-medium p-3 rounded-xl bg-red-50 text-red-700 border border-red-200";
+                msgBox.textContent = "Error: " + err.message;
+                msgBox.classList.remove("hidden");
+            }
+        });
 
         async function cambiarPasswordUsuario(id, nombre) {
             const nuevaPassword = prompt(`Ingresa la nueva contraseña para el usuario "${nombre}":`);
@@ -1237,7 +1338,6 @@
             }
         }
 
-        // Registrar Nuevo Usuario
         document.getElementById("admin-user-form").addEventListener("submit", async (e) => {
             e.preventDefault();
             const name = document.getElementById("new-name").value;
@@ -1430,6 +1530,7 @@
             formData.append("location", document.getElementById("event-location").value);
             formData.append("event_date", document.getElementById("event-date").value);
             formData.append("description", document.getElementById("event-description").value);
+            formData.append("registration_deadline", document.getElementById("event-deadline").value);
             
             const isFree = document.getElementById("event-is-free").value;
             formData.append("is_free", isFree);
@@ -1545,7 +1646,7 @@
         }
 
         // ==========================================
-        // MÓDULO CONTABLE MEJORADO (Gráficos, Egresos, Rango, Editar, Eliminar)
+        // MÓDULO CONTABLE
         // ==========================================
         async function cargarContabilidad() {
             const token = localStorage.getItem("token");
@@ -1646,7 +1747,6 @@
             statOfrendas.textContent = `$${sumaOfrendas.toLocaleString()}`;
         }
 
-        // ENVÍO DE FORMULARIO DE CONTABILIDAD (CREAR O EDITAR)
         document.getElementById("accounting-form").addEventListener("submit", async (e) => {
             e.preventDefault();
             const id = document.getElementById("accounting-id").value;
@@ -1734,7 +1834,6 @@
             }
         }
 
-        // FILTROS AVANZADOS (DESDE - HASTA - TIPO - BUSCAR)
         function filtrarTransacciones() {
             const textoBusqueda = document.getElementById("filter-search").value.toLowerCase();
             const tipoFiltro = document.getElementById("filter-type").value;
@@ -1745,7 +1844,6 @@
                 const donante = (tx.donor_name || "").toLowerCase();
                 const referencia = (tx.reference || "").toLowerCase();
                 const coincideTexto = donante.includes(textoBusqueda) || referencia.includes(textoBusqueda);
-                
                 const coincideTipo = (tipoFiltro === "ALL" || tx.type === tipoFiltro);
 
                 let coincideFecha = true;
@@ -1769,7 +1867,6 @@
             renderizarTablaContabilidad(transaccionesGlobales);
         }
 
-        // GRÁFICOS ESTADÍSTICOS (CHART.JS)
         function actualizarGraficosContabilidad(lista) {
             let totalDiezmos = 0;
             let totalOfrendas = 0;
@@ -1783,7 +1880,6 @@
                 else totalOfrendas += monto;
             });
 
-            // 1. Gráfico de Pastel (Distribución)
             const ctxPie = document.getElementById('financialPieChart').getContext('2d');
             if (pieChartInstance) pieChartInstance.destroy();
             pieChartInstance = new Chart(ctxPie, {
@@ -1798,7 +1894,6 @@
                 options: { responsive: true, maintainAspectRatio: false }
             });
 
-            // 2. Gráfico de Barras (Ingresos vs Egresos)
             const totalIngresos = totalDiezmos + totalOfrendas;
             const ctxBar = document.getElementById('financialBarChart').getContext('2d');
             if (barChartInstance) barChartInstance.destroy();
@@ -1823,7 +1918,6 @@
             }
 
             let csvContent = "data:text/csv;charset=utf-8,Tipo,Monto,Donante,Metodo de Pago,Referencia,Fecha\r\n";
-            
             transaccionesGlobales.forEach(tx => {
                 const fila = [
                     tx.type,
@@ -1853,7 +1947,8 @@
             window.print();
         }
     </script>
-    <!-- Navegación del panel principal, rutas #hash y fondo animado -->
+    
+    <!-- Navegación y animación de fondo -->
     <script>
         function escaparHtml(v) { return String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
         const MODULOS = ['sermons','users','ministerios','events','prayers','accounting'];
@@ -1901,7 +1996,6 @@
             enrutar();
         });
 
-        // Luces flotantes del fondo
         (function () {
             const c = document.getElementById('bg-canvas'); if (!c) return;
             const ctx = c.getContext('2d');
@@ -1929,6 +2023,5 @@
             document.addEventListener('visibilitychange', () => { if (reduce) return; if (document.hidden) cancelAnimationFrame(raf); else raf = requestAnimationFrame(loop); });
         })();
     </script>
-
 </body>
 </html>

@@ -1,9 +1,13 @@
 const pool = require('../config/db');
 
-// Obtener peticiones de oración aprobadas (para la web pública)
+// Obtener todas las peticiones para el panel admin (con alias para que coincidan con admin.html)
 const getPrayers = async (req, res) => {
     try {
-        const result = await pool.query("SELECT * FROM prayers WHERE status = 'approved' ORDER BY created_at DESC");
+        const result = await pool.query(`
+            SELECT id, author_name AS name, petition AS prayer, status, created_at 
+            FROM prayers 
+            ORDER BY created_at DESC
+        `);
         res.json(result.rows);
     } catch (error) {
         console.error('Error al obtener oraciones:', error);
@@ -11,7 +15,7 @@ const getPrayers = async (req, res) => {
     }
 };
 
-// Crear una nueva petición de oración
+// Crear una nueva petición de oración (formulario público)
 const createPrayer = async (req, res) => {
     const { author_name, petition } = req.body;
     try {
@@ -29,34 +33,20 @@ const createPrayer = async (req, res) => {
     }
 };
 
-// Obtener TODAS las peticiones (pendientes y aprobadas) para el panel de administración
-const getAllPrayers = async (req, res) => {
-    try {
-        const result = await pool.query("SELECT * FROM prayers ORDER BY created_at DESC");
-        res.json(result.rows);
-    } catch (error) {
-        console.error('Error al obtener todas las oraciones:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
-    }
-};
-
-// Marcar una petición como atendida (la retira del muro)
+// Eliminar / Marcar como atendida una petición de oración (Panel admin)
 const deletePrayer = async (req, res) => {
+    const { id } = req.params;
     try {
-        const result = await pool.query("DELETE FROM prayers WHERE id = $1 RETURNING id", [req.params.id]);
-        if (result.rowCount === 0) {
-            return res.status(404).json({ error: 'Petición no encontrada' });
-        }
-        res.json({ message: 'Petición atendida y retirada del muro' });
+        await pool.query('DELETE FROM prayers WHERE id = $1', [id]);
+        res.json({ message: 'Petición atendida y retirada con éxito ✓' });
     } catch (error) {
-        console.error('Error al eliminar petición de oración:', error);
+        console.error('Error al eliminar oración:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
 
 module.exports = {
     getPrayers,
-    getAllPrayers,
     createPrayer,
     deletePrayer
 };
