@@ -83,6 +83,33 @@ const getUsers = async (req, res) => {
     }
 };
 
+// ✏️ Actualizar información general del usuario (Nombre, Correo y Rol)
+const updateUser = async (req, res) => {
+    const { id } = req.params;
+    const { name, email, role } = req.body;
+    try {
+        const query = `
+            UPDATE users 
+            SET name = $1, email = $2, role = $3 
+            WHERE id = $4 
+            RETURNING id, name, email, role;
+        `;
+        const result = await pool.query(query, [name, email, role, id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+
+        res.json({ 
+            message: '¡Usuario actualizado con éxito! 🔄', 
+            user: result.rows[0] 
+        });
+    } catch (error) {
+        console.error('Error al actualizar usuario:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
 // 🗑️ Eliminar un usuario
 const deleteUser = async (req, res) => {
     const { id } = req.params;
@@ -130,6 +157,7 @@ module.exports = {
     registerAdmin,
     loginAdmin,
     getUsers,
+    updateUser,
     deleteUser,
     updateUserPassword
 };
