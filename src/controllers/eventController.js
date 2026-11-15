@@ -15,17 +15,12 @@ const getEvents = async (req, res) => {
 const createEvent = async (req, res) => {
     const { title, description, location, event_date, cost, is_free } = req.body;
     try {
-        // Extraer las URLs de los archivos subidos a Cloudinary (hasta 3 fotos)
         const images_urls = req.files ? req.files.map(file => file.path) : [];
-
-        // Evaluar si la entrada es gratuita o con costo
         const isFreeEvent = is_free === 'true' || is_free === true || !cost || parseFloat(cost) === 0;
 
-        // 🕒 CORRECCIÓN DE ZONA HORARIA (Servidor UTC vs Colombia UTC-5)
         let finalEventDate = event_date;
         if (event_date) {
             const dateObj = new Date(event_date);
-            // Sumamos 5 horas para compensar el desfase del servidor en la nube
             dateObj.setHours(dateObj.getHours() + 5);
             finalEventDate = dateObj;
         }
@@ -53,6 +48,47 @@ const createEvent = async (req, res) => {
     }
 };
 
+// 🎟️ Registrar la inscripción a un evento (con soporte para adjuntar comprobante)
+const registerEvent = async (req, res) => {
+    try {
+        const { event_id, name, phone, email } = req.body;
+        const receiptUrl = req.file ? req.file.path : null;
+
+        const query = `
+            INSERT INTO event_registrations (event_id, name, phone, email, receipt_url, created_at)
+            VALUES ($1, $2, $3, $4, $5, NOW())
+            RETURNING *;
+        `;
+        const values = [event_id, name, phone, email, receiptUrl];
+        const result = await pool.query(query, values);
+
+        res.status(201).json({
+            message: '¡Inscripción registrada con éxito! 🎟️',
+            registration: result.rows[0]
+        });
+    } catch (error) {
+        console.error('Error al registrar en el evento:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
+// 📋 Obtener todas las inscripciones para el panel de administración
+const getEventRegistrations = async (req, res) => {
+    try {
+        const query = `
+            SELECT er.*, e.title AS event_title, e.cost AS event_cost, e.is_free
+            FROM event_registrations er
+            LEFT JOIN events e ON er.event_id = e.id
+            ORDER BY er.created_at DESC;
+        `;
+        const result = await pool.query(query);
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error al obtener inscripciones:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
 // Eliminar un evento existente
 const deleteEvent = async (req, res) => {
     const { id } = req.params;
@@ -73,5 +109,7 @@ const deleteEvent = async (req, res) => {
 module.exports = {
     getEvents,
     createEvent,
+    registerEvent,
+    getEventRegistrations,
     deleteEvent
 };

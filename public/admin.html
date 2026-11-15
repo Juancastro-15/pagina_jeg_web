@@ -530,6 +530,62 @@
             </div>
         </div>
 
+        <!-- SECCIÓN 4: Gestión de Eventos e Inscripciones -->
+        <div id="section-events" class="hidden space-y-8">
+            <!-- (Tu formulario de crear eventos actual se mantiene aquí arriba) -->
+
+            <!-- Tabla de Eventos Programados -->
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-slate-900">Eventos Programados</h3>
+                    <button onclick="cargarEventosAdmin()" class="text-xs text-blue-600 hover:underline font-medium">Recargar Lista 🔄</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+                                <th class="p-4">Evento</th>
+                                <th class="p-4">Lugar</th>
+                                <th class="p-4">Fecha / Hora</th>
+                                <th class="p-4">Costo ($ COP)</th>
+                                <th class="p-4 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-events-list" class="text-sm divide-y divide-slate-100">
+                            <tr><td colspan="5" class="p-6 text-center text-slate-500 animate-pulse">Cargando eventos...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- NUEVA SECCIÓN: Listado de Inscritos a Eventos y Comprobantes de Pago -->
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden mt-8">
+                <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-blue-50/50">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900">🎟️ Asistentes e Inscripciones a Eventos</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Control de registros, teléfonos de contacto y verificación de comprobantes de pago.</p>
+                    </div>
+                    <button onclick="cargarInscripcionesAdmin()" class="text-xs text-blue-600 hover:underline font-medium">Recargar Inscritos 🔄</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+                                <th class="p-4">Evento</th>
+                                <th class="p-4">Asistente</th>
+                                <th class="p-4">Contacto (WhatsApp / Email)</th>
+                                <th class="p-4">Comprobante / Voucher</th>
+                                <th class="p-4">Fecha de Registro</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-registrations-list" class="text-sm divide-y divide-slate-100">
+                            <tr><td colspan="5" class="p-6 text-center text-slate-500 animate-pulse">Cargando inscripciones...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <!-- SECCIÓN: Gestor de Peticiones de Oración -->
         <div id="section-prayers" class="hidden space-y-8">
             <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
@@ -815,7 +871,7 @@
             }
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
             const token = localStorage.getItem("token");
             if (!token) {
                 alert("Acceso no autorizado. Por favor inicia sesión.");
@@ -842,6 +898,7 @@
             cargarUsuariosAdmin();
             cargarMinisteriosAdmin();
             cargarEventosAdmin();
+            cargarInscripcionesAdmin(); // 👈 ¡Inscripciones a eventos añadidas con éxito!
             cargarPeticionesAdmin();
             cargarContabilidad();
         });
@@ -2022,6 +2079,62 @@
             if (reduce) draw(0); else raf = requestAnimationFrame(loop);
             document.addEventListener('visibilitychange', () => { if (reduce) return; if (document.hidden) cancelAnimationFrame(raf); else raf = requestAnimationFrame(loop); });
         })();
+
+        // ==========================================
+        // MÓDULO DE INSCRIPCIONES A EVENTOS (ADMIN)
+        // ==========================================
+        async function cargarInscripcionesAdmin() {
+            const tbody = document.getElementById("admin-registrations-list");
+            if (!tbody) return;
+
+            try {
+                const res = await fetch(`${API_URL}/api/events/registrations`, {
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+                });
+
+                if (!res.ok) throw new Error("No se pudieron cargar las inscripciones");
+
+                const registrations = await res.json();
+                tbody.innerHTML = "";
+
+                if (!Array.isArray(registrations) || registrations.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">No hay personas inscritas en los eventos todavía.</td></tr>`;
+                    return;
+                }
+
+                registrations.forEach(reg => {
+                    const eventoTitulo = reg.event_title || "Evento General";
+                    const nombre = reg.name || "Sin nombre";
+                    const telefono = reg.phone || "";
+                    const email = reg.email || "";
+                    const fechaReg = reg.created_at ? new Date(reg.created_at).toLocaleString('es-CO') : "Reciente";
+
+                    // Enlace para ver el comprobante/voucher si lo subió
+                    let comprobanteHtml = '<span class="text-xs text-slate-400 bg-slate-100 px-2.5 py-1 rounded-md">Entrada Gratuita</span>';
+                    if (reg.receipt_url) {
+                        const urlVoucher = reg.receipt_url.startsWith('http') ? reg.receipt_url : `${API_URL}${reg.receipt_url}`;
+                        comprobanteHtml = `<a href="${urlVoucher}" target="_blank" class="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 text-xs px-3 py-1.5 rounded-lg font-semibold transition inline-flex items-center gap-1 shadow-sm">Ver Voucher 👁️</a>`;
+                    }
+
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-4 font-bold text-slate-900">${eventoTitulo}</td>
+                            <td class="p-4 font-medium text-slate-800">${nombre}</td>
+                            <td class="p-4 text-xs text-slate-600 space-y-1">
+                                <div>📱 <a href="https://wa.me/57${telefono.replace(/\s+/g, '')}" target="_blank" class="text-green-600 hover:underline font-semibold">${telefono}</a></div>
+                                <div class="text-slate-500">✉️ ${email}</div>
+                            </td>
+                            <td class="p-4">${comprobanteHtml}</td>
+                            <td class="p-4 text-xs text-slate-500">${fechaReg}</td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error("Error al cargar inscripciones:", err);
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-red-500">Error al conectar con la base de datos de inscripciones.</td></tr>`;
+            }
+        }
+
     </script>
 </body>
 </html>
