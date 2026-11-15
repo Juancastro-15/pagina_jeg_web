@@ -17,14 +17,21 @@ const getPrayers = async (req, res) => {
 
 // Crear una nueva petición de oración (formulario público)
 const createPrayer = async (req, res) => {
-    const { author_name, petition } = req.body;
+    // Soportamos tanto los nombres que envía prayer.html (name, request) como los alternativos (author_name, petition)
+    const author_name = req.body.name || req.body.author_name || 'Anónimo';
+    const petition = req.body.request || req.body.petition;
+
+    if (!petition || petition.trim() === "") {
+        return res.status(400).json({ error: 'La petición de oración no puede estar vacía' });
+    }
+
     try {
         const query = `
             INSERT INTO prayers (author_name, petition, status)
             VALUES ($1, $2, 'pending')
             RETURNING *;
         `;
-        const values = [author_name || 'Anónimo', petition];
+        const values = [author_name, petition];
         const result = await pool.query(query, values);
         res.status(201).json({ message: 'Petición de oración enviada con éxito 🙏', prayer: result.rows[0] });
     } catch (error) {
