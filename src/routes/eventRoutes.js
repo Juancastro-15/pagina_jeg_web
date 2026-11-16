@@ -5,6 +5,7 @@ const {
     createEvent, 
     registerEvent, 
     getEventRegistrations, 
+    deleteEventRegistration,
     deleteEvent 
 } = require('../controllers/eventController');
 const verifyToken = require('../middlewares/authMiddleware');
@@ -18,6 +19,9 @@ router.post('/register', upload.single('receipt'), registerEvent);
 
 // Ruta protegida: Obtener todas las inscripciones para el panel de admin
 router.get('/registrations', verifyToken, getEventRegistrations);
+
+// Ruta protegida: Eliminar una inscripción específica
+router.delete('/registrations/:id', verifyToken, deleteEventRegistration);
 
 // Ruta protegida: Crear evento con hasta 3 imágenes (SOLO ADMINS / PASTORES)
 router.post('/', verifyToken, upload.array('images', 3), createEvent);
