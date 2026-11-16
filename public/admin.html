@@ -215,7 +215,7 @@
                 <svg class="gestor-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg><span class="gestor-icon">🤝</span><h3>Ministerios</h3><p>Revisa quién quiere servir y en qué área.</p>
             </button>
             <button type="button" class="gestor-card" data-tab="events" style="--i:3;--c1:#f59e0b;--c2:#fcd34d" onclick="switchTab('events')">
-                <svg class="gestor-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg><span class="gestor-icon">📅</span><h3>Eventos</h3><p>Programa eventos con fecha, costo y fotos.</p>
+                <svg class="gestor-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg><span class="gestor-icon">📅</span><h3>Eventos</h3><p>Programa eventos, controla aforo y verifica pagos.</p>
             </button>
             <button type="button" class="gestor-card" data-tab="prayers" style="--i:4;--c1:#e11d48;--c2:#fb7185" onclick="switchTab('prayers')">
                 <svg class="gestor-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg><span class="gestor-icon">🙏</span><h3>Peticiones de oración</h3><p>Lee los motivos que envía la comunidad.</p>
@@ -529,28 +529,92 @@
                 </div>
             </div>
 
-            <!-- Listado de Inscritos a Eventos y Comprobantes de Pago -->
+            <!-- GESTIÓN PROFESIONAL DE INSCRIPCIONES A EVENTOS -->
             <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden mt-8">
-                <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-blue-50/50">
+                <!-- Encabezado y Acciones Principales -->
+                <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gradient-to-r from-blue-50/80 to-indigo-50/50">
                     <div>
-                        <h3 class="text-xl font-bold text-slate-900">🎟️ Asistentes e Inscripciones a Eventos</h3>
-                        <p class="text-xs text-slate-500 mt-0.5">Control de registros, teléfonos de contacto y verificación de comprobantes de pago.</p>
+                        <span class="bg-blue-100 text-blue-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Control de Aforo y Tesorería</span>
+                        <h3 class="text-xl font-extrabold text-slate-900 mt-1">🎟️ Gestión de Inscritos y Comprobantes</h3>
+                        <p class="text-xs text-slate-600 mt-0.5">Filtra por evento, verifica los pagos adjuntos y exporta listados de asistencia.</p>
                     </div>
-                    <button onclick="cargarInscripcionesAdmin()" class="text-xs text-blue-600 hover:underline font-medium">Recargar Inscritos 🔄</button>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="exportarInscritosExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                            <span>📥 Exportar Lista</span>
+                        </button>
+                        <button onclick="cargarInscripcionesAdmin()" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-3 py-2 rounded-xl text-xs font-bold transition shadow-sm" title="Actualizar datos">
+                            🔄 Actualizar
+                        </button>
+                    </div>
                 </div>
+
+                <!-- Mini Tarjetas de Resumen (KPIs) -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 p-6 bg-slate-50/60 border-b border-slate-100">
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+                        <div>
+                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Total Inscritos</span>
+                            <h4 id="kpi-reg-total" class="text-2xl font-extrabold text-slate-800 mt-0.5">0</h4>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 grid place-items-center text-lg">👥</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-sm flex items-center justify-between">
+                        <div>
+                            <span class="text-[11px] font-bold text-amber-600 uppercase tracking-wider block">Con Voucher / Pago</span>
+                            <h4 id="kpi-reg-paid" class="text-2xl font-extrabold text-amber-700 mt-0.5">0</h4>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 grid place-items-center text-lg">🧾</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl border border-emerald-200/80 shadow-sm flex items-center justify-between">
+                        <div>
+                            <span class="text-[11px] font-bold text-emerald-600 uppercase tracking-wider block">Entrada Gratuita</span>
+                            <h4 id="kpi-reg-free" class="text-2xl font-extrabold text-emerald-700 mt-0.5">0</h4>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 grid place-items-center text-lg">🎟️</div>
+                    </div>
+                </div>
+
+                <!-- Barra de Filtros Inteligentes -->
+                <div class="p-4 bg-white border-b border-slate-100 grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Filtrar por Evento</label>
+                        <select id="filter-reg-event" onchange="filtrarInscripciones()" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600">
+                            <option value="ALL">Todos los eventos</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Tipo / Comprobante</label>
+                        <select id="filter-reg-type" onchange="filtrarInscripciones()" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600">
+                            <option value="ALL">Todos los registros</option>
+                            <option value="PAID">Con Comprobante de Pago</option>
+                            <option value="FREE">Entrada Gratuita</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Buscar Asistente</label>
+                        <input type="text" id="filter-reg-search" oninput="filtrarInscripciones()" placeholder="Nombre, teléfono o correo..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600">
+                    </div>
+                    <div>
+                        <button onclick="limpiarFiltrosInscripciones()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 rounded-xl transition text-xs">
+                            Limpiar Filtros ✖️
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tabla de Resultados -->
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
-                                <th class="p-4">Evento</th>
+                            <tr class="bg-slate-50 text-slate-500 text-[11px] uppercase tracking-wider border-b border-slate-200">
                                 <th class="p-4">Asistente</th>
-                                <th class="p-4">Contacto (WhatsApp / Email)</th>
-                                <th class="p-4">Comprobante / Voucher</th>
-                                <th class="p-4">Fecha de Registro</th>
+                                <th class="p-4">Evento</th>
+                                <th class="p-4">Contacto Directo</th>
+                                <th class="p-4">Estado / Comprobante</th>
+                                <th class="p-4">Fecha Registro</th>
+                                <th class="p-4 text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="admin-registrations-list" class="text-sm divide-y divide-slate-100">
-                            <tr><td colspan="5" class="p-6 text-center text-slate-500 animate-pulse">Cargando inscripciones...</td></tr>
+                            <tr><td colspan="6" class="p-6 text-center text-slate-500 animate-pulse">Cargando inscripciones...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -818,6 +882,26 @@
         </div>
     </div>
 
+    <!-- MODAL VISOR DE COMPROBANTE DE EVENTO -->
+    <div id="voucher-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl relative view-enter">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <div>
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-blue-600">Verificación de Pago</span>
+                    <h4 id="voucher-modal-name" class="font-extrabold text-slate-900 text-lg">Asistente</h4>
+                </div>
+                <button onclick="cerrarModalVoucher()" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold flex items-center justify-center">✕</button>
+            </div>
+            <div class="p-6 bg-slate-900 flex justify-center items-center max-h-[65vh] overflow-auto">
+                <img id="voucher-modal-img" src="" alt="Comprobante de pago" class="max-w-full rounded-xl shadow-lg">
+            </div>
+            <div class="p-4 bg-white border-t border-slate-100 flex justify-between items-center text-xs text-slate-500">
+                <span id="voucher-modal-event" class="font-semibold text-slate-700">Evento</span>
+                <a id="voucher-modal-external" href="#" target="_blank" class="text-blue-600 hover:underline font-bold">Abrir imagen original ↗️</a>
+            </div>
+        </div>
+    </div>
+
     <!-- Script JavaScript Principal -->
     <script>
         const API_URL = "https://pagina-jeg-web.onrender.com";
@@ -869,7 +953,7 @@
             cargarUsuariosAdmin();
             cargarMinisteriosAdmin();
             cargarEventosAdmin();
-            cargarInscripcionesAdmin(); // 👈 ¡Inscripciones a eventos cargadas con éxito!
+            cargarInscripcionesAdmin(); // 👈 ¡Inscripciones profesionales cargadas!
             cargarPeticionesAdmin();
             cargarContabilidad();
         });
@@ -1976,7 +2060,7 @@
         }
     </script>
     
-    <!-- Navegación y animación de fondo -->
+    <!-- Navegación, animación de fondo y gestión profesional de inscripciones -->
     <script>
         function escaparHtml(v) { return String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
         const MODULOS = ['sermons','users','ministerios','events','prayers','accounting'];
@@ -2052,8 +2136,11 @@
         })();
 
         // ==========================================
-        // MÓDULO DE INSCRIPCIONES A EVENTOS (ADMIN)
+        // MÓDULO PROFESIONAL DE INSCRIPCIONES A EVENTOS
         // ==========================================
+        let inscripcionesGlobales = [];
+        let inscripcionesFiltradas = [];
+
         async function cargarInscripcionesAdmin() {
             const tbody = document.getElementById("admin-registrations-list");
             if (!tbody) return;
@@ -2065,45 +2152,188 @@
 
                 if (!res.ok) throw new Error("No se pudieron cargar las inscripciones");
 
-                const registrations = await res.json();
-                tbody.innerHTML = "";
-
-                if (!Array.isArray(registrations) || registrations.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">No hay personas inscritas en los eventos todavía.</td></tr>`;
-                    return;
-                }
-
-                registrations.forEach(reg => {
-                    const eventoTitulo = reg.event_title || "Evento General";
-                    const nombre = reg.name || "Sin nombre";
-                    const telefono = reg.phone || "";
-                    const email = reg.email || "";
-                    const fechaReg = reg.created_at ? new Date(reg.created_at).toLocaleString('es-CO') : "Reciente";
-
-                    // Enlace para ver el comprobante/voucher si lo subió
-                    let comprobanteHtml = '<span class="text-xs text-slate-400 bg-slate-100 px-2.5 py-1 rounded-md">Entrada Gratuita</span>';
-                    if (reg.receipt_url) {
-                        const urlVoucher = reg.receipt_url.startsWith('http') ? reg.receipt_url : `${API_URL}${reg.receipt_url}`;
-                        comprobanteHtml = `<a href="${urlVoucher}" target="_blank" class="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 text-xs px-3 py-1.5 rounded-lg font-semibold transition inline-flex items-center gap-1 shadow-sm">Ver Voucher 👁️</a>`;
-                    }
-
-                    tbody.innerHTML += `
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="p-4 font-bold text-slate-900">${eventoTitulo}</td>
-                            <td class="p-4 font-medium text-slate-800">${nombre}</td>
-                            <td class="p-4 text-xs text-slate-600 space-y-1">
-                                <div>📱 <a href="https://wa.me/57${telefono.replace(/\s+/g, '')}" target="_blank" class="text-green-600 hover:underline font-semibold">${telefono}</a></div>
-                                <div class="text-slate-500">✉️ ${email}</div>
-                            </td>
-                            <td class="p-4">${comprobanteHtml}</td>
-                            <td class="p-4 text-xs text-slate-500">${fechaReg}</td>
-                        </tr>
-                    `;
-                });
+                const data = await res.json();
+                inscripcionesGlobales = Array.isArray(data) ? data : [];
+                
+                poblarFiltroEventos(inscripcionesGlobales);
+                filtrarInscripciones();
             } catch (err) {
                 console.error("Error al cargar inscripciones:", err);
-                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-red-500">Error al conectar con la base de datos de inscripciones.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-red-500">Error al conectar con la base de datos de inscripciones.</td></tr>`;
             }
+        }
+
+        function poblarFiltroEventos(lista) {
+            const select = document.getElementById("filter-reg-event");
+            if (!select) return;
+            const valorActual = select.value;
+            const eventosUnicos = [...new Set(lista.map(r => r.event_title).filter(Boolean))];
+            
+            select.innerHTML = '<option value="ALL">Todos los eventos (' + lista.length + ')</option>';
+            eventosUnicos.forEach(titulo => {
+                const count = lista.filter(r => r.event_title === titulo).length;
+                select.innerHTML += `<option value="${escaparHtml(titulo)}">${escaparHtml(titulo)} (${count})</option>`;
+            });
+            if (eventosUnicos.includes(valorActual)) select.value = valorActual;
+        }
+
+        function filtrarInscripciones() {
+            const eventoSel = document.getElementById("filter-reg-event")?.value || "ALL";
+            const tipoSel = document.getElementById("filter-reg-type")?.value || "ALL";
+            const busqueda = (document.getElementById("filter-reg-search")?.value || "").toLowerCase().trim();
+
+            inscripcionesFiltradas = inscripcionesGlobales.filter(reg => {
+                const coincideEvento = eventoSel === "ALL" || reg.event_title === eventoSel;
+                const tieneVoucher = Boolean(reg.receipt_url);
+                const coincideTipo = tipoSel === "ALL" || (tipoSel === "PAID" && tieneVoucher) || (tipoSel === "FREE" && !tieneVoucher);
+                
+                const texto = `${reg.name || ""} ${reg.phone || ""} ${reg.email || ""}`.toLowerCase();
+                const coincideBusqueda = !busqueda || texto.includes(busqueda);
+
+                return coincideEvento && coincideTipo && coincideBusqueda;
+            });
+
+            actualizarKPIsInscripciones(inscripcionesFiltradas);
+            renderizarTablaInscripciones(inscripcionesFiltradas);
+        }
+
+        function actualizarKPIsInscripciones(lista) {
+            const totalEl = document.getElementById("kpi-reg-total");
+            const paidEl = document.getElementById("kpi-reg-paid");
+            const freeEl = document.getElementById("kpi-reg-free");
+            if (!totalEl) return;
+
+            const conPago = lista.filter(r => Boolean(r.receipt_url)).length;
+            const gratuitos = lista.length - conPago;
+
+            totalEl.textContent = lista.length;
+            paidEl.textContent = conPago;
+            freeEl.textContent = gratuitos;
+        }
+
+        function renderizarTablaInscripciones(lista) {
+            const tbody = document.getElementById("admin-registrations-list");
+            if (!tbody) return;
+            tbody.innerHTML = "";
+
+            if (lista.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-500">No se encontraron asistentes con los filtros seleccionados.</td></tr>`;
+                return;
+            }
+
+            lista.forEach(reg => {
+                const id = reg.id || reg._id;
+                const eventoTitulo = escaparHtml(reg.event_title || "Evento General");
+                const nombre = escaparHtml(reg.name || "Sin nombre");
+                const telefono = escaparHtml(reg.phone || "");
+                const email = escaparHtml(reg.email || "Sin correo");
+                const fechaReg = reg.created_at ? new Date(reg.created_at).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' }) : "Reciente";
+
+                const iniciales = nombre.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase() || "👤";
+
+                let estadoHtml = `<span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">✓ Entrada Gratuita</span>`;
+                if (reg.receipt_url) {
+                    const urlVoucher = reg.receipt_url.startsWith('http') ? reg.receipt_url : `${API_URL}${reg.receipt_url}`;
+                    estadoHtml = `
+                        <button type="button" onclick="abrirModalVoucher('${urlVoucher}', '${nombre}', '${eventoTitulo}')" 
+                            class="inline-flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 text-xs px-3 py-1.5 rounded-xl font-bold transition shadow-sm">
+                            🧾 Ver Voucher
+                        </button>`;
+                }
+
+                const telLimpio = telefono.replace(/\D/g, '');
+                const mensajeWa = encodeURIComponent(`Hola ${reg.name}, te saludamos de la Iglesia Jehová es Gloria respecto a tu inscripción al evento "${reg.event_title}".`);
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50/90 transition">
+                        <td class="p-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center flex-none">
+                                    ${iniciales}
+                                </div>
+                                <div>
+                                    <div class="font-bold text-slate-900">${nombre}</div>
+                                    <div class="text-[11px] text-slate-400">ID #${id || 'N/A'}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="p-4">
+                            <span class="bg-blue-50 text-blue-700 text-xs px-2.5 py-1 rounded-lg font-semibold inline-block">${eventoTitulo}</span>
+                        </td>
+                        <td class="p-4 text-xs space-y-1">
+                            <div>
+                                <a href="https://wa.me/57${telLimpio}?text=${mensajeWa}" target="_blank" class="inline-flex items-center gap-1 text-emerald-700 hover:text-emerald-800 bg-emerald-50/70 px-2 py-0.5 rounded-md font-bold transition">
+                                    💬 ${telefono || 'Sin número'}
+                                </a>
+                            </div>
+                            <div class="text-slate-500 pl-1">✉️ ${email}</div>
+                        </td>
+                        <td class="p-4">${estadoHtml}</td>
+                        <td class="p-4 text-xs text-slate-500">${fechaReg}</td>
+                        <td class="p-4 text-center">
+                            <button onclick="eliminarInscripcion(${id})" class="bg-red-50 hover:bg-red-500 text-red-600 hover:text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition" title="Eliminar registro">
+                                🗑️
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function limpiarFiltrosInscripciones() {
+            document.getElementById("filter-reg-event").value = "ALL";
+            document.getElementById("filter-reg-type").value = "ALL";
+            document.getElementById("filter-reg-search").value = "";
+            filtrarInscripciones();
+        }
+
+        function abrirModalVoucher(url, nombre, evento) {
+            document.getElementById("voucher-modal-img").src = url;
+            document.getElementById("voucher-modal-name").textContent = nombre;
+            document.getElementById("voucher-modal-event").textContent = "Evento: " + evento;
+            document.getElementById("voucher-modal-external").href = url;
+            document.getElementById("voucher-modal").classList.remove("hidden");
+        }
+
+        function cerrarModalVoucher() {
+            document.getElementById("voucher-modal").classList.add("hidden");
+            document.getElementById("voucher-modal-img").src = "";
+        }
+
+        async function eliminarInscripcion(id) {
+            if (!id || !confirm("¿Estás seguro de eliminar esta inscripción?")) return;
+            try {
+                const res = await fetch(`${API_URL}/api/events/registrations/${id}`, {
+                    method: "DELETE",
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+                });
+                if (res.ok) {
+                    cargarInscripcionesAdmin();
+                } else {
+                    alert("No se pudo eliminar el registro (verifica si la ruta DELETE está creada en el backend).");
+                }
+            } catch (err) {
+                alert("Error de conexión al intentar eliminar.");
+            }
+        }
+
+        function exportarInscritosExcel() {
+            if (inscripcionesFiltradas.length === 0) {
+                alert("No hay inscritos en la vista actual para exportar.");
+                return;
+            }
+            let csv = "data:text/csv;charset=utf-8,Evento,Asistente,Telefono,Correo,Tipo,Fecha de Registro\r\n";
+            inscripcionesFiltradas.forEach(r => {
+                const tipo = r.receipt_url ? "Con Comprobante" : "Gratuito";
+                const fecha = r.created_at ? r.created_at.split("T")[0] : "";
+                csv += [`"${r.event_title || ''}"`, `"${r.name || ''}"`, `"${r.phone || ''}"`, `"${r.email || ''}"`, tipo, fecha].join(",") + "\r\n";
+            });
+            const link = document.createElement("a");
+            link.setAttribute("href", encodeURI(csv));
+            link.setAttribute("download", `inscritos_eventos_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>
