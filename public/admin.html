@@ -1690,6 +1690,7 @@
             }
         }
 
+
         // ==========================================
         // MÓDULO DE GESTIÓN DE PETICIONES DE ORACIÓN
         // ==========================================
@@ -1718,12 +1719,30 @@
                 prayers.forEach(item => {
                     const id = item.id || item._id;
                     const nombre = escaparHtml(item.name || item.nombre || item.author_name || "Anónimo");
+                    const indicativo = escaparHtml(item.phone_code || "+57");
+                    const telefono = escaparHtml(item.phone || "");
+                    const correo = escaparHtml(item.email || "");
                     const peticion = escaparHtml(item.prayer || item.peticion || item.message || item.petition || "Sin detalles");
                     const fecha = item.created_at ? new Date(item.created_at).toLocaleDateString('es-CO') : "Reciente";
 
+                    const telLimpio = (indicativo + telefono).replace(/\D/g, '');
+                    const msgWa = encodeURIComponent(`Hola ${item.name || ''}, te saludamos del equipo pastoral de la Iglesia Jehová es Gloria. Hemos recibido tu petición de oración y queremos acompañarte.`);
+
+                    const contactoHtml = telefono 
+                        ? `<a href="https://wa.me/${telLimpio}?text=${msgWa}" target="_blank" class="inline-flex items-center gap-1 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded text-[11px] font-bold mt-1 transition">💬 ${indicativo} ${telefono}</a>`
+                        : `<span class="text-[11px] text-slate-400 block mt-0.5">Sin teléfono</span>`;
+
+                    const correoHtml = correo 
+                        ? `<div class="text-[11px] text-slate-500 mt-0.5">✉️ ${correo}</div>` 
+                        : "";
+
                     tbody.innerHTML += `
                         <tr class="hover:bg-slate-50 transition">
-                            <td class="p-4 font-bold text-slate-900">${nombre}</td>
+                            <td class="p-4">
+                                <div class="font-bold text-slate-900">${nombre}</div>
+                                ${contactoHtml}
+                                ${correoHtml}
+                            </td>
                             <td class="p-4 text-xs text-slate-700 leading-relaxed max-w-md">${peticion}</td>
                             <td class="p-4 text-xs text-slate-500">${fecha}</td>
                             <td class="p-4 text-center">
