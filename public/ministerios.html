@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,289 +8,520 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Librería de Animaciones AOS CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        .ministry-hero-bg {
+            background-image: url('images/WhatsApp Image 2026-11-16 at 5.12.28 PM.jpeg');
+            background-size: cover;
+            background-position: center;
+            animation: zoomEffect 20s infinite alternate ease-in-out;
+        }
+        @keyframes zoomEffect {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.08); }
+        }
+    </style>
 </head>
 <body class="bg-slate-50 font-sans text-slate-800 overflow-x-hidden">
 
     <!-- Header / Barra de Navegación Unificada con Menú Móvil -->
-<header class="bg-white shadow-sm sticky top-0 z-50 border-b border-slate-100">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        
-        <!-- LOGO Y NOMBRE DE LA IGLESIA -->
-        <a href="index.html" class="flex items-center space-x-3">
-            <img src="images/logo.png" alt="Logo" class="w-10 h-10 object-cover rounded-full shadow-md border border-blue-200">
-            <span class="text-xl font-bold text-blue-700">Jehová es Gloria</span>
-        </a>
-
-        <!-- MENÚ DE NAVEGACIÓN COMPUTADOR (Escritorio) -->
-        <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-600">
-            <a href="index.html" class="hover:text-blue-600 transition">Inicio</a>
-            <a href="ministerios.html" class="text-blue-600 font-bold transition">Ministerios 🤝</a>
-            <a href="sermons.html" class="hover:text-blue-600 transition">Prédicas</a>
-            <a href="events.html" class="hover:text-blue-600 transition">Eventos</a>
-            <a href="prayer.html" class="hover:text-blue-600 transition">Peticiones</a>
-            <a href="donations.html" class="bg-blue-50 text-blue-700 hover:bg-blue-100 font-semibold px-4 py-2 rounded-xl transition border border-blue-200 shadow-sm flex items-center space-x-1">
-                <span>💛 Donar / Ofrendar</span>
+    <header class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            
+            <!-- LOGO Y NOMBRE DE LA IGLESIA -->
+            <a href="index.html" class="flex items-center space-x-3">
+                <img src="images/logo.png" alt="Logo" class="w-10 h-10 object-cover rounded-full shadow-md border border-blue-200">
+                <span class="text-xl font-bold text-blue-700">Jehová es Gloria</span>
             </a>
-        </nav>
 
-        <!-- ACCESOS RÁPIDOS Y BOTÓN HAMBURGUESA MÓVIL -->
-        <div class="flex items-center space-x-3">
-            <a href="login.html" class="hidden sm:inline-block text-xs text-slate-500 hover:text-blue-600 font-medium transition">
-                🔒 Admin
-            </a>
-            <!-- Botón Hamburguesa -->
-            <button id="menu-btn" onclick="toggleMobileMenu()" class="md:hidden text-slate-700 hover:text-blue-600 focus:outline-none p-2 rounded-lg bg-slate-50 border border-slate-200">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-            </button>
+            <!-- MENÚ DE NAVEGACIÓN COMPUTADOR (Escritorio) -->
+            <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-600">
+                <a href="index.html" class="hover:text-blue-600 transition">Inicio</a>
+                <a href="nosotros.html" class="hover:text-blue-600 transition">Nosotros</a>
+                <a href="ministerios.html" class="text-blue-600 font-bold transition">Ministerios 🤝</a>
+                <a href="sermons.html" class="hover:text-blue-600 transition">Prédicas</a>
+                <a href="events.html" class="hover:text-blue-600 transition">Eventos</a>
+                <a href="prayer.html" class="hover:text-blue-600 transition">Peticiones</a>
+                <a href="donations.html" class="bg-blue-50 text-blue-700 hover:bg-blue-100 font-semibold px-4 py-2 rounded-xl transition border border-blue-200 shadow-sm flex items-center space-x-1">
+                    <span>💛 Donar / Ofrendar</span>
+                </a>
+            </nav>
+
+            <!-- ACCESOS RÁPIDOS Y BOTÓN HAMBURGUESA MÓVIL -->
+            <div class="flex items-center space-x-3">
+                <a href="login.html" class="hidden sm:inline-block text-xs text-slate-500 hover:text-blue-600 font-medium transition">
+                    🔒 Admin
+                </a>
+                <!-- Botón Hamburguesa -->
+                <button id="menu-btn" onclick="toggleMobileMenu()" class="md:hidden text-slate-700 hover:text-blue-600 focus:outline-none p-2 rounded-lg bg-slate-50 border border-slate-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
         </div>
-    </div>
 
-    <!-- MENÚ DESPLEGABLE MÓVIL (Oculto por defecto) -->
-    <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-6 py-4 space-y-3 shadow-lg">
-        <a href="index.html" class="block text-sm font-medium text-slate-700 hover:text-blue-600 py-1.5">🏠 Inicio</a>
-        <a href="ministerios.html" class="block text-sm font-bold text-blue-600 py-1.5">🤝 Ministerios</a>
-        <a href="sermons.html" class="block text-sm font-medium text-slate-700 hover:text-blue-600 py-1.5">📖 Prédicas</a>
-        <a href="events.html" class="block text-sm font-medium text-slate-700 hover:text-blue-600 py-1.5">📅 Eventos</a>
-        <a href="prayer.html" class="block text-sm font-medium text-slate-700 hover:text-blue-600 py-1.5">🙏 Peticiones de Oración</a>
-        <a href="donations.html" class="block text-sm font-semibold text-blue-700 bg-blue-50 px-4 py-2.5 rounded-xl border border-blue-200">💛 Donar / Ofrendar</a>
-        <div class="pt-2 border-t border-slate-100 flex justify-between items-center">
-            <a href="https://linktr.ee/jehovaesgloria" target="_blank" class="text-xs text-slate-500 font-medium">🔗 Redes & Enlaces</a>
-            <a href="login.html" class="text-xs text-blue-600 font-bold">🔒 Acceso Admin</a>
+        <!-- MENÚ DESPLEGABLE MÓVIL (Oculto por defecto) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-6 py-4 space-y-3 shadow-lg">
+            <a href="index.html" class="block text-sm font-medium text-slate-700 hover:text-blue-600 py-1.5">🏠 Inicio</a>
+            <a href="nosotros.html" class="block text-sm font-medium text-slate-700 hover:text-blue-600 py-1.5">🏛️ Nosotros</a>
+            <a href="ministerios.html" class="block text-sm font-bold text-blue-600 py-1.5">🤝 Ministerios</a>
+            <a href="sermons.html" class="block text-sm font-medium text-slate-700 hover:text-blue-600 py-1.5">📖 Prédicas</a>
+            <a href="events.html" class="block text-sm font-medium text-slate-700 hover:text-blue-600 py-1.5">📅 Eventos</a>
+            <a href="prayer.html" class="block text-sm font-medium text-slate-700 hover:text-blue-600 py-1.5">🙏 Peticiones de Oración</a>
+            <a href="donations.html" class="block text-sm font-semibold text-blue-700 bg-blue-50 px-4 py-2.5 rounded-xl border border-blue-200">💛 Donar / Ofrendar</a>
+            <div class="pt-2 border-t border-slate-100 flex justify-between items-center">
+                <a href="https://linktr.ee/jehovaesgloria" target="_blank" class="text-xs text-slate-500 font-medium">🔗 Redes & Enlaces</a>
+                <a href="login.html" class="text-xs text-blue-600 font-bold">🔒 Acceso Admin</a>
+            </div>
         </div>
-    </div>
-</header>
+    </header>
 
-    <!-- Banner Principal -->
-    <section class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white py-16 text-center px-6">
-        <div class="max-w-4xl mx-auto space-y-4" data-aos="zoom-in" data-aos-duration="900">
-            <span class="bg-blue-800 text-blue-200 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider inline-block">Áreas de Servicio</span>
-            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight">Nuestros Ministerios</h1>
-            <p class="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto">
+    <!-- Banner Principal con Foto de Fondo -->
+    <section class="ministry-hero-bg relative text-white py-20 text-center px-6 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-blue-950/75 to-slate-950/85"></div>
+        <div class="relative max-w-4xl mx-auto space-y-4 z-10" data-aos="zoom-in" data-aos-duration="900">
+            <span class="bg-blue-600/90 text-white text-xs font-semibold px-4 py-1.5 rounded-full uppercase tracking-wider inline-block shadow-sm">Áreas de Servicio</span>
+            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight drop-shadow-md">Nuestros Ministerios</h1>
+            <p class="text-slate-200 text-base sm:text-lg max-w-2xl mx-auto">
                 "Cada uno ponga al servicio de los demás el don que ha recibido." Descubre el espacio donde Dios te llama a servir y crecer.
             </p>
         </div>
     </section>
 
-    <!-- GRID DE MINISTERIOS CON CARRUSEL DE FOTOS INTERACTIVO -->
-    <section class="py-16 max-w-7xl mx-auto px-6">
+    <!-- GRID DE MINISTERIOS REDISEÑADO Y PROFESIONAL -->
+    <section class="py-20 max-w-7xl mx-auto px-6">
+        <!-- Encabezado de sección -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4" data-aos="fade-up">
+            <div>
+                <span class="text-blue-600 font-bold text-xs uppercase tracking-widest">Cuerpo de Cristo</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Equipos y Departamentos Activos</h2>
+            </div>
+            <p class="text-slate-500 text-xs sm:text-sm max-w-md">
+                Explora cada ministerio, haz clic en las fotografías para ampliarlas o postúlate directamente para servir en el área de tu llamado.
+            </p>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             
             <!-- 1. MINISTERIO PASTORAL -->
-            <div class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition flex flex-col justify-between" data-aos="fade-up">
+            <div class="group bg-white rounded-[2rem] overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-2xl hover:border-blue-300 transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between" data-aos="fade-up">
                 <div>
-                    <div class="relative h-48 w-full overflow-hidden group border-b border-slate-100 bg-slate-900">
-                        <img id="img-pastoral" src="images/pastores1.jpg" onclick="ampliarFoto('pastoral')" class="w-full h-full object-cover transition-all duration-500 cursor-pointer group-hover:scale-105" title="Haz clic para ampliar">
-                        <div onclick="ampliarFoto('pastoral')" class="absolute bottom-2 right-2 bg-slate-900/70 hover:bg-slate-900 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-lg cursor-pointer transition">🔍 Ampliar foto</div>
-                        <!-- Botones de navegación del carrusel -->
-                        <button onclick="cambiarFoto('pastoral', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10">❮</button>
-                        <button onclick="cambiarFoto('pastoral', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10">❯</button>
+                    <!-- Cabecera Fotográfica -->
+                    <div class="relative h-56 w-full overflow-hidden bg-slate-900">
+                        <img id="img-pastoral" src="images/pastores1.jpg" onclick="ampliarFoto('pastoral')" class="w-full h-full object-cover transition-all duration-700 cursor-pointer group-hover:scale-105" title="Haz clic para ampliar">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/15 to-transparent pointer-events-none"></div>
+                        
+                        <!-- Etiqueta Superior -->
+                        <span class="absolute top-3.5 left-3.5 bg-blue-600/90 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+                            Cobertura
+                        </span>
+
+                        <!-- Botón Ampliar -->
+                        <button onclick="ampliarFoto('pastoral')" class="absolute top-3.5 right-3.5 bg-slate-950/60 hover:bg-slate-950 backdrop-blur-md text-white text-[11px] px-2.5 py-1 rounded-full cursor-pointer transition flex items-center gap-1 border border-white/15">
+                            <span>🔍</span>
+                        </button>
+
+                        <!-- Flechas Carrusel -->
+                        <button onclick="cambiarFoto('pastoral', -1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/90 hover:text-slate-900 backdrop-blur-md text-white w-8 h-8 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10 shadow">❮</button>
+                        <button onclick="cambiarFoto('pastoral', 1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/90 hover:text-slate-900 backdrop-blur-md text-white w-8 h-8 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10 shadow">❯</button>
+
+                        <!-- Indicadores de fotos (Dots) -->
+                        <div id="dots-pastoral" class="absolute bottom-3 right-4 flex space-x-1.5 z-10"></div>
                     </div>
-                    <div class="p-6">
-                        <span class="text-2xl mb-2 inline-block">📖</span>
-                        <h3 class="text-xl font-bold text-slate-900 mb-1">Ministerio Pastoral</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed">Cuidado espiritual, consejería familiar, guianza doctrinal y cobertura para la congregación.</p>
+
+                    <!-- Cuerpo de la Tarjeta -->
+                    <div class="p-6 pt-5 relative">
+                        <!-- Icono Flotante -->
+                        <div class="-mt-11 mb-3 w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-lg border-4 border-white flex items-center justify-center text-xl">
+                            📖
+                        </div>
+                        <h3 class="text-xl font-extrabold text-slate-900 group-hover:text-blue-700 transition">Ministerio Pastoral</h3>
+                        <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mt-2">
+                            Cuidado espiritual, consejería familiar, guianza doctrinal y cobertura para toda la congregación.
+                        </p>
                     </div>
                 </div>
-                <div class="p-6 pt-0 border-t border-slate-100 flex items-center space-x-3 mt-4">
-                    <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-xs">P</div>
-                    <div>
-                        <p class="text-[10px] text-slate-400 font-semibold uppercase">Encargados</p>
-                        <p class="text-xs font-bold text-slate-800">Pastores Wilson Camacho y Ella Ribón</p>
+
+                <!-- Pie de Tarjeta: Líderes + Acción -->
+                <div class="px-6 pb-6 pt-3 border-t border-slate-100 bg-slate-50/60 flex items-center justify-between gap-2">
+                    <div class="flex items-center space-x-3 min-w-0">
+                        <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-700 border border-blue-200 flex items-center justify-center font-extrabold text-xs shrink-0">P</div>
+                        <div class="truncate">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Encargados</p>
+                            <p class="text-xs font-bold text-slate-800 truncate" title="Pastores Wilson Camacho y Ella Ribón">Pastores Wilson Camacho y Ella Ribón</p>
+                        </div>
                     </div>
+                    <button onclick="seleccionarMinisterio('Ministerio Pastoral')" class="shrink-0 text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-xl border border-blue-200 transition">
+                        Unirme →
+                    </button>
                 </div>
             </div>
 
             <!-- 2. JÓVENES -->
-            <div class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition flex flex-col justify-between" data-aos="fade-up" data-aos-delay="100">
+            <div class="group bg-white rounded-[2rem] overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-2xl hover:border-indigo-300 transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between" data-aos="fade-up" data-aos-delay="100">
                 <div>
-                    <div class="relative h-48 w-full overflow-hidden group border-b border-slate-100 bg-slate-900">
-                        <img id="img-jovenes" src="images/jovenes1.jpeg" onclick="ampliarFoto('jovenes')" class="w-full h-full object-cover transition-all duration-500 cursor-pointer group-hover:scale-105" title="Haz clic para ampliar">
-                        <div onclick="ampliarFoto('jovenes')" class="absolute bottom-2 right-2 bg-slate-900/70 hover:bg-slate-900 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-lg cursor-pointer transition">🔍 Ampliar foto</div>
-                        <button onclick="cambiarFoto('jovenes', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10">❮</button>
-                        <button onclick="cambiarFoto('jovenes', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10">❯</button>
+                    <div class="relative h-56 w-full overflow-hidden bg-slate-900">
+                        <img id="img-jovenes" src="images/jovenes1.jpeg" onclick="ampliarFoto('jovenes')" class="w-full h-full object-cover transition-all duration-700 cursor-pointer group-hover:scale-105" title="Haz clic para ampliar">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/15 to-transparent pointer-events-none"></div>
+                        
+                        <span class="absolute top-3.5 left-3.5 bg-indigo-600/90 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+                            Generación
+                        </span>
+
+                        <button onclick="ampliarFoto('jovenes')" class="absolute top-3.5 right-3.5 bg-slate-950/60 hover:bg-slate-950 backdrop-blur-md text-white text-[11px] px-2.5 py-1 rounded-full cursor-pointer transition flex items-center gap-1 border border-white/15">
+                            <span>🔍</span>
+                        </button>
+
+                        <button onclick="cambiarFoto('jovenes', -1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/90 hover:text-slate-900 backdrop-blur-md text-white w-8 h-8 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10 shadow">❮</button>
+                        <button onclick="cambiarFoto('jovenes', 1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/90 hover:text-slate-900 backdrop-blur-md text-white w-8 h-8 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10 shadow">❯</button>
+
+                        <div id="dots-jovenes" class="absolute bottom-3 right-4 flex space-x-1.5 z-10"></div>
                     </div>
-                    <div class="p-6">
-                        <span class="text-2xl mb-2 inline-block">🔥</span>
-                        <h3 class="text-xl font-bold text-slate-900 mb-1">Ministerio Juvenil</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed">Un espacio dinámico para adolescentes y jóvenes con reuniones, retiros y discipulado apasionado.</p>
+
+                    <div class="p-6 pt-5 relative">
+                        <div class="-mt-11 mb-3 w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-700 text-white shadow-lg border-4 border-white flex items-center justify-center text-xl">
+                            🔥
+                        </div>
+                        <h3 class="text-xl font-extrabold text-slate-900 group-hover:text-indigo-700 transition">Ministerio Juvenil</h3>
+                        <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mt-2">
+                            Un espacio dinámico para adolescentes y jóvenes con reuniones, retiros y discipulado apasionado.
+                        </p>
                     </div>
                 </div>
-                <div class="p-6 pt-0 border-t border-slate-100 flex items-center space-x-3 mt-4">
-                    <div class="w-9 h-9 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs">J</div>
-                    <div>
-                        <p class="text-[10px] text-slate-400 font-semibold uppercase">Encargados</p>
-                        <p class="text-xs font-bold text-slate-800">Lilibeth Quintana - Jaime Perez</p>
+
+                <div class="px-6 pb-6 pt-3 border-t border-slate-100 bg-slate-50/60 flex items-center justify-between gap-2">
+                    <div class="flex items-center space-x-3 min-w-0">
+                        <div class="w-9 h-9 rounded-full bg-indigo-100 text-indigo-700 border border-indigo-200 flex items-center justify-center font-extrabold text-xs shrink-0">J</div>
+                        <div class="truncate">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Encargados</p>
+                            <p class="text-xs font-bold text-slate-800 truncate" title="Lilibeth Quintana - Jaime Perez">Lilibeth Quintana - Jaime Perez</p>
+                        </div>
                     </div>
+                    <button onclick="seleccionarMinisterio('Ministerio Juvenil')" class="shrink-0 text-xs font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-600 hover:text-white px-3 py-2 rounded-xl border border-indigo-200 transition">
+                        Unirme →
+                    </button>
                 </div>
             </div>
 
             <!-- 3. NIÑOS / ESCUELA DOMINICAL -->
-            <div class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition flex flex-col justify-between" data-aos="fade-up" data-aos-delay="200">
+            <div class="group bg-white rounded-[2rem] overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-2xl hover:border-amber-300 transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between" data-aos="fade-up" data-aos-delay="200">
                 <div>
-                    <div class="relative h-48 w-full overflow-hidden group border-b border-slate-100 bg-slate-900">
-                        <img id="img-ninos" src="https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=800&q=80" onclick="ampliarFoto('ninos')" class="w-full h-full object-cover transition-all duration-500 cursor-pointer group-hover:scale-105" title="Haz clic para ampliar">
-                        <div onclick="ampliarFoto('ninos')" class="absolute bottom-2 right-2 bg-slate-900/70 hover:bg-slate-900 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-lg cursor-pointer transition">🔍 Ampliar foto</div>
-                        <button onclick="cambiarFoto('ninos', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10">❮</button>
-                        <button onclick="cambiarFoto('ninos', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10">❯</button>
+                    <div class="relative h-56 w-full overflow-hidden bg-slate-900">
+                        <img id="img-ninos" src="https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=800&q=80" onclick="ampliarFoto('ninos')" class="w-full h-full object-cover transition-all duration-700 cursor-pointer group-hover:scale-105" title="Haz clic para ampliar">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/15 to-transparent pointer-events-none"></div>
+                        
+                        <span class="absolute top-3.5 left-3.5 bg-amber-500/95 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+                            Formación
+                        </span>
+
+                        <button onclick="ampliarFoto('ninos')" class="absolute top-3.5 right-3.5 bg-slate-950/60 hover:bg-slate-950 backdrop-blur-md text-white text-[11px] px-2.5 py-1 rounded-full cursor-pointer transition flex items-center gap-1 border border-white/15">
+                            <span>🔍</span>
+                        </button>
+
+                        <button onclick="cambiarFoto('ninos', -1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/90 hover:text-slate-900 backdrop-blur-md text-white w-8 h-8 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10 shadow">❮</button>
+                        <button onclick="cambiarFoto('ninos', 1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/90 hover:text-slate-900 backdrop-blur-md text-white w-8 h-8 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10 shadow">❯</button>
+
+                        <div id="dots-ninos" class="absolute bottom-3 right-4 flex space-x-1.5 z-10"></div>
                     </div>
-                    <div class="p-6">
-                        <span class="text-2xl mb-2 inline-block">🎨</span>
-                        <h3 class="text-xl font-bold text-slate-900 mb-1">Ministerio Infantil (Maestros)</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed">Instruyendo a los niños con amor, manualidades, juegos y valores bíblicos cada domingo.</p>
+
+                    <div class="p-6 pt-5 relative">
+                        <div class="-mt-11 mb-3 w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-lg border-4 border-white flex items-center justify-center text-xl">
+                            🎨
+                        </div>
+                        <h3 class="text-xl font-extrabold text-slate-900 group-hover:text-amber-700 transition">Ministerio Infantil</h3>
+                        <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mt-2">
+                            Instruyendo a los niños con amor, manualidades, juegos y valores bíblicos cada domingo.
+                        </p>
                     </div>
                 </div>
-                <div class="p-6 pt-0 border-t border-slate-100 flex items-center space-x-3 mt-4">
-                    <div class="w-9 h-9 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-xs">N</div>
-                    <div>
-                        <p class="text-[10px] text-slate-400 font-semibold uppercase">Encargados</p>
-                        <p class="text-xs font-bold text-slate-800">Coordinadora de Maestros</p>
+
+                <div class="px-6 pb-6 pt-3 border-t border-slate-100 bg-slate-50/60 flex items-center justify-between gap-2">
+                    <div class="flex items-center space-x-3 min-w-0">
+                        <div class="w-9 h-9 rounded-full bg-amber-100 text-amber-700 border border-amber-200 flex items-center justify-center font-extrabold text-xs shrink-0">N</div>
+                        <div class="truncate">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Encargados</p>
+                            <p class="text-xs font-bold text-slate-800 truncate">Coordinadora de Maestros</p>
+                        </div>
                     </div>
+                    <button onclick="seleccionarMinisterio('Ministerio Infantil (Maestros)')" class="shrink-0 text-xs font-bold text-amber-700 bg-amber-50 hover:bg-amber-600 hover:text-white px-3 py-2 rounded-xl border border-amber-200 transition">
+                        Unirme →
+                    </button>
                 </div>
             </div>
 
             <!-- 4. DAMAS -->
-            <div class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition flex flex-col justify-between" data-aos="fade-up">
+            <div class="group bg-white rounded-[2rem] overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-2xl hover:border-pink-300 transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between" data-aos="fade-up">
                 <div>
-                    <div class="relative h-48 w-full overflow-hidden group border-b border-slate-100 bg-slate-900">
-                        <img id="img-damas" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80" onclick="ampliarFoto('damas')" class="w-full h-full object-cover transition-all duration-500 cursor-pointer group-hover:scale-105" title="Haz clic para ampliar">
-                        <div onclick="ampliarFoto('damas')" class="absolute bottom-2 right-2 bg-slate-900/70 hover:bg-slate-900 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-lg cursor-pointer transition">🔍 Ampliar foto</div>
-                        <button onclick="cambiarFoto('damas', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10">❮</button>
-                        <button onclick="cambiarFoto('damas', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10">❯</button>
+                    <div class="relative h-56 w-full overflow-hidden bg-slate-900">
+                        <img id="img-damas" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80" onclick="ampliarFoto('damas')" class="w-full h-full object-cover transition-all duration-700 cursor-pointer group-hover:scale-105" title="Haz clic para ampliar">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/15 to-transparent pointer-events-none"></div>
+                        
+                        <span class="absolute top-3.5 left-3.5 bg-pink-600/90 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+                            Edificación
+                        </span>
+
+                        <button onclick="ampliarFoto('damas')" class="absolute top-3.5 right-3.5 bg-slate-950/60 hover:bg-slate-950 backdrop-blur-md text-white text-[11px] px-2.5 py-1 rounded-full cursor-pointer transition flex items-center gap-1 border border-white/15">
+                            <span>🔍</span>
+                        </button>
+
+                        <button onclick="cambiarFoto('damas', -1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/90 hover:text-slate-900 backdrop-blur-md text-white w-8 h-8 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10 shadow">❮</button>
+                        <button onclick="cambiarFoto('damas', 1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/90 hover:text-slate-900 backdrop-blur-md text-white w-8 h-8 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10 shadow">❯</button>
+
+                        <div id="dots-damas" class="absolute bottom-3 right-4 flex space-x-1.5 z-10"></div>
                     </div>
-                    <div class="p-6">
-                        <span class="text-2xl mb-2 inline-block">🌸</span>
-                        <h3 class="text-xl font-bold text-slate-900 mb-1">Ministerio de Damas</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed">Mujeres de fe unidas para orar, edificarse mutuamente, realizar congresos y talleres prácticos.</p>
+
+                    <div class="p-6 pt-5 relative">
+                        <div class="-mt-11 mb-3 w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 text-white shadow-lg border-4 border-white flex items-center justify-center text-xl">
+                            🌸
+                        </div>
+                        <h3 class="text-xl font-extrabold text-slate-900 group-hover:text-pink-700 transition">Ministerio de Damas</h3>
+                        <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mt-2">
+                            Mujeres de fe unidas para orar, edificarse mutuamente, realizar congresos y talleres prácticos.
+                        </p>
                     </div>
                 </div>
-                <div class="p-6 pt-0 border-t border-slate-100 flex items-center space-x-3 mt-4">
-                    <div class="w-9 h-9 rounded-full bg-pink-100 text-pink-700 flex items-center justify-center font-bold text-xs">D</div>
-                    <div>
-                        <p class="text-[10px] text-slate-400 font-semibold uppercase">Encargados</p>
-                        <p class="text-xs font-bold text-slate-800">Directiva de Mujeres</p>
+
+                <div class="px-6 pb-6 pt-3 border-t border-slate-100 bg-slate-50/60 flex items-center justify-between gap-2">
+                    <div class="flex items-center space-x-3 min-w-0">
+                        <div class="w-9 h-9 rounded-full bg-pink-100 text-pink-700 border border-pink-200 flex items-center justify-center font-extrabold text-xs shrink-0">D</div>
+                        <div class="truncate">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Encargados</p>
+                            <p class="text-xs font-bold text-slate-800 truncate">Directiva de Mujeres</p>
+                        </div>
                     </div>
+                    <button onclick="seleccionarMinisterio('Ministerio de Damas')" class="shrink-0 text-xs font-bold text-pink-700 bg-pink-50 hover:bg-pink-600 hover:text-white px-3 py-2 rounded-xl border border-pink-200 transition">
+                        Unirme →
+                    </button>
                 </div>
             </div>
 
             <!-- 5. CABALLEROS -->
-            <div class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition flex flex-col justify-between" data-aos="fade-up" data-aos-delay="100">
+            <div class="group bg-white rounded-[2rem] overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-2xl hover:border-slate-400 transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between" data-aos="fade-up" data-aos-delay="100">
                 <div>
-                    <div class="relative h-48 w-full overflow-hidden group border-b border-slate-100 bg-slate-900">
-                        <img id="img-caballeros" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" onclick="ampliarFoto('caballeros')" class="w-full h-full object-cover transition-all duration-500 cursor-pointer group-hover:scale-105" title="Haz clic para ampliar">
-                        <div onclick="ampliarFoto('caballeros')" class="absolute bottom-2 right-2 bg-slate-900/70 hover:bg-slate-900 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-lg cursor-pointer transition">🔍 Ampliar foto</div>
-                        <button onclick="cambiarFoto('caballeros', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10">❮</button>
-                        <button onclick="cambiarFoto('caballeros', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10">❯</button>
+                    <div class="relative h-56 w-full overflow-hidden bg-slate-900">
+                        <img id="img-caballeros" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" onclick="ampliarFoto('caballeros')" class="w-full h-full object-cover transition-all duration-700 cursor-pointer group-hover:scale-105" title="Haz clic para ampliar">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/15 to-transparent pointer-events-none"></div>
+                        
+                        <span class="absolute top-3.5 left-3.5 bg-slate-800/90 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+                            Liderazgo
+                        </span>
+
+                        <button onclick="ampliarFoto('caballeros')" class="absolute top-3.5 right-3.5 bg-slate-950/60 hover:bg-slate-950 backdrop-blur-md text-white text-[11px] px-2.5 py-1 rounded-full cursor-pointer transition flex items-center gap-1 border border-white/15">
+                            <span>🔍</span>
+                        </button>
+
+                        <button onclick="cambiarFoto('caballeros', -1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/90 hover:text-slate-900 backdrop-blur-md text-white w-8 h-8 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10 shadow">❮</button>
+                        <button onclick="cambiarFoto('caballeros', 1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/90 hover:text-slate-900 backdrop-blur-md text-white w-8 h-8 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10 shadow">❯</button>
+
+                        <div id="dots-caballeros" class="absolute bottom-3 right-4 flex space-x-1.5 z-10"></div>
                     </div>
-                    <div class="p-6">
-                        <span class="text-2xl mb-2 inline-block">🛡️</span>
-                        <h3 class="text-xl font-bold text-slate-900 mb-1">Ministerio de Caballeros</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed">Formando hombres como sacerdotes de sus hogares, fortaleciendo el liderazgo y la comunión.</p>
+
+                    <div class="p-6 pt-5 relative">
+                        <div class="-mt-11 mb-3 w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-700 to-slate-900 text-white shadow-lg border-4 border-white flex items-center justify-center text-xl">
+                            🛡️
+                        </div>
+                        <h3 class="text-xl font-extrabold text-slate-900 group-hover:text-slate-700 transition">Ministerio de Caballeros</h3>
+                        <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mt-2">
+                            Formando hombres como sacerdotes de sus hogares, fortaleciendo el liderazgo y la comunión.
+                        </p>
                     </div>
                 </div>
-                <div class="p-6 pt-0 border-t border-slate-100 flex items-center space-x-3 mt-4">
-                    <div class="w-9 h-9 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs">C</div>
-                    <div>
-                        <p class="text-[10px] text-slate-400 font-semibold uppercase">Encargados</p>
-                        <p class="text-xs font-bold text-slate-800">Líderes de Varones</p>
+
+                <div class="px-6 pb-6 pt-3 border-t border-slate-100 bg-slate-50/60 flex items-center justify-between gap-2">
+                    <div class="flex items-center space-x-3 min-w-0">
+                        <div class="w-9 h-9 rounded-full bg-slate-200 text-slate-800 border border-slate-300 flex items-center justify-center font-extrabold text-xs shrink-0">C</div>
+                        <div class="truncate">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Encargados</p>
+                            <p class="text-xs font-bold text-slate-800 truncate">Líderes de Varones</p>
+                        </div>
                     </div>
+                    <button onclick="seleccionarMinisterio('Ministerio de Caballeros')" class="shrink-0 text-xs font-bold text-slate-800 bg-slate-200/70 hover:bg-slate-800 hover:text-white px-3 py-2 rounded-xl border border-slate-300 transition">
+                        Unirme →
+                    </button>
                 </div>
             </div>
 
             <!-- 6. INTERCESIÓN Y ORACIÓN -->
-            <div class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition flex flex-col justify-between" data-aos="fade-up" data-aos-delay="200">
+            <div class="group bg-white rounded-[2rem] overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-2xl hover:border-emerald-300 transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between" data-aos="fade-up" data-aos-delay="200">
                 <div>
-                    <div class="relative h-48 w-full overflow-hidden group border-b border-slate-100 bg-slate-900">
-                        <img id="img-intercesion" src="https://images.unsplash.com/photo-1499209974431-9dac3ada00d7?auto=format&fit=crop&w=800&q=80" onclick="ampliarFoto('intercesion')" class="w-full h-full object-cover transition-all duration-500 cursor-pointer group-hover:scale-105" title="Haz clic para ampliar">
-                        <div onclick="ampliarFoto('intercesion')" class="absolute bottom-2 right-2 bg-slate-900/70 hover:bg-slate-900 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-lg cursor-pointer transition">🔍 Ampliar foto</div>
-                        <button onclick="cambiarFoto('intercesion', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10">❮</button>
-                        <button onclick="cambiarFoto('intercesion', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10">❯</button>
+                    <div class="relative h-56 w-full overflow-hidden bg-slate-900">
+                        <img id="img-intercesion" src="https://images.unsplash.com/photo-1499209974431-9dac3ada00d7?auto=format&fit=crop&w=800&q=80" onclick="ampliarFoto('intercesion')" class="w-full h-full object-cover transition-all duration-700 cursor-pointer group-hover:scale-105" title="Haz clic para ampliar">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/15 to-transparent pointer-events-none"></div>
+                        
+                        <span class="absolute top-3.5 left-3.5 bg-emerald-600/90 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+                            Clamor
+                        </span>
+
+                        <button onclick="ampliarFoto('intercesion')" class="absolute top-3.5 right-3.5 bg-slate-950/60 hover:bg-slate-950 backdrop-blur-md text-white text-[11px] px-2.5 py-1 rounded-full cursor-pointer transition flex items-center gap-1 border border-white/15">
+                            <span>🔍</span>
+                        </button>
+
+                        <button onclick="cambiarFoto('intercesion', -1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/90 hover:text-slate-900 backdrop-blur-md text-white w-8 h-8 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10 shadow">❮</button>
+                        <button onclick="cambiarFoto('intercesion', 1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/90 hover:text-slate-900 backdrop-blur-md text-white w-8 h-8 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10 shadow">❯</button>
+
+                        <div id="dots-intercesion" class="absolute bottom-3 right-4 flex space-x-1.5 z-10"></div>
                     </div>
-                    <div class="p-6">
-                        <span class="text-2xl mb-2 inline-block">🙏</span>
-                        <h3 class="text-xl font-bold text-slate-900 mb-1">Intercesión y Oración</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed">Equipo dedicado a la vigilia constante y respaldo espiritual por las peticiones de la iglesia.</p>
+
+                    <div class="p-6 pt-5 relative">
+                        <div class="-mt-11 mb-3 w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white shadow-lg border-4 border-white flex items-center justify-center text-xl">
+                            🙏
+                        </div>
+                        <h3 class="text-xl font-extrabold text-slate-900 group-hover:text-emerald-700 transition">Intercesión y Oración</h3>
+                        <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mt-2">
+                            Equipo dedicado a la vigilia constante y respaldo espiritual por las peticiones de la iglesia.
+                        </p>
                     </div>
                 </div>
-                <div class="p-6 pt-0 border-t border-slate-100 flex items-center space-x-3 mt-4">
-                    <div class="w-9 h-9 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">I</div>
-                    <div>
-                        <p class="text-[10px] text-slate-400 font-semibold uppercase">Encargados</p>
-                        <p class="text-xs font-bold text-slate-800">Coordinador de Oración</p>
+
+                <div class="px-6 pb-6 pt-3 border-t border-slate-100 bg-slate-50/60 flex items-center justify-between gap-2">
+                    <div class="flex items-center space-x-3 min-w-0">
+                        <div class="w-9 h-9 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200 flex items-center justify-center font-extrabold text-xs shrink-0">I</div>
+                        <div class="truncate">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Encargados</p>
+                            <p class="text-xs font-bold text-slate-800 truncate">Coordinador de Oración</p>
+                        </div>
                     </div>
+                    <button onclick="seleccionarMinisterio('Intercesión y Oración')" class="shrink-0 text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-600 hover:text-white px-3 py-2 rounded-xl border border-emerald-200 transition">
+                        Unirme →
+                    </button>
                 </div>
             </div>
 
             <!-- 7. ALABANZA Y ADORACIÓN -->
-            <div class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition flex flex-col justify-between" data-aos="fade-up">
+            <div class="group bg-white rounded-[2rem] overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-2xl hover:border-purple-300 transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between" data-aos="fade-up">
                 <div>
-                    <div class="relative h-48 w-full overflow-hidden group border-b border-slate-100 bg-slate-900">
-                        <img id="img-alabanza" src="images/alabanza1.jpeg" onclick="ampliarFoto('alabanza')" class="w-full h-full object-cover transition-all duration-500 cursor-pointer group-hover:scale-105" title="Haz clic para ampliar">
-                        <div onclick="ampliarFoto('alabanza')" class="absolute bottom-2 right-2 bg-slate-900/70 hover:bg-slate-900 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-lg cursor-pointer transition">🔍 Ampliar foto</div>
-                        <button onclick="cambiarFoto('alabanza', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10">❮</button>
-                        <button onclick="cambiarFoto('alabanza', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10">❯</button>
+                    <div class="relative h-56 w-full overflow-hidden bg-slate-900">
+                        <img id="img-alabanza" src="images/alabanza1.jpeg" onclick="ampliarFoto('alabanza')" class="w-full h-full object-cover transition-all duration-700 cursor-pointer group-hover:scale-105" title="Haz clic para ampliar">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/15 to-transparent pointer-events-none"></div>
+                        
+                        <span class="absolute top-3.5 left-3.5 bg-purple-600/90 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+                            Adoración
+                        </span>
+
+                        <button onclick="ampliarFoto('alabanza')" class="absolute top-3.5 right-3.5 bg-slate-950/60 hover:bg-slate-950 backdrop-blur-md text-white text-[11px] px-2.5 py-1 rounded-full cursor-pointer transition flex items-center gap-1 border border-white/15">
+                            <span>🔍</span>
+                        </button>
+
+                        <button onclick="cambiarFoto('alabanza', -1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/90 hover:text-slate-900 backdrop-blur-md text-white w-8 h-8 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10 shadow">❮</button>
+                        <button onclick="cambiarFoto('alabanza', 1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/90 hover:text-slate-900 backdrop-blur-md text-white w-8 h-8 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10 shadow">❯</button>
+
+                        <div id="dots-alabanza" class="absolute bottom-3 right-4 flex space-x-1.5 z-10"></div>
                     </div>
-                    <div class="p-6">
-                        <span class="text-2xl mb-2 inline-block">🎵</span>
-                        <h3 class="text-xl font-bold text-slate-900 mb-1">Alabanza y Adoración</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed">Músicos y vocalistas comprometidos con guiar al pueblo en un ambiente de adoración genuina.</p>
+
+                    <div class="p-6 pt-5 relative">
+                        <div class="-mt-11 mb-3 w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 to-fuchsia-700 text-white shadow-lg border-4 border-white flex items-center justify-center text-xl">
+                            🎵
+                        </div>
+                        <h3 class="text-xl font-extrabold text-slate-900 group-hover:text-purple-700 transition">Alabanza y Adoración</h3>
+                        <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mt-2">
+                            Músicos y vocalistas comprometidos con guiar al pueblo en un ambiente de adoración genuina.
+                        </p>
                     </div>
                 </div>
-                <div class="p-6 pt-0 border-t border-slate-100 flex items-center space-x-3 mt-4">
-                    <div class="w-9 h-9 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-xs">A</div>
-                    <div>
-                        <p class="text-[10px] text-slate-400 font-semibold uppercase">Encargados</p>
-                        <p class="text-xs font-bold text-slate-800">Juan E. Castro</p>
+
+                <div class="px-6 pb-6 pt-3 border-t border-slate-100 bg-slate-50/60 flex items-center justify-between gap-2">
+                    <div class="flex items-center space-x-3 min-w-0">
+                        <div class="w-9 h-9 rounded-full bg-purple-100 text-purple-700 border border-purple-200 flex items-center justify-center font-extrabold text-xs shrink-0">A</div>
+                        <div class="truncate">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Encargados</p>
+                            <p class="text-xs font-bold text-slate-800 truncate">Juan E. Castro</p>
+                        </div>
                     </div>
+                    <button onclick="seleccionarMinisterio('Alabanza y Adoración')" class="shrink-0 text-xs font-bold text-purple-700 bg-purple-50 hover:bg-purple-600 hover:text-white px-3 py-2 rounded-xl border border-purple-200 transition">
+                        Unirme →
+                    </button>
                 </div>
             </div>
 
             <!-- 8. UJIERES Y PROTOCOLO -->
-            <div class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition flex flex-col justify-between" data-aos="fade-up" data-aos-delay="100">
+            <div class="group bg-white rounded-[2rem] overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-2xl hover:border-cyan-300 transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between" data-aos="fade-up" data-aos-delay="100">
                 <div>
-                    <div class="relative h-48 w-full overflow-hidden group border-b border-slate-100 bg-slate-900">
-                        <img id="img-ujieres" src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80" onclick="ampliarFoto('ujieres')" class="w-full h-full object-cover transition-all duration-500 cursor-pointer group-hover:scale-105" title="Haz clic para ampliar">
-                        <div onclick="ampliarFoto('ujieres')" class="absolute bottom-2 right-2 bg-slate-900/70 hover:bg-slate-900 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-lg cursor-pointer transition">🔍 Ampliar foto</div>
-                        <button onclick="cambiarFoto('ujieres', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10">❮</button>
-                        <button onclick="cambiarFoto('ujieres', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10">❯</button>
+                    <div class="relative h-56 w-full overflow-hidden bg-slate-900">
+                        <img id="img-ujieres" src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80" onclick="ampliarFoto('ujieres')" class="w-full h-full object-cover transition-all duration-700 cursor-pointer group-hover:scale-105" title="Haz clic para ampliar">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/15 to-transparent pointer-events-none"></div>
+                        
+                        <span class="absolute top-3.5 left-3.5 bg-cyan-600/90 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+                            Hospitalidad
+                        </span>
+
+                        <button onclick="ampliarFoto('ujieres')" class="absolute top-3.5 right-3.5 bg-slate-950/60 hover:bg-slate-950 backdrop-blur-md text-white text-[11px] px-2.5 py-1 rounded-full cursor-pointer transition flex items-center gap-1 border border-white/15">
+                            <span>🔍</span>
+                        </button>
+
+                        <button onclick="cambiarFoto('ujieres', -1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/90 hover:text-slate-900 backdrop-blur-md text-white w-8 h-8 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10 shadow">❮</button>
+                        <button onclick="cambiarFoto('ujieres', 1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/90 hover:text-slate-900 backdrop-blur-md text-white w-8 h-8 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10 shadow">❯</button>
+
+                        <div id="dots-ujieres" class="absolute bottom-3 right-4 flex space-x-1.5 z-10"></div>
                     </div>
-                    <div class="p-6">
-                        <span class="text-2xl mb-2 inline-block">🤝</span>
-                        <h3 class="text-xl font-bold text-slate-900 mb-1">Ujieres y Servidores</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed">Servicio con amor, orden, bienvenida calurosa y asistencia en cada reunión.</p>
+
+                    <div class="p-6 pt-5 relative">
+                        <div class="-mt-11 mb-3 w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-600 to-sky-700 text-white shadow-lg border-4 border-white flex items-center justify-center text-xl">
+                            🤝
+                        </div>
+                        <h3 class="text-xl font-extrabold text-slate-900 group-hover:text-cyan-700 transition">Ujieres y Servidores</h3>
+                        <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mt-2">
+                            Servicio con amor, orden, bienvenida calurosa y asistencia en cada reunión.
+                        </p>
                     </div>
                 </div>
-                <div class="p-6 pt-0 border-t border-slate-100 flex items-center space-x-3 mt-4">
-                    <div class="w-9 h-9 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-xs">U</div>
-                    <div>
-                        <p class="text-[10px] text-slate-400 font-semibold uppercase">Encargados</p>
-                        <p class="text-xs font-bold text-slate-800">Líder de Protocolo</p>
+
+                <div class="px-6 pb-6 pt-3 border-t border-slate-100 bg-slate-50/60 flex items-center justify-between gap-2">
+                    <div class="flex items-center space-x-3 min-w-0">
+                        <div class="w-9 h-9 rounded-full bg-cyan-100 text-cyan-700 border border-cyan-200 flex items-center justify-center font-extrabold text-xs shrink-0">U</div>
+                        <div class="truncate">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Encargados</p>
+                            <p class="text-xs font-bold text-slate-800 truncate">Líder de Protocolo</p>
+                        </div>
                     </div>
+                    <button onclick="seleccionarMinisterio('Ujieres y Servidores')" class="shrink-0 text-xs font-bold text-cyan-700 bg-cyan-50 hover:bg-cyan-600 hover:text-white px-3 py-2 rounded-xl border border-cyan-200 transition">
+                        Unirme →
+                    </button>
                 </div>
             </div>
 
             <!-- 9. EVANGELISMO Y MISIONES -->
-            <div class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition flex flex-col justify-between" data-aos="fade-up" data-aos-delay="200">
+            <div class="group bg-white rounded-[2rem] overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-2xl hover:border-rose-300 transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between" data-aos="fade-up" data-aos-delay="200">
                 <div>
-                    <div class="relative h-48 w-full overflow-hidden group border-b border-slate-100 bg-slate-900">
-                        <img id="img-evangelismo" src="images/evangelismo1.jpeg" onclick="ampliarFoto('evangelismo')" class="w-full h-full object-cover transition-all duration-500 cursor-pointer group-hover:scale-105" title="Haz clic para ampliar">
-                        <div onclick="ampliarFoto('evangelismo')" class="absolute bottom-2 right-2 bg-slate-900/70 hover:bg-slate-900 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-lg cursor-pointer transition">🔍 Ampliar foto</div>
-                        <button onclick="cambiarFoto('evangelismo', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10">❮</button>
-                        <button onclick="cambiarFoto('evangelismo', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10">❯</button>
+                    <div class="relative h-56 w-full overflow-hidden bg-slate-900">
+                        <img id="img-evangelismo" src="images/evangelismo1.jpeg" onclick="ampliarFoto('evangelismo')" class="w-full h-full object-cover transition-all duration-700 cursor-pointer group-hover:scale-105" title="Haz clic para ampliar">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/15 to-transparent pointer-events-none"></div>
+                        
+                        <span class="absolute top-3.5 left-3.5 bg-rose-600/90 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+                            Alcance
+                        </span>
+
+                        <button onclick="ampliarFoto('evangelismo')" class="absolute top-3.5 right-3.5 bg-slate-950/60 hover:bg-slate-950 backdrop-blur-md text-white text-[11px] px-2.5 py-1 rounded-full cursor-pointer transition flex items-center gap-1 border border-white/15">
+                            <span>🔍</span>
+                        </button>
+
+                        <button onclick="cambiarFoto('evangelismo', -1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/90 hover:text-slate-900 backdrop-blur-md text-white w-8 h-8 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10 shadow">❮</button>
+                        <button onclick="cambiarFoto('evangelismo', 1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/90 hover:text-slate-900 backdrop-blur-md text-white w-8 h-8 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition z-10 shadow">❯</button>
+
+                        <div id="dots-evangelismo" class="absolute bottom-3 right-4 flex space-x-1.5 z-10"></div>
                     </div>
-                    <div class="p-6">
-                        <span class="text-2xl mb-2 inline-block">🌍</span>
-                        <h3 class="text-xl font-bold text-slate-900 mb-1">Evangelismo y Misiones</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed">Llevando el mensaje transformador de Jesús a las calles, comunidades y vecindarios.</p>
+
+                    <div class="p-6 pt-5 relative">
+                        <div class="-mt-11 mb-3 w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-600 to-red-700 text-white shadow-lg border-4 border-white flex items-center justify-center text-xl">
+                            🌍
+                        </div>
+                        <h3 class="text-xl font-extrabold text-slate-900 group-hover:text-rose-700 transition">Evangelismo y Misiones</h3>
+                        <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mt-2">
+                            Llevando el mensaje transformador de Jesús a las calles, comunidades y vecindarios.
+                        </p>
                     </div>
                 </div>
-                <div class="p-6 pt-0 border-t border-slate-100 flex items-center space-x-3 mt-4">
-                    <div class="w-9 h-9 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-xs">E</div>
-                    <div>
-                        <p class="text-[10px] text-slate-400 font-semibold uppercase">Encargados</p>
-                        <p class="text-xs font-bold text-slate-800">Coordinador Misionero</p>
+
+                <div class="px-6 pb-6 pt-3 border-t border-slate-100 bg-slate-50/60 flex items-center justify-between gap-2">
+                    <div class="flex items-center space-x-3 min-w-0">
+                        <div class="w-9 h-9 rounded-full bg-rose-100 text-rose-700 border border-rose-200 flex items-center justify-center font-extrabold text-xs shrink-0">E</div>
+                        <div class="truncate">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Encargados</p>
+                            <p class="text-xs font-bold text-slate-800 truncate">Coordinador Misionero</p>
+                        </div>
                     </div>
+                    <button onclick="seleccionarMinisterio('Evangelismo y Misiones')" class="shrink-0 text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-600 hover:text-white px-3 py-2 rounded-xl border border-rose-200 transition">
+                        Unirme →
+                    </button>
                 </div>
             </div>
 
@@ -306,10 +537,10 @@
     </div>
 
     <!-- FORMULARIO PARA UNIRSE A UN MINISTERIO -->
-    <section class="bg-slate-100 py-16 px-6">
-        <div class="max-w-3xl mx-auto bg-white p-8 sm:p-10 rounded-3xl shadow-lg border border-slate-200 space-y-6" data-aos="fade-up">
+    <section id="form-unirse" class="bg-slate-100 py-16 px-6 border-t border-slate-200/70">
+        <div class="max-w-3xl mx-auto bg-white p-8 sm:p-10 rounded-3xl shadow-xl border border-slate-200 space-y-6" data-aos="fade-up">
             <div class="text-center space-y-2">
-                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full uppercase tracking-wider">Involúcrate</span>
+                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-3.5 py-1 rounded-full uppercase tracking-wider border border-blue-100">Involúcrate</span>
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">¿Deseas Servir en un Ministerio?</h2>
                 <p class="text-slate-500 text-sm">Diligencia tus datos y el líder encargado del área se comunicará contigo.</p>
             </div>
@@ -347,7 +578,7 @@
                     <textarea id="applicant-notes" rows="3" placeholder="Ej: Toco la guitarra, me gusta enseñar, tengo disponibilidad los fines de semana..." class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:outline-none text-sm"></textarea>
                 </div>
 
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition shadow-md text-sm">
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl transition shadow-md text-sm">
                     Enviar Solicitud de Servicio 🚀
                 </button>
             </form>
@@ -398,6 +629,21 @@
             if (menu) menu.classList.toggle("hidden");
         }
 
+        // Seleccionar ministerio automáticamente desde la tarjeta y bajar al formulario
+        function seleccionarMinisterio(nombreMinisterio) {
+            const select = document.getElementById("ministry-selection");
+            const seccionForm = document.getElementById("form-unirse");
+            if (select) {
+                select.value = nombreMinisterio;
+            }
+            if (seccionForm) {
+                seccionForm.scrollIntoView({ behavior: "smooth" });
+                setTimeout(() => {
+                    document.getElementById("applicant-name")?.focus();
+                }, 600);
+            }
+        }
+
         // 📸 BANCO DE FOTOS POR MINISTERIO (Independientes)
         const galeriaMinisterios = {
             pastoral: [
@@ -443,7 +689,6 @@
             ]
         };
 
-        // Estado actual de los índices de cada carrusel
         const indicesCarrusel = {
             pastoral: 0,
             jovenes: 0,
@@ -456,29 +701,47 @@
             evangelismo: 0
         };
 
-        // Función para cambiar de foto manualmente con flechas o automáticamente
+        // Renderizar los puntitos indicadores del carrusel en cada tarjeta
+        function actualizarDots(ministerio) {
+            const dotsContainer = document.getElementById(`dots-${ministerio}`);
+            const fotos = galeriaMinisterios[ministerio];
+            if (!dotsContainer || !fotos) return;
+
+            dotsContainer.innerHTML = fotos.map((_, idx) => {
+                const activo = idx === indicesCarrusel[ministerio];
+                return `<span class="h-1.5 rounded-full transition-all duration-300 ${activo ? 'w-4 bg-white' : 'w-1.5 bg-white/50'}"></span>`;
+            }).join('');
+        }
+
+        // Inicializar dots al cargar
+        document.addEventListener("DOMContentLoaded", () => {
+            Object.keys(galeriaMinisterios).forEach(ministerio => actualizarDots(ministerio));
+        });
+
+        // Función para cambiar de foto manualmente o automáticamente
         function cambiarFoto(ministerio, direccion) {
             const fotos = galeriaMinisterios[ministerio];
             if (!fotos) return;
 
             indicesCarrusel[ministerio] = (indicesCarrusel[ministerio] + direccion + fotos.length) % fotos.length;
+            actualizarDots(ministerio);
             
             const imgElement = document.getElementById(`img-${ministerio}`);
             if (imgElement) {
-                imgElement.style.opacity = '0.3';
+                imgElement.style.opacity = '0.35';
                 setTimeout(() => {
                     imgElement.src = fotos[indicesCarrusel[ministerio]];
                     imgElement.style.opacity = '1';
-                }, 250);
+                }, 220);
             }
         }
 
-        // Rotación automática suave cada 4 segundos para cada ministerio de forma independiente
+        // Rotación automática suave cada 4.5 segundos
         setInterval(() => {
             Object.keys(galeriaMinisterios).forEach(ministerio => {
                 cambiarFoto(ministerio, 1);
             });
-        }, 4000);
+        }, 4500);
 
         // FUNCIONES DE LIGHTBOX (AMPLIAR FOTO)
         function ampliarFoto(ministerio) {
